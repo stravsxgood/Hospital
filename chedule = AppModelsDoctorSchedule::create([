@@ -1,0 +1,15 @@
+[90m= [39m[34;4mApp\Models\Doctor[39;24m {#9351
+    [34muser_id[39m: [35m24[39m,
+    [34mspecialization_id[39m: [35m12[39m,
+    [34mname[39m: [32m"[39m[32mdr. John Doe, Sp.PD[39m[32m"[39m,
+    [34msip_number[39m: [32m"[39m[32mSIP.503/TEST-001/DS/2026[39m[32m"[39m,
+    [34mgender[39m: [32m"[39m[32mLaki-laki[39m[32m"[39m,
+    [34mnumber_phone[39m: [32m"[39m[32m081299991111[39m[32m"[39m,
+    [34memail[39m: [32m"[39m[32mdr.johndoe@hospital.com[39m[32m"[39m,
+    [34malamat[39m: [32m"[39m[32mJl. Pahlawan No. 1, Magelang[39m[32m"[39m,
+    [34mjoin_date[39m: [32m"[39m[32m2026-08-24[39m[32m"[39m,
+    [34mstatus[39m: [32m"[39m[32maktif[39m[32m"[39m,
+    [34mupdated_at[39m: [32m"[39m[32m2026-08-24 05:20:35[39m[32m"[39m,
+    [34mcreated_at[39m: [32m"[39m[32m2026-08-24 05:20:35[39m[32m"[39m,
+    [34mdoctor_id[39m: [35m2[39m,
+  }
