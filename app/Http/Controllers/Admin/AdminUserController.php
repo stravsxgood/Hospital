@@ -29,9 +29,6 @@ class AdminUserController extends Controller
 {
     /**
      * Display the User Directory & Provisioning Management Page.
-     *
-     * @param IndexAdminUserRequest $request
-     * @return Response|JsonResponse
      */
     public function index(IndexAdminUserRequest $request): Response|JsonResponse
     {
@@ -63,13 +60,13 @@ class AdminUserController extends Controller
             })
             ->when($roleFilter !== 'all', function ($q) use ($roleFilter) {
                 match ($roleFilter) {
-                    'doctor'      => $q->where('role', 'doctor')->orWhereHas('roles', fn ($r) => $r->where('name', 'dpjp-doctor')),
+                    'doctor' => $q->where('role', 'doctor')->orWhereHas('roles', fn ($r) => $r->where('name', 'dpjp-doctor')),
                     'nurse_tetap' => $q->whereHas('nurse', fn ($n) => $n->where('type', 'tetap')),
-                    'koas'        => $q->whereHas('nurse', fn ($n) => $n->where('type', 'koas')),
-                    'nurse'       => $q->where('role', 'nurse'),
+                    'koas' => $q->whereHas('nurse', fn ($n) => $n->where('type', 'koas')),
+                    'nurse' => $q->where('role', 'nurse'),
                     'admin', 'super-admin' => $q->whereIn('role', ['admin', 'super-admin'])->orWhereHas('roles', fn ($r) => $r->where('name', 'super-admin')),
-                    'patient'     => $q->where('role', 'patient'),
-                    default       => null,
+                    'patient' => $q->where('role', 'patient'),
+                    default => null,
                 };
             })
             ->when($statusFilter !== 'all', function ($q) use ($statusFilter) {
@@ -89,31 +86,31 @@ class AdminUserController extends Controller
         $rooms = Room::orderBy('name_room')->get();
 
         $stats = [
-            'total_users'        => User::count(),
-            'total_doctors'      => Doctor::count(),
+            'total_users' => User::count(),
+            'total_doctors' => Doctor::count(),
             'total_nurses_tetap' => Nurse::where('type', 'tetap')->count(),
-            'total_nurses_koas'  => Nurse::where('type', 'koas')->count(),
-            'total_inactive'     => User::where('is_active', false)->count(),
+            'total_nurses_koas' => Nurse::where('type', 'koas')->count(),
+            'total_inactive' => User::where('is_active', false)->count(),
         ];
 
         $payload = [
-            'users'           => $users,
-            'filters'         => [
+            'users' => $users,
+            'filters' => [
                 'search' => $search,
-                'role'   => $roleFilter,
+                'role' => $roleFilter,
                 'status' => $statusFilter,
             ],
-            'stats'           => $stats,
+            'stats' => $stats,
             'specializations' => $specializations,
-            'polis'           => $polis,
-            'rooms'           => $rooms,
+            'polis' => $polis,
+            'rooms' => $rooms,
         ];
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Users list retrieved successfully.',
-                'data'    => $payload,
+                'data' => $payload,
             ]);
         }
 
@@ -122,9 +119,6 @@ class AdminUserController extends Controller
 
     /**
      * Provision and register a new DPJP Doctor account.
-     *
-     * @param StoreDoctorUserRequest $request
-     * @return RedirectResponse|JsonResponse
      */
     public function storeDoctor(StoreDoctorUserRequest $request): RedirectResponse|JsonResponse
     {
@@ -134,11 +128,11 @@ class AdminUserController extends Controller
             // 1. Create User
             $password = ! empty($validated['password']) ? $validated['password'] : 'Hospital2026!';
             $user = User::create([
-                'name'              => $validated['name'],
-                'email'             => $validated['email'],
-                'password'          => Hash::make($password),
-                'role'              => 'doctor',
-                'is_active'         => true,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($password),
+                'role' => 'doctor',
+                'is_active' => true,
                 'email_verified_at' => Carbon::now(),
             ]);
 
@@ -148,28 +142,28 @@ class AdminUserController extends Controller
 
             // 3. Create Doctor Master Profile
             $doctor = Doctor::create([
-                'user_id'           => $user->id,
+                'user_id' => $user->id,
                 'specialization_id' => $validated['specialization_id'],
-                'name'              => $validated['name'],
-                'sip_number'        => $validated['sip_number'],
-                'gender'            => $validated['gender'],
-                'number_phone'      => $validated['number_phone'] ?? null,
-                'alamat'            => $validated['alamat'] ?? null,
-                'join_date'         => $validated['join_date'] ?? Carbon::today()->toDateString(),
-                'status'            => 'aktif',
+                'name' => $validated['name'],
+                'sip_number' => $validated['sip_number'],
+                'gender' => $validated['gender'],
+                'number_phone' => $validated['number_phone'] ?? null,
+                'alamat' => $validated['alamat'] ?? null,
+                'join_date' => $validated['join_date'] ?? Carbon::today()->toDateString(),
+                'status' => 'aktif',
             ]);
 
             // 4. Optional Initial Practice Schedule
             if (! empty($validated['create_schedule']) && ! empty($validated['poli_id']) && ! empty($validated['room_id'])) {
                 DoctorSchedule::create([
-                    'doctor_id'  => $doctor->doctor_id,
-                    'poli_id'    => $validated['poli_id'],
-                    'room_id'    => $validated['room_id'],
-                    'day'        => $validated['day'],
+                    'doctor_id' => $doctor->doctor_id,
+                    'poli_id' => $validated['poli_id'],
+                    'room_id' => $validated['room_id'],
+                    'day' => $validated['day'],
                     'start_time' => $validated['start_time'],
-                    'end_time'   => $validated['end_time'],
-                    'quota_day'  => $validated['quota_day'] ?? 20,
-                    'status'     => 'Aktif',
+                    'end_time' => $validated['end_time'],
+                    'quota_day' => $validated['quota_day'] ?? 20,
+                    'status' => 'Aktif',
                 ]);
             }
 
@@ -178,9 +172,9 @@ class AdminUserController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'        => true,
-                'message'       => 'Akun Dokter DPJP berhasil didaftarkan.',
-                'data'          => $created['doctor'],
+                'status' => true,
+                'message' => 'Akun Dokter DPJP berhasil didaftarkan.',
+                'data' => $created['doctor'],
                 'temp_password' => $created['temp_password'],
             ], 201);
         }
@@ -190,9 +184,6 @@ class AdminUserController extends Controller
 
     /**
      * Provision and register a new Nurse (Tetap / Koas) account.
-     *
-     * @param StoreNurseUserRequest $request
-     * @return RedirectResponse|JsonResponse
      */
     public function storeNurse(StoreNurseUserRequest $request): RedirectResponse|JsonResponse
     {
@@ -202,11 +193,11 @@ class AdminUserController extends Controller
             // 1. Create User
             $password = ! empty($validated['password']) ? $validated['password'] : 'Hospital2026!';
             $user = User::create([
-                'name'              => $validated['name'],
-                'email'             => $validated['email'],
-                'password'          => Hash::make($password),
-                'role'              => 'nurse',
-                'is_active'         => true,
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($password),
+                'role' => 'nurse',
+                'is_active' => true,
                 'email_verified_at' => Carbon::now(),
             ]);
 
@@ -217,14 +208,14 @@ class AdminUserController extends Controller
 
             // 3. Create Nurse Master Profile
             $nurse = Nurse::create([
-                'user_id'             => $user->id,
-                'name'                => $validated['name'],
+                'user_id' => $user->id,
+                'name' => $validated['name'],
                 'registration_number' => $validated['registration_number'] ?? null,
-                'type'                => $validated['type'],
-                'institute'           => $validated['institute'] ?? null,
-                'gender'              => $validated['gender'],
-                'date_start'          => $validated['date_start'] ?? null,
-                'date_end'            => $validated['date_end'] ?? null,
+                'type' => $validated['type'],
+                'institute' => $validated['institute'] ?? null,
+                'gender' => $validated['gender'],
+                'date_start' => $validated['date_start'] ?? null,
+                'date_end' => $validated['date_end'] ?? null,
             ]);
 
             return ['user' => $user, 'nurse' => $nurse, 'temp_password' => $password];
@@ -232,9 +223,9 @@ class AdminUserController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'        => true,
-                'message'       => 'Akun Staf/Perawat berhasil didaftarkan.',
-                'data'          => $created['nurse'],
+                'status' => true,
+                'message' => 'Akun Staf/Perawat berhasil didaftarkan.',
+                'data' => $created['nurse'],
                 'temp_password' => $created['temp_password'],
             ], 201);
         }
@@ -244,10 +235,6 @@ class AdminUserController extends Controller
 
     /**
      * Toggle user status (Safe Deactivation - Never hard deletes clinical users).
-     *
-     * @param Request $request
-     * @param User $user
-     * @return RedirectResponse|JsonResponse
      */
     public function toggleStatus(Request $request, User $user): RedirectResponse|JsonResponse
     {
@@ -256,6 +243,7 @@ class AdminUserController extends Controller
             if ($request->wantsJson()) {
                 return response()->json(['status' => false, 'message' => $msg], 422);
             }
+
             return redirect()->back()->with('error', $msg);
         }
 
@@ -280,8 +268,8 @@ class AdminUserController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'    => true,
-                'message'   => "Status pengguna {$user->name} berhasil {$statusText}.",
+                'status' => true,
+                'message' => "Status pengguna {$user->name} berhasil {$statusText}.",
                 'is_active' => $user->is_active,
             ]);
         }
@@ -291,10 +279,6 @@ class AdminUserController extends Controller
 
     /**
      * Reset user password to default temporary secure credential.
-     *
-     * @param Request $request
-     * @param User $user
-     * @return RedirectResponse|JsonResponse
      */
     public function resetPassword(Request $request, User $user): RedirectResponse|JsonResponse
     {
@@ -305,8 +289,8 @@ class AdminUserController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'             => true,
-                'message'            => "Password pengguna {$user->name} berhasil direset.",
+                'status' => true,
+                'message' => "Password pengguna {$user->name} berhasil direset.",
                 'temporary_password' => $temporaryPassword,
             ]);
         }

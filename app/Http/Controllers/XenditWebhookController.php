@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaymentSettledEvent;
 use App\Models\Billing;
 use App\Models\Payment;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +23,7 @@ class XenditWebhookController extends Controller
         // Validasi Keamanan Callback Token
         if (! empty($expectedToken) && $incomingToken !== $expectedToken) {
             Log::warning('Xendit Webhook Unauthorized Token Attempt', [
-                'ip'             => $request->ip(),
+                'ip' => $request->ip(),
                 'incoming_token' => $incomingToken,
             ]);
 
@@ -36,15 +37,15 @@ class XenditWebhookController extends Controller
         $paymentMethod = (string) ($payload['payment_method'] ?? $payload['payment_channel'] ?? 'xendit_invoice');
 
         Log::info('Xendit Webhook Received', [
-            'status'      => $status,
+            'status' => $status,
             'external_id' => $externalId,
-            'xendit_id'   => $xenditId,
+            'xendit_id' => $xenditId,
         ]);
 
         if (! in_array($status, ['PAID', 'SETTLED'])) {
             return response()->json([
-                'status'  => true,
-                'message' => 'Notification acknowledged (non-paid status: ' . $status . ')',
+                'status' => true,
+                'message' => 'Notification acknowledged (non-paid status: '.$status.')',
             ]);
         }
 
@@ -65,9 +66,9 @@ class XenditWebhookController extends Controller
             if ($billing) {
                 DB::transaction(function () use ($billing, $paymentMethod) {
                     $billing->update([
-                        'status'         => 'paid',
+                        'status' => 'paid',
                         'payment_method' => $paymentMethod,
-                        'paid_at'        => now(),
+                        'paid_at' => now(),
                     ]);
 
                     // Update status appointment / antrean
@@ -82,7 +83,7 @@ class XenditWebhookController extends Controller
                 });
 
                 // Siarkan konfirmasi pelunasan instan via Reverb WebSockets
-                event(new \App\Events\PaymentSettledEvent(
+                event(new PaymentSettledEvent(
                     billingId: (int) $billing->billing_id,
                     invoiceNumber: (string) $billing->invoice_number,
                     status: 'paid',
@@ -94,7 +95,7 @@ class XenditWebhookController extends Controller
                 Log::info("Billing #{$billing->invoice_number} successfully marked as PAID via Xendit webhook.");
 
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => 'Billing successfully marked as PAID',
                 ]);
             }
@@ -107,9 +108,9 @@ class XenditWebhookController extends Controller
             $payment = Payment::find($paymentId);
 
             if ($payment) {
-                DB::transaction(function () use ($payment, $payload) {
+                DB::transaction(function () use ($payment) {
                     $payment->update([
-                        'status'      => 'Paid',
+                        'status' => 'Paid',
                         'paid_amount' => $payment->payment_total,
                     ]);
 
@@ -119,14 +120,14 @@ class XenditWebhookController extends Controller
                 });
 
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => 'Legacy payment successfully updated',
                 ]);
             }
         }
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Webhook received, no matching record found',
         ]);
     }
@@ -142,7 +143,7 @@ class XenditWebhookController extends Controller
         // Validasi Keamanan Callback Token
         if (! empty($expectedToken) && $incomingToken !== $expectedToken) {
             Log::warning('Xendit QR Webhook Unauthorized Token Attempt', [
-                'ip'             => $request->ip(),
+                'ip' => $request->ip(),
                 'incoming_token' => $incomingToken,
             ]);
 
@@ -158,15 +159,15 @@ class XenditWebhookController extends Controller
         $paymentMethod = 'QRIS';
 
         Log::info('Xendit QR Webhook Received', [
-            'status'      => $status,
+            'status' => $status,
             'external_id' => $externalId,
-            'qr_id'       => $qrId,
+            'qr_id' => $qrId,
         ]);
 
         if (! in_array($status, ['COMPLETED', 'PAID', 'SETTLED', 'ACTIVE'])) {
             return response()->json([
-                'status'  => true,
-                'message' => 'QR webhook acknowledged (status: ' . $status . ')',
+                'status' => true,
+                'message' => 'QR webhook acknowledged (status: '.$status.')',
             ]);
         }
 
@@ -186,9 +187,9 @@ class XenditWebhookController extends Controller
             if ($billing) {
                 DB::transaction(function () use ($billing, $paymentMethod) {
                     $billing->update([
-                        'status'         => 'paid',
+                        'status' => 'paid',
                         'payment_method' => $paymentMethod,
-                        'paid_at'        => now(),
+                        'paid_at' => now(),
                     ]);
 
                     if ($billing->reservation) {
@@ -202,7 +203,7 @@ class XenditWebhookController extends Controller
                 });
 
                 // Siarkan konfirmasi pelunasan instan via Reverb WebSockets
-                event(new \App\Events\PaymentSettledEvent(
+                event(new PaymentSettledEvent(
                     billingId: (int) $billing->billing_id,
                     invoiceNumber: (string) $billing->invoice_number,
                     status: 'paid',
@@ -214,14 +215,14 @@ class XenditWebhookController extends Controller
                 Log::info("Billing #{$billing->invoice_number} successfully marked as PAID via QRIS webhook.");
 
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => 'QRIS payment successfully settled',
                 ]);
             }
         }
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'QR webhook acknowledged, no matching billing found',
         ]);
     }

@@ -11,12 +11,13 @@ use App\Models\Patient;
 use App\Models\Specialization;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
 
 function createKoasTestEnvironment(): array

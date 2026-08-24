@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,16 +26,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $supervisor_feedback
  * @property int|null $score
  * @property string $status ('draft', 'submitted', 'approved', 'revision_needed')
- * @property \Carbon\Carbon|null $submitted_at
- * @property \Carbon\Carbon|null $reviewed_at
- * @property \Carbon\Carbon|null $created_at
- * @property \Carbon\Carbon|null $updated_at
+ * @property Carbon|null $submitted_at
+ * @property Carbon|null $reviewed_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class ClinicalLogbook extends Model
 {
     use HasFactory;
 
     protected $table = 'clinical_logbook';
+
     protected $primaryKey = 'clinical_logbook_id';
 
     protected $fillable = [
@@ -61,13 +63,13 @@ class ClinicalLogbook extends Model
     {
         return [
             'clinical_logbook_id' => 'integer',
-            'nurse_id'            => 'integer',
-            'patient_id'          => 'integer',
-            'medical_record_id'   => 'integer',
-            'doctor_id'           => 'integer',
-            'score'               => 'integer',
-            'submitted_at'        => 'datetime',
-            'reviewed_at'         => 'datetime',
+            'nurse_id' => 'integer',
+            'patient_id' => 'integer',
+            'medical_record_id' => 'integer',
+            'doctor_id' => 'integer',
+            'score' => 'integer',
+            'submitted_at' => 'datetime',
+            'reviewed_at' => 'datetime',
         ];
     }
 

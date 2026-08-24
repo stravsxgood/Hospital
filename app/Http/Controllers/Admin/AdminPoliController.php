@@ -20,9 +20,6 @@ class AdminPoliController extends Controller
 {
     /**
      * Display Poliklinik & Facility Management.
-     *
-     * @param Request $request
-     * @return Response|JsonResponse
      */
     public function index(Request $request): Response|JsonResponse
     {
@@ -42,9 +39,9 @@ class AdminPoliController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Poliklinik data retrieved successfully.',
-                'data'    => $payload,
+                'data' => $payload,
             ]);
         }
 
@@ -53,9 +50,6 @@ class AdminPoliController extends Controller
 
     /**
      * Store a newly created Poliklinik.
-     *
-     * @param StorePoliRequest $request
-     * @return RedirectResponse|JsonResponse
      */
     public function store(StorePoliRequest $request): RedirectResponse|JsonResponse
     {
@@ -63,9 +57,9 @@ class AdminPoliController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => "Poliklinik {$poli->name_poli} berhasil ditambahkan.",
-                'data'    => $poli,
+                'data' => $poli,
             ], 201);
         }
 
@@ -74,10 +68,6 @@ class AdminPoliController extends Controller
 
     /**
      * Update the specified Poliklinik.
-     *
-     * @param UpdatePoliRequest $request
-     * @param Poli $poli
-     * @return RedirectResponse|JsonResponse
      */
     public function update(UpdatePoliRequest $request, Poli $poli): RedirectResponse|JsonResponse
     {
@@ -85,9 +75,9 @@ class AdminPoliController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => "Data Poliklinik {$poli->name_poli} berhasil diperbarui.",
-                'data'    => $poli,
+                'data' => $poli,
             ]);
         }
 
@@ -96,10 +86,6 @@ class AdminPoliController extends Controller
 
     /**
      * Remove the specified Poliklinik from storage safely.
-     *
-     * @param Request $request
-     * @param Poli $poli
-     * @return RedirectResponse|JsonResponse
      */
     public function destroy(Request $request, Poli $poli): RedirectResponse|JsonResponse
     {
@@ -110,6 +96,7 @@ class AdminPoliController extends Controller
             if ($request->wantsJson()) {
                 return response()->json(['status' => false, 'message' => $msg], 422);
             }
+
             return redirect()->back()->with('error', $msg);
         }
 
@@ -118,7 +105,7 @@ class AdminPoliController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => "Poliklinik {$poliName} berhasil dihapus.",
             ]);
         }

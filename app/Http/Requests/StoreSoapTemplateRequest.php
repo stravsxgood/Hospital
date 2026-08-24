@@ -16,11 +16,11 @@ class StoreSoapTemplateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'template_name'        => ['required', 'string', 'max:100'],
-            'subjective_template'  => ['nullable', 'string', 'max:2000'],
-            'objective_template'   => ['nullable'],
-            'assessment_template'  => ['nullable', 'string', 'max:2000'],
-            'plan_template'        => ['nullable', 'string', 'max:2000'],
+            'template_name' => ['required', 'string', 'max:100'],
+            'subjective_template' => ['nullable', 'string', 'max:2000'],
+            'objective_template' => ['nullable'],
+            'assessment_template' => ['nullable', 'string', 'max:2000'],
+            'plan_template' => ['nullable', 'string', 'max:2000'],
         ];
     }
 }

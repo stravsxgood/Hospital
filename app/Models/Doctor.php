@@ -13,6 +13,7 @@ class Doctor extends Model
     use HasFactory;
 
     protected $table = 'doctor';
+
     protected $primaryKey = 'doctor_id';
 
     protected $fillable = [

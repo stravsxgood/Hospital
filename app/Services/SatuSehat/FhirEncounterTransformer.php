@@ -18,7 +18,6 @@ class FhirEncounterTransformer
     /**
      * Ubah Rekam Medis (EMR) menjadi Dokumen FHIR Bundle lengkap (Encounter + Condition + Observations).
      *
-     * @param MedicalRecord $record
      * @return array<string, mixed>
      */
     public function toFhirBundle(MedicalRecord $record): array
@@ -57,25 +56,25 @@ class FhirEncounterTransformer
             'fullUrl' => $encounterUuid,
             'resource' => [
                 'resourceType' => 'Encounter',
-                'id'           => "enc-{$record->medical_record_id}",
-                'identifier'   => [
+                'id' => "enc-{$record->medical_record_id}",
+                'identifier' => [
                     [
                         'system' => 'http://sys-ids.kemkes.go.id/encounter/hospital-population',
-                        'value'  => "ENC-{$record->medical_record_id}",
+                        'value' => "ENC-{$record->medical_record_id}",
                     ],
                 ],
                 'status' => 'finished',
-                'class'  => [
-                    'system'  => 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
-                    'code'    => 'AMB',
+                'class' => [
+                    'system' => 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+                    'code' => 'AMB',
                     'display' => 'ambulatory',
                 ],
                 'subject' => [
                     'reference' => "Patient/{$patientId}",
-                    'display'   => $patientName,
-                    'identifier'=> [
+                    'display' => $patientName,
+                    'identifier' => [
                         'system' => 'https://fhir.kemkes.go.id/id/nik',
-                        'value'  => $patientNik,
+                        'value' => $patientNik,
                     ],
                 ],
                 'participant' => [
@@ -84,8 +83,8 @@ class FhirEncounterTransformer
                             [
                                 'coding' => [
                                     [
-                                        'system'  => 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType',
-                                        'code'    => 'ATND',
+                                        'system' => 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType',
+                                        'code' => 'ATND',
                                         'display' => 'attender',
                                     ],
                                 ],
@@ -93,30 +92,30 @@ class FhirEncounterTransformer
                         ],
                         'individual' => [
                             'reference' => "Practitioner/{$doctorId}",
-                            'display'   => $doctorName,
+                            'display' => $doctorName,
                         ],
                     ],
                 ],
                 'period' => [
                     'start' => $createdAtIso,
-                    'end'   => $createdAtIso,
+                    'end' => $createdAtIso,
                 ],
                 'location' => [
                     [
                         'location' => [
                             'reference' => "Location/poli-{$schedule?->poli_id}",
-                            'display'   => "{$poliName} - {$roomName}",
+                            'display' => "{$poliName} - {$roomName}",
                         ],
                     ],
                 ],
                 'serviceProvider' => [
                     'reference' => 'Organization/hospital-population-simrs',
-                    'display'   => 'Hospital Population SIMRS',
+                    'display' => 'Hospital Population SIMRS',
                 ],
             ],
             'request' => [
                 'method' => 'POST',
-                'url'    => 'Encounter',
+                'url' => 'Encounter',
             ],
         ];
 
@@ -135,12 +134,12 @@ class FhirEncounterTransformer
             'fullUrl' => "urn:uuid:condition-{$record->medical_record_id}",
             'resource' => [
                 'resourceType' => 'Condition',
-                'id'           => "cond-{$record->medical_record_id}",
+                'id' => "cond-{$record->medical_record_id}",
                 'clinicalStatus' => [
                     'coding' => [
                         [
                             'system' => 'http://terminology.hl7.org/CodeSystem/condition-clinical',
-                            'code'   => 'active',
+                            'code' => 'active',
                         ],
                     ],
                 ],
@@ -148,7 +147,7 @@ class FhirEncounterTransformer
                     'coding' => [
                         [
                             'system' => 'http://terminology.hl7.org/CodeSystem/condition-ver-status',
-                            'code'   => 'confirmed',
+                            'code' => 'confirmed',
                         ],
                     ],
                 ],
@@ -156,8 +155,8 @@ class FhirEncounterTransformer
                     [
                         'coding' => [
                             [
-                                'system'  => 'http://terminology.hl7.org/CodeSystem/condition-category',
-                                'code'    => 'encounter-diagnosis',
+                                'system' => 'http://terminology.hl7.org/CodeSystem/condition-category',
+                                'code' => 'encounter-diagnosis',
                                 'display' => 'Encounter Diagnosis',
                             ],
                         ],
@@ -166,8 +165,8 @@ class FhirEncounterTransformer
                 'code' => [
                     'coding' => [
                         [
-                            'system'  => 'http://hl7.org/fhir/sid/icd-10',
-                            'code'    => $icdCode,
+                            'system' => 'http://hl7.org/fhir/sid/icd-10',
+                            'code' => $icdCode,
                             'display' => $icdDisplay,
                         ],
                     ],
@@ -175,7 +174,7 @@ class FhirEncounterTransformer
                 ],
                 'subject' => [
                     'reference' => "Patient/{$patientId}",
-                    'display'   => $patientName,
+                    'display' => $patientName,
                 ],
                 'encounter' => [
                     'reference' => $encounterUuid,
@@ -184,7 +183,7 @@ class FhirEncounterTransformer
             ],
             'request' => [
                 'method' => 'POST',
-                'url'    => 'Condition',
+                'url' => 'Condition',
             ],
         ];
 
@@ -194,57 +193,57 @@ class FhirEncounterTransformer
         // Mapping parameter tanda vital ke kode LOINC standar
         $loincMappings = [
             'systolic' => [
-                'code'    => '8480-6',
+                'code' => '8480-6',
                 'display' => 'Systolic blood pressure',
-                'unit'    => 'mm[Hg]',
+                'unit' => 'mm[Hg]',
                 'unit_label' => 'mmHg',
             ],
             'diastolic' => [
-                'code'    => '8462-4',
+                'code' => '8462-4',
                 'display' => 'Diastolic blood pressure',
-                'unit'    => 'mm[Hg]',
+                'unit' => 'mm[Hg]',
                 'unit_label' => 'mmHg',
             ],
             'heart_rate' => [
-                'code'    => '8867-4',
+                'code' => '8867-4',
                 'display' => 'Heart rate',
-                'unit'    => '/min',
+                'unit' => '/min',
                 'unit_label' => 'bpm',
             ],
             'pulse' => [
-                'code'    => '8867-4',
+                'code' => '8867-4',
                 'display' => 'Heart rate',
-                'unit'    => '/min',
+                'unit' => '/min',
                 'unit_label' => 'bpm',
             ],
             'temperature' => [
-                'code'    => '8310-5',
+                'code' => '8310-5',
                 'display' => 'Body temperature',
-                'unit'    => 'Cel',
+                'unit' => 'Cel',
                 'unit_label' => '°C',
             ],
             'respiratory_rate' => [
-                'code'    => '9279-1',
+                'code' => '9279-1',
                 'display' => 'Respiratory rate',
-                'unit'    => '/min',
+                'unit' => '/min',
                 'unit_label' => 'x/menit',
             ],
             'spo2' => [
-                'code'    => '2708-6',
+                'code' => '2708-6',
                 'display' => 'Oxygen saturation in Arterial blood',
-                'unit'    => '%',
+                'unit' => '%',
                 'unit_label' => '%',
             ],
             'weight' => [
-                'code'    => '29463-7',
+                'code' => '29463-7',
                 'display' => 'Body weight',
-                'unit'    => 'kg',
+                'unit' => 'kg',
                 'unit_label' => 'kg',
             ],
             'height' => [
-                'code'    => '8302-2',
+                'code' => '8302-2',
                 'display' => 'Body height',
-                'unit'    => 'cm',
+                'unit' => 'cm',
                 'unit_label' => 'cm',
             ],
         ];
@@ -252,8 +251,12 @@ class FhirEncounterTransformer
         // Handle blood pressure compound string jika format "120/80"
         if (! empty($objective['blood_pressure']) && is_string($objective['blood_pressure'])) {
             $parts = explode('/', $objective['blood_pressure']);
-            if (isset($parts[0])) $objective['systolic'] = trim($parts[0]);
-            if (isset($parts[1])) $objective['diastolic'] = trim($parts[1]);
+            if (isset($parts[0])) {
+                $objective['systolic'] = trim($parts[0]);
+            }
+            if (isset($parts[1])) {
+                $objective['diastolic'] = trim($parts[1]);
+            }
         }
 
         foreach ($objective as $key => $val) {
@@ -269,14 +272,14 @@ class FhirEncounterTransformer
                 'fullUrl' => "urn:uuid:observation-{$record->medical_record_id}-{$normalizedKey}",
                 'resource' => [
                     'resourceType' => 'Observation',
-                    'id'           => "obs-{$record->medical_record_id}-{$normalizedKey}",
-                    'status'       => 'final',
-                    'category'     => [
+                    'id' => "obs-{$record->medical_record_id}-{$normalizedKey}",
+                    'status' => 'final',
+                    'category' => [
                         [
                             'coding' => [
                                 [
-                                    'system'  => 'http://terminology.hl7.org/CodeSystem/observation-category',
-                                    'code'    => 'vital-signs',
+                                    'system' => 'http://terminology.hl7.org/CodeSystem/observation-category',
+                                    'code' => 'vital-signs',
                                     'display' => 'Vital Signs',
                                 ],
                             ],
@@ -285,8 +288,8 @@ class FhirEncounterTransformer
                     'code' => [
                         'coding' => [
                             [
-                                'system'  => 'http://loinc.org',
-                                'code'    => $meta['code'],
+                                'system' => 'http://loinc.org',
+                                'code' => $meta['code'],
                                 'display' => $meta['display'],
                             ],
                         ],
@@ -294,32 +297,32 @@ class FhirEncounterTransformer
                     ],
                     'subject' => [
                         'reference' => "Patient/{$patientId}",
-                        'display'   => $patientName,
+                        'display' => $patientName,
                     ],
                     'encounter' => [
                         'reference' => $encounterUuid,
                     ],
                     'effectiveDateTime' => $createdAtIso,
-                    'issued'            => $createdAtIso,
-                    'valueQuantity'     => [
-                        'value'  => $numVal,
-                        'unit'   => $meta['unit_label'],
+                    'issued' => $createdAtIso,
+                    'valueQuantity' => [
+                        'value' => $numVal,
+                        'unit' => $meta['unit_label'],
                         'system' => 'http://unitsofmeasure.org',
-                        'code'   => $meta['unit'],
+                        'code' => $meta['unit'],
                     ],
                 ],
                 'request' => [
                     'method' => 'POST',
-                    'url'    => 'Observation',
+                    'url' => 'Observation',
                 ],
             ];
         }
 
         return [
             'resourceType' => 'Bundle',
-            'id'           => "bundle-satusehat-{$record->medical_record_id}",
-            'type'         => 'transaction',
-            'entry'        => $bundleEntries,
+            'id' => "bundle-satusehat-{$record->medical_record_id}",
+            'type' => 'transaction',
+            'entry' => $bundleEntries,
         ];
     }
 }

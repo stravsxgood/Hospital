@@ -20,16 +20,18 @@ class Reservation extends Model
     use HasFactory;
 
     protected $table = 'appointments';
+
     protected $primaryKey = 'appointment_id';
+
     protected $guarded = ['appointment_id'];
 
     protected function casts(): array
     {
         return [
-            'appointment_id'     => 'integer',
-            'patient_id'         => 'integer',
+            'appointment_id' => 'integer',
+            'patient_id' => 'integer',
             'doctor_schedule_id' => 'integer',
-            'appointment_date'   => 'date',
+            'appointment_date' => 'date',
         ];
     }
 
@@ -65,9 +67,6 @@ class Reservation extends Model
 
     /**
      * Scope antrean berstatus pending (menunggu check-in meja depan).
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopePending(Builder $query): Builder
     {
@@ -76,9 +75,6 @@ class Reservation extends Model
 
     /**
      * Scope antrean berstatus confirmed (sudah hadir & diverifikasi).
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeConfirmed(Builder $query): Builder
     {
@@ -87,9 +83,6 @@ class Reservation extends Model
 
     /**
      * Scope antrean yang sedang diperiksa oleh dokter di ruang praktik.
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeInProgress(Builder $query): Builder
     {
@@ -98,9 +91,6 @@ class Reservation extends Model
 
     /**
      * Scope antrean dengan status completed (pemeriksaan telah selesai).
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeCompleted(Builder $query): Builder
     {
@@ -109,13 +99,9 @@ class Reservation extends Model
 
     /**
      * Scope antrean dengan jadwal hari ini.
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeToday(Builder $query): Builder
     {
         return $query->whereDate('appointment_date', today());
     }
 }
-

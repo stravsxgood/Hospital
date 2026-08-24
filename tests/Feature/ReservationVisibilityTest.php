@@ -9,16 +9,17 @@ use App\Models\Room;
 use App\Models\Specialization;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 
 test('reservations appear in doctor queue and staff dashboard regardless of future appointment date', function () {
     $this->withoutMiddleware([
-        \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+        ValidateCsrfToken::class,
     ]);
 
     // 1. Setup Doctor, Patient, and Schedule
     $doctorUser = User::factory()->create([
         'name' => 'dr. Budi Santoso, Sp.A',
-        'email' => 'drbudi' . uniqid() . '@test.com',
+        'email' => 'drbudi'.uniqid().'@test.com',
         'role' => 'doctor',
     ]);
 
@@ -31,7 +32,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
         'user_id' => $doctorUser->id,
         'name' => 'dr. Budi Santoso, Sp.A',
         'specialization_id' => $spec->specialization_id ?? $spec->id,
-        'sip_number' => 'SIP.503/' . rand(1000, 9999) . '/DS/2026',
+        'sip_number' => 'SIP.503/'.rand(1000, 9999).'/DS/2026',
         'gender' => 'Laki-laki',
         'number_phone' => '08123456789',
         'join_date' => now()->toDateString(),
@@ -41,8 +42,8 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
     $poli = Poli::first() ?? Poli::create([
         'kode_poli' => 'POLI-ANAK',
         'name_poli' => 'Poli Anak',
-        'location'  => 'Gedung B, Lantai 1',
-        'status'    => 'Aktif',
+        'location' => 'Gedung B, Lantai 1',
+        'status' => 'Aktif',
     ]);
 
     $room = Room::first() ?? Room::create([
@@ -66,7 +67,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
 
     $patientUser = User::factory()->create([
         'name' => 'Pasien Testing',
-        'email' => 'pasien' . uniqid() . '@test.com',
+        'email' => 'pasien'.uniqid().'@test.com',
         'role' => 'patient',
     ]);
 
@@ -95,7 +96,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
 
     // 3. Akses Doctor Queue sebagai dokter yang bersangkutan
     $response = $this->actingAs($doctorUser)
-        ->get('/doctor/queue?schedule_id=' . $schedule->doctor_schedule_id . '&date=' . $futureDate);
+        ->get('/doctor/queue?schedule_id='.$schedule->doctor_schedule_id.'&date='.$futureDate);
 
     $response->assertOk();
     $response->assertInertia(fn ($page) => $page
@@ -107,7 +108,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
 
     // 4. Akses Doctor Queue dengan filter 'all'
     $responseAll = $this->actingAs($doctorUser)
-        ->get('/doctor/queue?schedule_id=' . $schedule->doctor_schedule_id . '&date=all');
+        ->get('/doctor/queue?schedule_id='.$schedule->doctor_schedule_id.'&date=all');
 
     $responseAll->assertOk();
     $responseAll->assertInertia(fn ($page) => $page
@@ -130,7 +131,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
     // 6. Uji Aksi Panggil Pasien (callPatient) -> status: in_progress
     $callResponse = $this->actingAs($doctorUser)
         ->withSession(['_token' => 'test-csrf-token'])
-        ->patch('/doctor/queue/' . $appointment->appointment_id . '/call', [
+        ->patch('/doctor/queue/'.$appointment->appointment_id.'/call', [
             '_token' => 'test-csrf-token',
         ]);
 
@@ -141,7 +142,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
     // 7. Uji Aksi Selesai Konsultasi (completeConsultation) -> status: completed
     $completeResponse = $this->actingAs($doctorUser)
         ->withSession(['_token' => 'test-csrf-token'])
-        ->patch('/doctor/queue/' . $appointment->appointment_id . '/complete', [
+        ->patch('/doctor/queue/'.$appointment->appointment_id.'/complete', [
             '_token' => 'test-csrf-token',
         ]);
 
@@ -152,7 +153,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
     // 8. Uji Aksi Lewati Pasien (skipPatient) -> status: pending
     $skipResponse = $this->actingAs($doctorUser)
         ->withSession(['_token' => 'test-csrf-token'])
-        ->patch('/doctor/queue/' . $appointment->appointment_id . '/skip', [
+        ->patch('/doctor/queue/'.$appointment->appointment_id.'/skip', [
             '_token' => 'test-csrf-token',
         ]);
 
@@ -163,7 +164,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
     // 9. Uji Pemanggilan Berulang Kali (Repeat Calling)
     $firstCall = $this->actingAs($doctorUser)
         ->withSession(['_token' => 'test-csrf-token'])
-        ->patch('/doctor/queue/' . $appointment->appointment_id . '/call', [
+        ->patch('/doctor/queue/'.$appointment->appointment_id.'/call', [
             '_token' => 'test-csrf-token',
         ]);
     $firstCall->assertRedirect();
@@ -175,7 +176,7 @@ test('reservations appear in doctor queue and staff dashboard regardless of futu
     Carbon::setTestNow(now()->addSeconds(2));
     $repeatCall = $this->actingAs($doctorUser)
         ->withSession(['_token' => 'test-csrf-token'])
-        ->patch('/doctor/queue/' . $appointment->appointment_id . '/call', [
+        ->patch('/doctor/queue/'.$appointment->appointment_id.'/call', [
             '_token' => 'test-csrf-token',
         ]);
     $repeatCall->assertRedirect();

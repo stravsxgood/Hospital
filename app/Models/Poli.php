@@ -12,6 +12,7 @@ class Poli extends Model
     use HasFactory;
 
     protected $table = 'poli';
+
     protected $primaryKey = 'poli_id';
 
     protected $fillable = [

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 /**
  * Model SoapTemplate - Template Cepat SOAP Notes Dokter
@@ -19,14 +20,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property array|null $objective_template
  * @property string|null $assessment_template
  * @property string|null $plan_template
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class SoapTemplate extends Model
 {
     use HasFactory;
 
     protected $table = 'soap_template';
+
     protected $primaryKey = 'soap_template_id';
 
     protected $fillable = [
@@ -41,8 +43,8 @@ class SoapTemplate extends Model
     protected function casts(): array
     {
         return [
-            'soap_template_id'   => 'integer',
-            'doctor_id'          => 'integer',
+            'soap_template_id' => 'integer',
+            'doctor_id' => 'integer',
             'objective_template' => 'array',
         ];
     }
@@ -57,10 +59,6 @@ class SoapTemplate extends Model
 
     /**
      * Scope untuk mengambil template milik dokter tertentu ditambah template umum sistem
-     *
-     * @param Builder $query
-     * @param int|null $doctorId
-     * @return Builder
      */
     public function scopeForDoctor(Builder $query, ?int $doctorId): Builder
     {

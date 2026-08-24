@@ -1,0 +1,2311 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Actions\\Fortify\\CreateNewUser\:\:create\(\) has parameter \$input with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Actions/Fortify/CreateNewUser.php
+
+		-
+			message: '#^Method App\\Events\\PatientCalledEvent\:\:broadcastWith\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Events/PatientCalledEvent.php
+
+		-
+			message: '#^Method App\\Events\\PatientConfirmedEvent\:\:broadcastWith\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Events/PatientConfirmedEvent.php
+
+		-
+			message: '#^Method App\\Events\\PaymentSettledEvent\:\:broadcastWith\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Events/PaymentSettledEvent.php
+
+		-
+			message: '#^Method App\\Events\\PrescriptionCreatedEvent\:\:broadcastWith\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Events/PrescriptionCreatedEvent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Billing\:\:\$count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Billing\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\MedicalRecord\:\:\$case_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_schedule_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$room\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_room" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDashboardController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminDoctorController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDoctorController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminDoctorController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDoctorController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminDoctorController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDoctorController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminDoctorController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDoctorController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminDoctorController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminDoctorController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminNurseController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminNurseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminNurseController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminNurseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminNurseController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminNurseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminNurseController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminNurseController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdminNurseController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/AdminNurseController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminUserController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/AdminUserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\DoctorScheduleController\:\:destroy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/DoctorScheduleController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\DoctorScheduleController\:\:index\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/DoctorScheduleController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\DoctorScheduleController\:\:show\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/DoctorScheduleController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\DoctorScheduleController\:\:store\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/DoctorScheduleController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\DoctorScheduleController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Admin/DoctorScheduleController.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between true and 0 will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Http/Controllers/Api/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/NurseQueueController.php
+
+		-
+			message: '#^Parameter \#1 \$string of function str_pad expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/Api/NurseQueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/Api/PatientRegistrationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\PaymentController\:\:createOnlinePayment\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Api/PaymentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\PaymentController\:\:handleWebhook\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Api/PaymentController.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between ''Canceled''\|''Dp''\|''Paid''\|''Unpaid'' and ''Lunas'' will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 2
+			path: app/Http/Controllers/Api/PaymentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$kode_poli\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_poli\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 5
+			path: app/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$resident_n\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>kode_poli" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_poli" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/AppointmentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$billing_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medicalRecord\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$prescription\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Parameter \#2 \$operator of method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Billing\>\:\:whereDate\(\) expects DateTimeInterface\|string\|null, array\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Part \$search \(array\|string\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 3
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_medicine" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/BillingController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Controllers/CashierShiftController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:currentOpenShift\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Http/Controllers/CashierShiftController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/CashierShiftController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/ClinicalAssistantController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Appointment\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Appointment\>\:\:\$doctorSchedule\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Medicine\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Medicine\>\:\:\$medicine_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Medicine\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Medicine\>\:\:\$name_medicine\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Medicine\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Medicine\>\:\:\$stock\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Medicine\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Medicine\>\:\:\$unit\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$poli\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Call to an undefined method App\\Models\\Appointment\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Appointment\>\:\:update\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Call to an undefined method App\\Models\\Medicine\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Medicine\>\:\:decrement\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Controllers/DoctorConsultationController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Appointment\:\:\$count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$poli\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$room\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>doctor_id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 4
+			path: app/Http/Controllers/DoctorQueueController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 7
+			path: app/Http/Controllers/DoctorSupervisionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
+			identifier: property.notFound
+			count: 10
+			path: app/Http/Controllers/KoasLogbookController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medical_record_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/MedicalDocumentController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Controllers/MedicalDocumentController.php
+
+		-
+			message: '#^Part \$search \(array\|string\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 2
+			path: app/Http/Controllers/MedicineController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PatientDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PatientDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/PatientDashboardController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PoliTeamController\:\:getPolisDataset\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PoliTeamController.php
+
+		-
+			message: '#^Parameter \#1 \$string of function trim expects string, array\<string\>\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/PoliTeamController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 4
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_poli\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_room\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$poli\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$room\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\PublicDisplayController\:\:getDisplayData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\DoctorSchedule\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Return type of call to method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\DoctorSchedule\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: method.unresolvableReturnType
+			count: 1
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 6
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_poli" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_room" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>queue_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Controllers/PublicDisplayController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\SpecializationController\:\:getSpecializationsDataset\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Controllers/SpecializationController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medicine_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$poli\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$id with type int\|string is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>doctor_id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 3
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_poli" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/StaffActionController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_poli\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_room\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$specialization\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\DoctorSchedule\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: argument.unresolvableType
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Return type of call to method Illuminate\\Database\\Eloquent\\Collection\<int,App\\Models\\DoctorSchedule\>\:\:map\(\) contains unresolvable type\.$#'
+			identifier: method.unresolvableReturnType
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_poli" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_room" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_specialization" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>queue_number" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/StaffDashboardController.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medicalRecord\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/XenditWebhookController.php
+
+		-
+			message: '#^Call to function method_exists\(\) with App\\Models\\User and ''hasAnyRole'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Http/Middleware/EnsureUserHasRole.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$birthday_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$gender\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$resident_n\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$sip_number\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$specialization\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$type\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isKoas\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Middleware/HandleInertiaRequests.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$poli_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Requests/Admin/UpdatePoliRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\CheckClinicalSafetyRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/CheckClinicalSafetyRequest.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Requests/CloseCashierShiftRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\CloseCashierShiftRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/CloseCashierShiftRequest.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Requests/OpenCashierShiftRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\OpenCashierShiftRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/OpenCashierShiftRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\ReviewClinicalLogbookRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/ReviewClinicalLogbookRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\DoctorSchedule\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\DoctorSchedule\>\:\:\$day\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Requests/StoreAppointmentRequest.php
+
+		-
+			message: '#^Cannot call method isoFormat\(\) on Carbon\\Carbon\|string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Requests/StoreAppointmentRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\StoreAppointmentRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/StoreAppointmentRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\StoreClinicalLogbookRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/StoreClinicalLogbookRequest.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Requests/StoreRegistrationRequest.php
+
+		-
+			message: '#^Cannot call method isoFormat\(\) on Carbon\\Carbon\|string\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: app/Http/Requests/StoreRegistrationRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\StoreRegistrationRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/StoreRegistrationRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\StoreSoapTemplateRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/StoreSoapTemplateRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\UpdateClinicalLogbookRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/UpdateClinicalLogbookRequest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$medicine_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Requests/UpdateMedicineRequest.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Http/Responses/LoginResponse.php
+
+		-
+			message: '#^Method App\\Http\\Responses\\PasskeyLoginResponse\:\:redirectPathForCurrentTeam\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Responses/PasskeyLoginResponse.php
+
+		-
+			message: '#^Class App\\Models\\Appointment uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:billing\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:billings\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:doctorSchedule\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:medicalRecord\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:medicalRecords\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeCompleted\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeCompleted\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeConfirmed\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeConfirmed\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeInProgress\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeInProgress\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopePending\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopePending\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeToday\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:scopeToday\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Method App\\Models\\Appointment\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Appointment.php
+
+		-
+			message: '#^Class App\\Models\\Billing uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Billing.php
+
+		-
+			message: '#^Method App\\Models\\Billing\:\:appointment\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Billing.php
+
+		-
+			message: '#^Method App\\Models\\Billing\:\:items\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Billing.php
+
+		-
+			message: '#^Method App\\Models\\Billing\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Billing.php
+
+		-
+			message: '#^Method App\\Models\\Billing\:\:processedByNurse\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Billing.php
+
+		-
+			message: '#^Method App\\Models\\Billing\:\:reservation\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Billing.php
+
+		-
+			message: '#^Class App\\Models\\BillingItem uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/BillingItem.php
+
+		-
+			message: '#^Method App\\Models\\BillingItem\:\:billing\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/BillingItem.php
+
+		-
+			message: '#^Class App\\Models\\CashierShift uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CashierShift.php
+
+		-
+			message: '#^Method App\\Models\\CashierShift\:\:nurse\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CashierShift.php
+
+		-
+			message: '#^Method App\\Models\\CashierShift\:\:scopeClosed\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CashierShift.php
+
+		-
+			message: '#^Method App\\Models\\CashierShift\:\:scopeClosed\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CashierShift.php
+
+		-
+			message: '#^Method App\\Models\\CashierShift\:\:scopeOpen\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CashierShift.php
+
+		-
+			message: '#^Method App\\Models\\CashierShift\:\:scopeOpen\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/CashierShift.php
+
+		-
+			message: '#^Class App\\Models\\ClinicalLogbook uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:doctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:medicalRecord\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:nurse\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopeApproved\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopeApproved\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopeForDoctor\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopeForDoctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopeForKoas\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopeForKoas\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopePendingReview\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Method App\\Models\\ClinicalLogbook\:\:scopePendingReview\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ClinicalLogbook.php
+
+		-
+			message: '#^Class App\\Models\\Doctor uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:inspections\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:medicalRecords\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:polis\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:registrations\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:schedules\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:soapTemplates\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:specialization\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:supervisedLogbooks\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Method App\\Models\\Doctor\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Doctor.php
+
+		-
+			message: '#^Class App\\Models\\DoctorSchedule uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DoctorSchedule.php
+
+		-
+			message: '#^Method App\\Models\\DoctorSchedule\:\:doctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DoctorSchedule.php
+
+		-
+			message: '#^Method App\\Models\\DoctorSchedule\:\:poli\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DoctorSchedule.php
+
+		-
+			message: '#^Method App\\Models\\DoctorSchedule\:\:room\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/DoctorSchedule.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\ConnectionInterface\:\:getDriverName\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Models/Icd10Diagnosis.php
+
+		-
+			message: '#^Class App\\Models\\Icd10Diagnosis uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Icd10Diagnosis.php
+
+		-
+			message: '#^Method App\\Models\\Icd10Diagnosis\:\:scopeCommon\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Icd10Diagnosis.php
+
+		-
+			message: '#^Method App\\Models\\Icd10Diagnosis\:\:scopeCommon\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Icd10Diagnosis.php
+
+		-
+			message: '#^Method App\\Models\\Icd10Diagnosis\:\:scopeSearch\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Icd10Diagnosis.php
+
+		-
+			message: '#^Method App\\Models\\Icd10Diagnosis\:\:scopeSearch\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Icd10Diagnosis.php
+
+		-
+			message: '#^Class App\\Models\\Inspection uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Inspection.php
+
+		-
+			message: '#^Method App\\Models\\Inspection\:\:doctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Inspection.php
+
+		-
+			message: '#^Method App\\Models\\Inspection\:\:registration\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Inspection.php
+
+		-
+			message: '#^Class App\\Models\\MedicalRecord has PHPDoc tag @property for property \$objective with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Class App\\Models\\MedicalRecord uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecord\:\:appointment\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecord\:\:auditLogs\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecord\:\:clinicalLogbooks\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecord\:\:doctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecord\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecord\:\:prescription\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecord\:\:reservation\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecord.php
+
+		-
+			message: '#^Class App\\Models\\MedicalRecordAuditLog has PHPDoc tag @property for property \$payload_diff with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Class App\\Models\\MedicalRecordAuditLog uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecordAuditLog\:\:medicalRecord\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecordAuditLog\:\:scopeByAction\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecordAuditLog\:\:scopeByAction\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecordAuditLog\:\:scopeRecent\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecordAuditLog\:\:scopeRecent\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Method App\\Models\\MedicalRecordAuditLog\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicalRecordAuditLog.php
+
+		-
+			message: '#^Class App\\Models\\Medicine uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:batches\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:prescriptionItems\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:scopeAvailable\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:scopeAvailable\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:scopeLowStock\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:scopeLowStock\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:scopeOutOfStock\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Method App\\Models\\Medicine\:\:scopeOutOfStock\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Medicine.php
+
+		-
+			message: '#^Class App\\Models\\MedicineBatch uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:medicine\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeAvailable\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeAvailable\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeExpired\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeExpired\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeExpiringSoon\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeExpiringSoon\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeFefoOrder\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Method App\\Models\\MedicineBatch\:\:scopeFefoOrder\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/MedicineBatch.php
+
+		-
+			message: '#^Class App\\Models\\Nurse uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Nurse.php
+
+		-
+			message: '#^Method App\\Models\\Nurse\:\:cashierShifts\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Nurse.php
+
+		-
+			message: '#^Method App\\Models\\Nurse\:\:clinicalLogbooks\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Nurse.php
+
+		-
+			message: '#^Method App\\Models\\Nurse\:\:currentOpenShift\(\) should return App\\Models\\CashierShift\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Nurse.php
+
+		-
+			message: '#^Method App\\Models\\Nurse\:\:processedBillings\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Nurse.php
+
+		-
+			message: '#^Method App\\Models\\Nurse\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Nurse.php
+
+		-
+			message: '#^Method App\\Models\\Nurse\:\:verifiedRegistrations\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Nurse.php
+
+		-
+			message: '#^Class App\\Models\\Patient uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Patient.php
+
+		-
+			message: '#^Method App\\Models\\Patient\:\:allergies\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Patient.php
+
+		-
+			message: '#^Method App\\Models\\Patient\:\:appointments\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Patient.php
+
+		-
+			message: '#^Method App\\Models\\Patient\:\:billings\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Patient.php
+
+		-
+			message: '#^Method App\\Models\\Patient\:\:medicalRecords\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Patient.php
+
+		-
+			message: '#^Method App\\Models\\Patient\:\:registrations\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Patient.php
+
+		-
+			message: '#^Method App\\Models\\Patient\:\:user\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Patient.php
+
+		-
+			message: '#^Class App\\Models\\PatientAllergy uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PatientAllergy.php
+
+		-
+			message: '#^Method App\\Models\\PatientAllergy\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PatientAllergy.php
+
+		-
+			message: '#^Method App\\Models\\PatientAllergy\:\:scopeMedicine\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PatientAllergy.php
+
+		-
+			message: '#^Method App\\Models\\PatientAllergy\:\:scopeMedicine\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PatientAllergy.php
+
+		-
+			message: '#^Class App\\Models\\Payment uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Payment.php
+
+		-
+			message: '#^Method App\\Models\\Payment\:\:registration\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Payment.php
+
+		-
+			message: '#^Class App\\Models\\Poli uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Poli.php
+
+		-
+			message: '#^Method App\\Models\\Poli\:\:doctors\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Poli.php
+
+		-
+			message: '#^Method App\\Models\\Poli\:\:registrations\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Poli.php
+
+		-
+			message: '#^Method App\\Models\\Poli\:\:rooms\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Poli.php
+
+		-
+			message: '#^Method App\\Models\\Poli\:\:schedules\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Poli.php
+
+		-
+			message: '#^Class App\\Models\\Prescription uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:items\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:medicalRecord\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:prescriptionItems\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopeDiproses\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopeDiproses\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopeMenunggu\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopeMenunggu\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopePending\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopePending\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopeSelesai\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Method App\\Models\\Prescription\:\:scopeSelesai\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Prescription.php
+
+		-
+			message: '#^Class App\\Models\\PrescriptionItem uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PrescriptionItem.php
+
+		-
+			message: '#^Method App\\Models\\PrescriptionItem\:\:medicine\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PrescriptionItem.php
+
+		-
+			message: '#^Method App\\Models\\PrescriptionItem\:\:prescription\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PrescriptionItem.php
+
+		-
+			message: '#^Class App\\Models\\Registration uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:doctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:inspection\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:nurse\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:payment\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:poli\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:scopeByPatient\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Method App\\Models\\Registration\:\:scopeByPatient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Registration.php
+
+		-
+			message: '#^Class App\\Models\\Reservation uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:billing\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:billings\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:doctorSchedule\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:medicalRecord\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:medicalRecords\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeCompleted\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeCompleted\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeConfirmed\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeConfirmed\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeInProgress\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeInProgress\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopePending\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopePending\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeToday\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Method App\\Models\\Reservation\:\:scopeToday\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Reservation.php
+
+		-
+			message: '#^Class App\\Models\\Room uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Room.php
+
+		-
+			message: '#^Method App\\Models\\Room\:\:polis\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany does not specify its types\: TRelatedModel, TDeclaringModel, TPivotModel, TAccessor \(2\-4 required\)$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Room.php
+
+		-
+			message: '#^Method App\\Models\\Room\:\:schedules\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Room.php
+
+		-
+			message: '#^Class App\\Models\\SoapTemplate has PHPDoc tag @property for property \$objective_template with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/SoapTemplate.php
+
+		-
+			message: '#^Class App\\Models\\SoapTemplate uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/SoapTemplate.php
+
+		-
+			message: '#^Method App\\Models\\SoapTemplate\:\:doctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/SoapTemplate.php
+
+		-
+			message: '#^Method App\\Models\\SoapTemplate\:\:scopeForDoctor\(\) has parameter \$query with generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/SoapTemplate.php
+
+		-
+			message: '#^Method App\\Models\\SoapTemplate\:\:scopeForDoctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Builder does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/SoapTemplate.php
+
+		-
+			message: '#^Class App\\Models\\Specialization uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Specialization.php
+
+		-
+			message: '#^Method App\\Models\\Specialization\:\:doctors\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasMany does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Specialization.php
+
+		-
+			message: '#^Class App\\Models\\User uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:doctor\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:nurse\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:patient\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\HasOne does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^The @use tag of class App\\Models\\User describes Illuminate\\Database\\Eloquent\\Factories\\HasFactory but the class uses Laravel\\Sanctum\\HasApiTokens\.$#'
+			identifier: generics.wrongParent
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>value" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: '#^Method App\\Services\\AuditLogService\:\:logAccess\(\) has parameter \$payloadDiff with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/AuditLogService.php
+
+		-
+			message: '#^Method App\\Services\\ClinicalSafetyService\:\:evaluatePrescriptionSafety\(\) has parameter \$medicines with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/ClinicalSafetyService.php
+
+		-
+			message: '#^Method App\\Services\\ClinicalSafetyService\:\:evaluatePrescriptionSafety\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/ClinicalSafetyService.php
+
+		-
+			message: '#^Method App\\Services\\ClinicalSafetyService\:\:matchesRule\(\) has parameter \$keywords with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/ClinicalSafetyService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medicine\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/FEFODispensationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medicine_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/FEFODispensationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/FEFODispensationService.php
+
+		-
+			message: '#^Method App\\Services\\FEFODispensationService\:\:deductMedicine\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/FEFODispensationService.php
+
+		-
+			message: '#^Method App\\Services\\FEFODispensationService\:\:dispensePrescription\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/FEFODispensationService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctorSchedule\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SatuSehat/FhirEncounterTransformer.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SatuSehat/FhirEncounterTransformer.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/SatuSehat/FhirEncounterTransformer.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SatuSehat/FhirEncounterTransformer.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$resident_n\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/SatuSehat/FhirEncounterTransformer.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Services/SatuSehat/FhirEncounterTransformer.php
+
+		-
+			message: '#^Offset 0 on non\-empty\-list\<string\> in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: app/Services/SatuSehat/FhirEncounterTransformer.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctorSchedule\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$item_name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$number_phone\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$unit_price\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$user\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Method App\\Services\\XenditService\:\:createBillingInvoice\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Method App\\Services\\XenditService\:\:createDynamicQris\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Method App\\Services\\XenditService\:\:createInvoice\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Method App\\Services\\XenditService\:\:sendInvoiceRequest\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Method App\\Services\\XenditService\:\:sendInvoiceRequest\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>email" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name_poli" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>number_phone" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/XenditService.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, bool\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: config/sanctum.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Doctor\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: database/seeders/DoctorSeeder.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Poli\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: database/seeders/DoctorSeeder.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Room\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: database/seeders/DoctorSeeder.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Specialization\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: database/seeders/DoctorSeeder.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Medicine\:\:\$code\.$#'
+			identifier: property.notFound
+			count: 2
+			path: database/seeders/HospitalClinicalMasterSeeder.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Billing\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Billing\>\:\:\$reservation\.$#'
+			identifier: property.notFound
+			count: 1
+			path: routes/channels.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: routes/channels.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: routes/channels.php

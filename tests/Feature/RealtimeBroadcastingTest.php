@@ -20,13 +20,14 @@ use App\Models\Room;
 use App\Models\Specialization;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+    $this->withoutMiddleware(ValidateCsrfToken::class);
 });
 
 function createBroadcastingTestEnvironment(): array
@@ -116,7 +117,7 @@ test('calling a patient broadcasts PatientCalledEvent over queue-display and doc
         $channels = collect($event->broadcastOn())->map(fn ($c) => $c->name)->toArray();
 
         return in_array('queue-display', $channels)
-            && in_array('private-doctor.' . $env['doctor']->doctor_id, $channels)
+            && in_array('private-doctor.'.$env['doctor']->doctor_id, $channels)
             && $event->queueNumber === 'A-001'
             && $event->patientName === 'Bapak Budi Santoso';
     });
@@ -135,7 +136,7 @@ test('confirming patient arrival broadcasts PatientConfirmedEvent to doctor priv
     Event::assertDispatched(PatientConfirmedEvent::class, function (PatientConfirmedEvent $event) use ($env) {
         $channels = collect($event->broadcastOn())->map(fn ($c) => $c->name)->toArray();
 
-        return in_array('private-doctor.' . $env['doctor']->doctor_id, $channels)
+        return in_array('private-doctor.'.$env['doctor']->doctor_id, $channels)
             && $event->queueNumber === 'A-001'
             && $event->status === 'confirmed';
     });
@@ -208,7 +209,7 @@ test('settling cashier payment broadcasts PaymentSettledEvent to billing private
     Event::assertDispatched(PaymentSettledEvent::class, function (PaymentSettledEvent $event) use ($billing) {
         $channels = collect($event->broadcastOn())->map(fn ($c) => $c->name)->toArray();
 
-        return in_array('private-billing.' . $billing->billing_id, $channels)
+        return in_array('private-billing.'.$billing->billing_id, $channels)
             && $event->status === 'paid'
             && $event->billingId === $billing->billing_id;
     });

@@ -37,7 +37,7 @@ function createStaffWorkspaceContext(): array
     // 2. Doctor User & Profile
     $doctorUser = User::factory()->create([
         'name' => 'dr. Bagus Santoso, Sp.JP',
-        'email' => 'drbagus' . uniqid() . '@test.com',
+        'email' => 'drbagus'.uniqid().'@test.com',
         'role' => 'doctor',
     ]);
 
@@ -45,7 +45,7 @@ function createStaffWorkspaceContext(): array
         'user_id' => $doctorUser->id,
         'specialization_id' => $spec->specialization_id,
         'name' => 'dr. Bagus Santoso, Sp.JP',
-        'sip_number' => 'SIP-JP-' . uniqid(),
+        'sip_number' => 'SIP-JP-'.uniqid(),
         'gender' => 'Laki-laki',
         'number_phone' => '081211112222',
         'join_date' => now()->toDateString(),
@@ -67,14 +67,14 @@ function createStaffWorkspaceContext(): array
     // 4. Permanent Nurse User ("tetap" / Pekerja)
     $nurseTetapUser = User::factory()->create([
         'name' => 'Ns. Ratna Sari, S.Kep (Tetap)',
-        'email' => 'ratna' . uniqid() . '@hospital.id',
+        'email' => 'ratna'.uniqid().'@hospital.id',
         'role' => 'nurse',
     ]);
 
     $nurseTetap = Nurse::create([
         'user_id' => $nurseTetapUser->id,
         'name' => 'Ns. Ratna Sari, S.Kep',
-        'registration_number' => 'NIRA-TETAP-' . uniqid(),
+        'registration_number' => 'NIRA-TETAP-'.uniqid(),
         'type' => 'tetap',
         'gender' => 'Perempuan',
         'date_start' => now()->subYears(3)->toDateString(),
@@ -83,14 +83,14 @@ function createStaffWorkspaceContext(): array
     // 5. Intern Nurse User ("koas" / Mahasiswa Magang)
     $nurseKoasUser = User::factory()->create([
         'name' => 'Dimas Surya (Koas)',
-        'email' => 'dimas' . uniqid() . '@hospital.id',
+        'email' => 'dimas'.uniqid().'@hospital.id',
         'role' => 'nurse',
     ]);
 
     $nurseKoas = Nurse::create([
         'user_id' => $nurseKoasUser->id,
         'name' => 'Dimas Surya (Koas)',
-        'registration_number' => 'NIM-KOAS-' . uniqid(),
+        'registration_number' => 'NIM-KOAS-'.uniqid(),
         'type' => 'koas',
         'institute' => 'Fakultas Kedokteran UI',
         'gender' => 'Laki-laki',
@@ -100,7 +100,7 @@ function createStaffWorkspaceContext(): array
     // 6. Patient Profile
     $patientUser = User::factory()->create([
         'name' => 'Ahmad Faisal',
-        'email' => 'ahmad' . uniqid() . '@test.com',
+        'email' => 'ahmad'.uniqid().'@test.com',
         'role' => 'patient',
     ]);
 
@@ -127,7 +127,7 @@ function createStaffWorkspaceContext(): array
 
     // 8. Medicine master
     $medicine = Medicine::create([
-        'code_medicine' => 'MED-ISDN-' . uniqid(),
+        'code_medicine' => 'MED-ISDN-'.uniqid(),
         'name_medicine' => 'Isosorbide Dinitrate 5mg',
         'type' => 'Tablet',
         'stock' => 100,
@@ -154,7 +154,7 @@ function createStaffWorkspaceContext(): array
 
     $prescription = Prescription::create([
         'medical_record_id' => $medicalRecord->medical_record_id,
-        'prescription_number' => 'RX-CARDIO-' . uniqid(),
+        'prescription_number' => 'RX-CARDIO-'.uniqid(),
         'status' => 'menunggu',
     ]);
 
@@ -230,19 +230,19 @@ test('permanent staff can process cash payment in database transaction and settl
     // Buat billing terlebih dahulu
     $billing = Billing::create([
         'reservation_id' => $ctx['appointment']->appointment_id,
-        'patient_id'     => $ctx['patient']->patient_id,
+        'patient_id' => $ctx['patient']->patient_id,
         'invoice_number' => 'INV-TEST-001',
-        'total_amount'   => 175000.00,
-        'status'         => 'unpaid',
+        'total_amount' => 175000.00,
+        'status' => 'unpaid',
     ]);
 
     BillingItem::create([
         'billing_id' => $billing->billing_id,
-        'item_type'  => 'consultation_fee',
-        'item_name'  => 'Konsultasi Dokter',
-        'quantity'   => 1,
+        'item_type' => 'consultation_fee',
+        'item_name' => 'Konsultasi Dokter',
+        'quantity' => 1,
         'unit_price' => 175000.00,
-        'subtotal'   => 175000.00,
+        'subtotal' => 175000.00,
     ]);
 
     // Eksekusi Pembayaran Tunai dengan Uang 200.000 (Kembalian 25.000)
@@ -253,9 +253,9 @@ test('permanent staff can process cash payment in database transaction and settl
 
     $payResponse->assertOk();
     $payResponse->assertJson([
-        'status'        => true,
+        'status' => true,
         'cash_received' => 200000,
-        'change'        => 25000,
+        'change' => 25000,
     ]);
 
     $billing->refresh();
@@ -270,10 +270,10 @@ test('permanent staff can initiate Xendit online checkout and generate payment l
 
     $billing = Billing::create([
         'reservation_id' => $ctx['appointment']->appointment_id,
-        'patient_id'     => $ctx['patient']->patient_id,
+        'patient_id' => $ctx['patient']->patient_id,
         'invoice_number' => 'INV-TEST-XEN-001',
-        'total_amount'   => 150000.00,
-        'status'         => 'unpaid',
+        'total_amount' => 150000.00,
+        'status' => 'unpaid',
     ]);
 
     $response = $this->actingAs($ctx['nurseTetapUser'])
@@ -294,19 +294,19 @@ test('xendit webhook callback securely updates billing status to paid upon recei
 
     $billing = Billing::create([
         'reservation_id' => $ctx['appointment']->appointment_id,
-        'patient_id'     => $ctx['patient']->patient_id,
+        'patient_id' => $ctx['patient']->patient_id,
         'invoice_number' => 'INV-WEBHOOK-001',
-        'total_amount'   => 200000.00,
-        'status'         => 'pending',
-        'xendit_id'      => 'xendit_inv_mock12345',
+        'total_amount' => 200000.00,
+        'status' => 'pending',
+        'xendit_id' => 'xendit_inv_mock12345',
     ]);
 
     $webhookPayload = [
-        'id'              => 'xendit_inv_mock12345',
-        'external_id'     => 'BILL-' . $billing->billing_id . '-' . time(),
-        'status'          => 'PAID',
-        'payment_method'  => 'QRIS',
-        'amount'          => 200000,
+        'id' => 'xendit_inv_mock12345',
+        'external_id' => 'BILL-'.$billing->billing_id.'-'.time(),
+        'status' => 'PAID',
+        'payment_method' => 'QRIS',
+        'amount' => 200000,
     ];
 
     $response = $this->postJson('/api/webhooks/xendit', $webhookPayload, [
@@ -352,11 +352,11 @@ test('intern nurse (koas) is forbidden from downloading payment cashier receipt 
 
     $billing = Billing::create([
         'reservation_id' => $ctx['appointment']->appointment_id,
-        'patient_id'     => $ctx['patient']->patient_id,
+        'patient_id' => $ctx['patient']->patient_id,
         'invoice_number' => 'INV-RECEIPT-001',
-        'total_amount'   => 150000.00,
-        'status'         => 'paid',
-        'paid_at'        => now(),
+        'total_amount' => 150000.00,
+        'status' => 'paid',
+        'paid_at' => now(),
     ]);
 
     // Staf Tetap diizinkan
@@ -376,10 +376,10 @@ test('permanent staff can generate dynamic QRIS code with valid EMVCo qr_string 
 
     $billing = Billing::create([
         'reservation_id' => $ctx['appointment']->appointment_id,
-        'patient_id'     => $ctx['patient']->patient_id,
+        'patient_id' => $ctx['patient']->patient_id,
         'invoice_number' => 'INV-QRIS-001',
-        'total_amount'   => 250000.00,
-        'status'         => 'unpaid',
+        'total_amount' => 250000.00,
+        'status' => 'unpaid',
     ]);
 
     // 1. Request Dynamic QRIS
@@ -388,9 +388,9 @@ test('permanent staff can generate dynamic QRIS code with valid EMVCo qr_string 
 
     $response->assertOk();
     $response->assertJson([
-        'status'         => true,
+        'status' => true,
         'billing_status' => 'pending',
-        'amount'         => 250000.00,
+        'amount' => 250000.00,
     ]);
     expect($response->json('qr_string'))->toBeString()->not->toBeEmpty();
 
@@ -400,10 +400,10 @@ test('permanent staff can generate dynamic QRIS code with valid EMVCo qr_string 
 
     $pollResponse->assertOk();
     $pollResponse->assertJson([
-        'status'         => true,
-        'billing_id'     => $billing->billing_id,
+        'status' => true,
+        'billing_id' => $billing->billing_id,
         'billing_status' => 'pending',
-        'is_paid'        => false,
+        'is_paid' => false,
     ]);
 });
 
@@ -412,17 +412,17 @@ test('permanent staff can settle payment using EDC card terminal swipe', functio
 
     $billing = Billing::create([
         'reservation_id' => $ctx['appointment']->appointment_id,
-        'patient_id'     => $ctx['patient']->patient_id,
+        'patient_id' => $ctx['patient']->patient_id,
         'invoice_number' => 'INV-EDC-001',
-        'total_amount'   => 350000.00,
-        'status'         => 'unpaid',
+        'total_amount' => 350000.00,
+        'status' => 'unpaid',
     ]);
 
     $response = $this->actingAs($ctx['nurseTetapUser'])
         ->postJson("/staff/billing/{$billing->billing_id}/pay-edc", [
-            'card_type'      => 'Debit',
-            'bank_name'      => 'BCA',
-            'approval_code'  => 'APPV-99281',
+            'card_type' => 'Debit',
+            'bank_name' => 'BCA',
+            'approval_code' => 'APPV-99281',
             'card_last_four' => '4321',
         ]);
 
@@ -440,20 +440,20 @@ test('xendit dynamic QRIS webhook callback settles billing and synchronizes appo
 
     $billing = Billing::create([
         'reservation_id' => $ctx['appointment']->appointment_id,
-        'patient_id'     => $ctx['patient']->patient_id,
+        'patient_id' => $ctx['patient']->patient_id,
         'invoice_number' => 'INV-QRIS-WEBHOOK-001',
-        'total_amount'   => 185000.00,
-        'status'         => 'pending',
-        'xendit_id'      => 'qr_mock_778899',
+        'total_amount' => 185000.00,
+        'status' => 'pending',
+        'xendit_id' => 'qr_mock_778899',
     ]);
 
     $webhookPayload = [
         'event' => 'qr.payment',
         'data' => [
-            'id'          => 'qr_mock_778899',
-            'external_id' => 'QRIS-' . $billing->billing_id . '-' . time(),
-            'status'      => 'COMPLETED',
-            'amount'      => 185000,
+            'id' => 'qr_mock_778899',
+            'external_id' => 'QRIS-'.$billing->billing_id.'-'.time(),
+            'status' => 'COMPLETED',
+            'amount' => 185000,
         ],
     ];
 
@@ -463,7 +463,7 @@ test('xendit dynamic QRIS webhook callback settles billing and synchronizes appo
 
     $response->assertOk();
     $response->assertJson([
-        'status'  => true,
+        'status' => true,
         'message' => 'QRIS payment successfully settled',
     ]);
 
@@ -472,4 +472,3 @@ test('xendit dynamic QRIS webhook callback settles billing and synchronizes appo
     expect($billing->payment_method)->toBe('QRIS');
     expect($billing->paid_at)->not->toBeNull();
 });
-

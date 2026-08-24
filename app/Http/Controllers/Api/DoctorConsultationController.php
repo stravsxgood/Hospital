@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inspection;
+use App\Models\Payment;
 use App\Models\Registration;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -17,10 +18,10 @@ class DoctorConsultationController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        
+
         $doctor = $request->user()->doctor;
 
-        if (!$doctor) {
+        if (! $doctor) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Profil dokter tidak ditemukan.',
@@ -101,7 +102,7 @@ class DoctorConsultationController extends Controller
             $registration->update(['status' => 'Selesai']);
 
             // 3. Buat draf tagihan kasir otomatis
-            \App\Models\Payment::create([
+            Payment::create([
                 'registration_id' => $registration->registration_id,
                 'payment_date' => now(),
                 'payment_total' => 150000, // Biaya standar konsultasi dasar

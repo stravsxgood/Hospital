@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * Model Prescription - Resep Obat Elektronik (E-Prescription)
@@ -20,15 +21,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $prescription_number
  * @property string $status
  * @property string|null $notes
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Prescription extends Model
 {
     use HasFactory;
 
     protected $table = 'prescription';
+
     protected $primaryKey = 'prescription_id';
+
     protected $guarded = [];
 
     /**
@@ -37,7 +40,7 @@ class Prescription extends Model
     protected function casts(): array
     {
         return [
-            'prescription_id'   => 'integer',
+            'prescription_id' => 'integer',
             'medical_record_id' => 'integer',
         ];
     }
@@ -68,9 +71,6 @@ class Prescription extends Model
 
     /**
      * Scope resep dengan status menunggu
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeMenunggu(Builder $query): Builder
     {
@@ -79,9 +79,6 @@ class Prescription extends Model
 
     /**
      * Scope resep dengan status sedang diproses / diracik
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeDiproses(Builder $query): Builder
     {
@@ -90,9 +87,6 @@ class Prescription extends Model
 
     /**
      * Scope resep dengan status selesai
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeSelesai(Builder $query): Builder
     {
@@ -101,13 +95,9 @@ class Prescription extends Model
 
     /**
      * Scope resep aktif farmasi (menunggu atau sedang diproses)
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopePending(Builder $query): Builder
     {
         return $query->whereIn('status', ['menunggu', 'diproses']);
     }
 }
-

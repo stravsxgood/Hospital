@@ -22,52 +22,52 @@ class PublicDisplayTest extends TestCase
         $spec = Specialization::create([
             'code_specialization' => 'SPEC-ANAK',
             'name_specialization' => 'Spesialis Anak',
-            'description'         => 'Dokter Spesialis Anak',
+            'description' => 'Dokter Spesialis Anak',
         ]);
 
         $poli = Poli::create([
             'kode_poli' => 'POLI-ANAK',
             'name_poli' => 'Poli Anak',
-            'location'  => 'Lantai 1',
-            'status'    => 'Aktif',
+            'location' => 'Lantai 1',
+            'status' => 'Aktif',
         ]);
 
         $room = Room::create([
             'code_room' => 'RM-101',
             'name_room' => 'Ruang 101',
             'type_room' => 'Pemeriksaan',
-            'capacity'  => 1,
-            'floor'     => 1,
+            'capacity' => 1,
+            'floor' => 1,
         ]);
 
         $doctorUser = User::factory()->create([
-            'role'  => 'doctor',
-            'name'  => 'dr. Sarah Sp.A',
+            'role' => 'doctor',
+            'name' => 'dr. Sarah Sp.A',
             'email' => 'sarah@hospital.com',
         ]);
 
         $doctor = Doctor::create([
-            'user_id'           => $doctorUser->id,
+            'user_id' => $doctorUser->id,
             'specialization_id' => $spec->specialization_id,
-            'name'              => 'dr. Sarah Sp.A',
-            'sip_number'        => 'SIP-12345',
-            'gender'            => 'Perempuan',
-            'number_phone'      => '08123456789',
-            'email'             => 'sarah@hospital.com',
-            'alamat'            => 'Jl. Dokter Sehat No. 1',
-            'join_date'         => now()->toDateString(),
-            'status'            => 'aktif',
+            'name' => 'dr. Sarah Sp.A',
+            'sip_number' => 'SIP-12345',
+            'gender' => 'Perempuan',
+            'number_phone' => '08123456789',
+            'email' => 'sarah@hospital.com',
+            'alamat' => 'Jl. Dokter Sehat No. 1',
+            'join_date' => now()->toDateString(),
+            'status' => 'aktif',
         ]);
 
         $schedule = DoctorSchedule::create([
-            'doctor_id'    => $doctor->doctor_id,
-            'poli_id'      => $poli->poli_id,
-            'room_id'      => $room->room_id,
-            'day'          => 'Senin',
-            'start_time'   => '08:00',
-            'end_time'     => '12:00',
-            'quota_day'    => 30,
-            'status'       => 'Aktif',
+            'doctor_id' => $doctor->doctor_id,
+            'poli_id' => $poli->poli_id,
+            'room_id' => $room->room_id,
+            'day' => 'Senin',
+            'start_time' => '08:00',
+            'end_time' => '12:00',
+            'quota_day' => 30,
+            'status' => 'Aktif',
         ]);
 
         $patientUser = User::factory()->create([
@@ -76,25 +76,25 @@ class PublicDisplayTest extends TestCase
         ]);
 
         $patient = Patient::create([
-            'user_id'           => $patientUser->id,
-            'resident_n'        => '3201234567890001',
-            'name'              => 'Ahmad Pasien',
-            'gender'            => 'Laki-laki',
-            'birthday_date'     => '1995-05-15',
-            'address'           => 'Jl. Sehat No. 10',
-            'number_phone'      => '081298765432',
+            'user_id' => $patientUser->id,
+            'resident_n' => '3201234567890001',
+            'name' => 'Ahmad Pasien',
+            'gender' => 'Laki-laki',
+            'birthday_date' => '1995-05-15',
+            'address' => 'Jl. Sehat No. 10',
+            'number_phone' => '081298765432',
             'registration_date' => now()->toDateString(),
-            'status'            => 'active',
+            'status' => 'active',
         ]);
 
         // Buat janji temu berstatus in_progress
         $appointment = Appointment::create([
             'doctor_schedule_id' => $schedule->doctor_schedule_id,
-            'patient_id'         => $patient->patient_id,
-            'appointment_date'   => '2026-09-01',
-            'queue_number'       => 'POLI-ANAK-001',
-            'complaint'          => 'Demam tinggi',
-            'status'             => 'in_progress',
+            'patient_id' => $patient->patient_id,
+            'appointment_date' => '2026-09-01',
+            'queue_number' => 'POLI-ANAK-001',
+            'complaint' => 'Demam tinggi',
+            'status' => 'in_progress',
         ]);
 
         // 1. Uji halaman /display

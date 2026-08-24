@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Inertia\Testing\AssertableInertia as Assert;
+use Laravel\Fortify\Contracts\LoginResponse;
 use Laravel\Fortify\Features;
 use Laravel\Passkeys\Contracts\PasskeyLoginResponse;
 
@@ -141,7 +142,7 @@ test('doctor user is redirected to /staff upon login via api and web', function 
     $request = Request::create('/login', 'POST');
     $request->setLaravelSession($this->app['session.store']);
     $request->setUserResolver(fn () => $doctorUser);
-    $webResponse = app(Laravel\Fortify\Contracts\LoginResponse::class)->toResponse($request);
+    $webResponse = app(LoginResponse::class)->toResponse($request);
     expect($webResponse->getTargetUrl())->toContain('/staff');
 });
 
@@ -168,7 +169,7 @@ test('nurse user is redirected to /staff upon login via api and web', function (
     $request = Request::create('/login', 'POST');
     $request->setLaravelSession($this->app['session.store']);
     $request->setUserResolver(fn () => $nurseUser);
-    $webResponse = app(Laravel\Fortify\Contracts\LoginResponse::class)->toResponse($request);
+    $webResponse = app(LoginResponse::class)->toResponse($request);
     expect($webResponse->getTargetUrl())->toContain('/staff');
 });
 
@@ -196,11 +197,6 @@ test('patient user is redirected to /patient/dashboard upon login via api and we
     $request = Request::create('/login', 'POST');
     $request->setLaravelSession($this->app['session.store']);
     $request->setUserResolver(fn () => $patientUser);
-    $webResponse = app(Laravel\Fortify\Contracts\LoginResponse::class)->toResponse($request);
+    $webResponse = app(LoginResponse::class)->toResponse($request);
     expect($webResponse->getTargetUrl())->toContain('/patient/dashboard');
 });
-
-
-
-
-

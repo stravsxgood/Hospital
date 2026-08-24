@@ -16,8 +16,8 @@ class CheckClinicalSafetyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id'  => ['nullable', 'integer', 'exists:patient,patient_id'],
-            'medicines'   => ['required', 'array'],
+            'patient_id' => ['nullable', 'integer', 'exists:patient,patient_id'],
+            'medicines' => ['required', 'array'],
             'medicines.*' => ['nullable'],
         ];
     }

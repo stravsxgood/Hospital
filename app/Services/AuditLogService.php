@@ -20,11 +20,10 @@ class AuditLogService
     /**
      * Catat aksi akses rekam medis secara immutable.
      *
-     * @param int $medicalRecordId ID Rekam Medis yang diakses/dimutasi
-     * @param string $action Jenis tindakan ('view', 'create', 'update', 'export_pdf', 'print')
-     * @param array|null $payloadDiff Perubahan data atau rincian aksi dalam format array/JSON
-     * @param int|null $userId ID User yang mengakses (opsional, default Auth::id())
-     * @return MedicalRecordAuditLog
+     * @param  int  $medicalRecordId  ID Rekam Medis yang diakses/dimutasi
+     * @param  string  $action  Jenis tindakan ('view', 'create', 'update', 'export_pdf', 'print')
+     * @param  array|null  $payloadDiff  Perubahan data atau rincian aksi dalam format array/JSON
+     * @param  int|null  $userId  ID User yang mengakses (opsional, default Auth::id())
      */
     public static function logAccess(
         int $medicalRecordId,
@@ -41,12 +40,12 @@ class AuditLogService
 
         return MedicalRecordAuditLog::create([
             'medical_record_id' => $medicalRecordId,
-            'user_id'           => $resolvedUserId,
-            'action'            => $action,
-            'ip_address'        => Request::ip(),
-            'user_agent'        => substr((string) Request::userAgent(), 0, 500),
-            'payload_diff'      => $payloadDiff,
-            'created_at'        => now(),
+            'user_id' => $resolvedUserId,
+            'action' => $action,
+            'ip_address' => Request::ip(),
+            'user_agent' => substr((string) Request::userAgent(), 0, 500),
+            'payload_diff' => $payloadDiff,
+            'created_at' => now(),
         ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PaymentSettledEvent;
 use App\Models\Appointment;
 use App\Models\Billing;
 use App\Models\BillingItem;
@@ -17,7 +18,7 @@ use Inertia\Response;
 
 /**
  * Class BillingController
- * 
+ *
  * Modul Manajemen Tagihan & Kasir Rumah Sakit.
  * Dibatasi secara ketat hanya untuk Staf/Perawat Tetap (Pekerja) via Gate 'access-pekerja-only'.
  */
@@ -69,11 +70,11 @@ class BillingController extends Controller
         // 2. Agregasi Statistik Keuangan Kasir via PostgreSQL Aggregates
         $stats = [
             'total_invoices' => Billing::count(),
-            'unpaid_count'   => Billing::where('status', 'unpaid')->count(),
-            'pending_count'  => Billing::where('status', 'pending')->count(),
-            'paid_count'     => Billing::where('status', 'paid')->count(),
-            'total_revenue'  => (float) Billing::where('status', 'paid')->sum('total_amount'),
-            'today_revenue'  => (float) Billing::where('status', 'paid')->whereDate('paid_at', today())->sum('total_amount'),
+            'unpaid_count' => Billing::where('status', 'unpaid')->count(),
+            'pending_count' => Billing::where('status', 'pending')->count(),
+            'paid_count' => Billing::where('status', 'paid')->count(),
+            'total_revenue' => (float) Billing::where('status', 'paid')->sum('total_amount'),
+            'today_revenue' => (float) Billing::where('status', 'paid')->whereDate('paid_at', today())->sum('total_amount'),
         ];
 
         // 3. Ambil Pasien yang selesai konsultasi namun belum dibuatkan billing
@@ -90,13 +91,13 @@ class BillingController extends Controller
             ->get();
 
         return Inertia::render('staff/Billing/Index', [
-            'billings'              => $billings,
-            'stats'                 => $stats,
+            'billings' => $billings,
+            'stats' => $stats,
             'unbilledConsultations' => $unbilledConsultations,
-            'filters'               => [
+            'filters' => [
                 'search' => $search,
                 'status' => $status,
-                'date'   => $date,
+                'date' => $date,
             ],
         ]);
     }
@@ -121,7 +122,7 @@ class BillingController extends Controller
         if (request()->wantsJson()) {
             return response()->json([
                 'status' => true,
-                'data'   => $billing,
+                'data' => $billing,
             ]);
         }
 
@@ -152,7 +153,7 @@ class BillingController extends Controller
         }
 
         $billing = DB::transaction(function () use ($appointment) {
-            $invoiceNumber = 'INV-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -5));
+            $invoiceNumber = 'INV-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -5));
 
             // Biaya jasa dokter / konsultasi rawat jalan
             $consultationFee = 150000.00;
@@ -160,19 +161,19 @@ class BillingController extends Controller
             $itemsPayload = [];
 
             $itemsPayload[] = [
-                'item_type'   => 'consultation_fee',
-                'item_name'   => 'Jasa Konsultasi Dokter (' . ($appointment->doctorSchedule?->doctor?->name ?? 'Dokter Spesialis') . ')',
-                'quantity'    => 1,
-                'unit_price'  => $consultationFee,
-                'subtotal'    => $consultationFee,
+                'item_type' => 'consultation_fee',
+                'item_name' => 'Jasa Konsultasi Dokter ('.($appointment->doctorSchedule?->doctor?->name ?? 'Dokter Spesialis').')',
+                'quantity' => 1,
+                'unit_price' => $consultationFee,
+                'subtotal' => $consultationFee,
             ];
 
             $itemsPayload[] = [
-                'item_type'   => 'procedure',
-                'item_name'   => 'Biaya Administrasi & Sarana Rawat Jalan',
-                'quantity'    => 1,
-                'unit_price'  => $adminFee,
-                'subtotal'    => $adminFee,
+                'item_type' => 'procedure',
+                'item_name' => 'Biaya Administrasi & Sarana Rawat Jalan',
+                'quantity' => 1,
+                'unit_price' => $adminFee,
+                'subtotal' => $adminFee,
             ];
 
             $totalAmount = $consultationFee + $adminFee;
@@ -187,11 +188,11 @@ class BillingController extends Controller
                     $subtotal = $unitPrice * $qty;
 
                     $itemsPayload[] = [
-                        'item_type'  => 'medicine',
-                        'item_name'  => 'Obat: ' . ($med?->name_medicine ?? 'Farmasi') . ' (' . $item->dosage . ')',
-                        'quantity'   => $qty,
+                        'item_type' => 'medicine',
+                        'item_name' => 'Obat: '.($med?->name_medicine ?? 'Farmasi').' ('.$item->dosage.')',
+                        'quantity' => $qty,
                         'unit_price' => $unitPrice,
-                        'subtotal'   => $subtotal,
+                        'subtotal' => $subtotal,
                     ];
 
                     $totalAmount += $subtotal;
@@ -201,21 +202,21 @@ class BillingController extends Controller
             // Buat Record Billing
             $newBilling = Billing::create([
                 'reservation_id' => $appointment->appointment_id,
-                'patient_id'     => $appointment->patient_id,
+                'patient_id' => $appointment->patient_id,
                 'invoice_number' => $invoiceNumber,
-                'total_amount'   => $totalAmount,
-                'status'         => 'unpaid',
+                'total_amount' => $totalAmount,
+                'status' => 'unpaid',
             ]);
 
             // Buat Billing Items
             foreach ($itemsPayload as $item) {
                 BillingItem::create([
                     'billing_id' => $newBilling->billing_id,
-                    'item_type'  => $item['item_type'],
-                    'item_name'  => $item['item_name'],
-                    'quantity'   => $item['quantity'],
+                    'item_type' => $item['item_type'],
+                    'item_name' => $item['item_name'],
+                    'quantity' => $item['quantity'],
                     'unit_price' => $item['unit_price'],
-                    'subtotal'   => $item['subtotal'],
+                    'subtotal' => $item['subtotal'],
                 ]);
             }
 
@@ -224,14 +225,14 @@ class BillingController extends Controller
 
         if (request()->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Tagihan berhasil dibuat.',
-                'data'    => $billing,
+                'data' => $billing,
             ], 201);
         }
 
         return redirect()->route('staff.billing.show', $billing->billing_id)
-            ->with('success', 'Tagihan #' . $billing->invoice_number . ' berhasil dihitung dan dibuat.');
+            ->with('success', 'Tagihan #'.$billing->invoice_number.' berhasil dihitung dan dibuat.');
     }
 
     /**
@@ -257,20 +258,20 @@ class BillingController extends Controller
             }
 
             if ($cashReceived < (float) $bill->total_amount) {
-                throw new Exception('Uang tunai yang diterima (Rp ' . number_format($cashReceived, 0, ',', '.') . ') kurang dari total tagihan (Rp ' . number_format((float) $bill->total_amount, 0, ',', '.') . ').');
+                throw new Exception('Uang tunai yang diterima (Rp '.number_format($cashReceived, 0, ',', '.').') kurang dari total tagihan (Rp '.number_format((float) $bill->total_amount, 0, ',', '.').').');
             }
 
             $bill->update([
-                'status'                => 'paid',
-                'payment_method'        => 'cash',
+                'status' => 'paid',
+                'payment_method' => 'cash',
                 'processed_by_nurse_id' => $nurseId,
-                'paid_at'               => now(),
+                'paid_at' => now(),
             ]);
 
             // Sinkronisasi status reservasi & resep obat
             if ($bill->reservation) {
                 $bill->reservation->update(['status' => 'completed']);
-                
+
                 $prescription = $bill->reservation->medicalRecord?->prescription;
                 if ($prescription && in_array($prescription->status, ['menunggu', 'diproses'])) {
                     $prescription->update(['status' => 'selesai']);
@@ -283,7 +284,7 @@ class BillingController extends Controller
         $change = $cashReceived - (float) $billing->total_amount;
 
         // Siarkan konfirmasi pembayaran instan ke channel WebSocket private billing
-        event(new \App\Events\PaymentSettledEvent(
+        event(new PaymentSettledEvent(
             billingId: (int) $billing->billing_id,
             invoiceNumber: (string) $billing->invoice_number,
             status: 'paid',
@@ -294,15 +295,15 @@ class BillingController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'        => true,
-                'message'       => 'Pembayaran tunai berhasil diverifikasi.',
-                'data'          => $billing,
+                'status' => true,
+                'message' => 'Pembayaran tunai berhasil diverifikasi.',
+                'data' => $billing,
                 'cash_received' => $cashReceived,
-                'change'        => $change,
+                'change' => $change,
             ]);
         }
 
-        return redirect()->back()->with('success', 'Pembayaran tunai berhasil. Kembalian: Rp ' . number_format($change, 0, ',', '.'));
+        return redirect()->back()->with('success', 'Pembayaran tunai berhasil. Kembalian: Rp '.number_format($change, 0, ',', '.'));
     }
 
     /**
@@ -316,7 +317,7 @@ class BillingController extends Controller
 
         if ($billing->status === 'paid') {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Tagihan ini sudah lunas sebelumnya.',
             ], 422);
         }
@@ -325,21 +326,21 @@ class BillingController extends Controller
         $qrData = $this->xenditService->createDynamicQris($billing);
 
         $billing->update([
-            'xendit_id'          => $qrData['id'] ?? null,
+            'xendit_id' => $qrData['id'] ?? null,
             'xendit_payment_url' => $qrData['qr_string'] ?? null,
-            'payment_method'     => 'xendit_qris',
-            'status'             => 'pending',
+            'payment_method' => 'xendit_qris',
+            'status' => 'pending',
         ]);
 
         return response()->json([
-            'status'         => true,
-            'message'        => 'QRIS Dinamis berhasil dibuat.',
-            'qr_string'      => $qrData['qr_string'],
-            'amount'         => (float) $billing->total_amount,
+            'status' => true,
+            'message' => 'QRIS Dinamis berhasil dibuat.',
+            'qr_string' => $qrData['qr_string'],
+            'amount' => (float) $billing->total_amount,
             'invoice_number' => $billing->invoice_number,
-            'billing_id'     => $billing->billing_id,
+            'billing_id' => $billing->billing_id,
             'billing_status' => $billing->status,
-            'xendit_id'      => $billing->xendit_id,
+            'xendit_id' => $billing->xendit_id,
         ]);
     }
 
@@ -353,14 +354,14 @@ class BillingController extends Controller
         $billing = Billing::with('processedByNurse')->findOrFail($id);
 
         return response()->json([
-            'status'         => true,
-            'billing_id'     => $billing->billing_id,
+            'status' => true,
+            'billing_id' => $billing->billing_id,
             'invoice_number' => $billing->invoice_number,
             'billing_status' => $billing->status,
-            'is_paid'        => $billing->status === 'paid',
+            'is_paid' => $billing->status === 'paid',
             'payment_method' => $billing->payment_method,
-            'paid_at'        => $billing->paid_at ? $billing->paid_at->toIso8601String() : null,
-            'processed_by'   => $billing->processedByNurse?->name,
+            'paid_at' => $billing->paid_at ? $billing->paid_at->toIso8601String() : null,
+            'processed_by' => $billing->processedByNurse?->name,
         ]);
     }
 
@@ -372,9 +373,9 @@ class BillingController extends Controller
         Gate::authorize('access-pekerja-only');
 
         $request->validate([
-            'card_type'      => ['required', 'string', 'in:Debit,Kredit,debit,kredit'],
-            'bank_name'      => ['required', 'string', 'max:50'],
-            'approval_code'  => ['required', 'string', 'max:50'],
+            'card_type' => ['required', 'string', 'in:Debit,Kredit,debit,kredit'],
+            'bank_name' => ['required', 'string', 'max:50'],
+            'approval_code' => ['required', 'string', 'max:50'],
             'card_last_four' => ['nullable', 'string', 'max:4'],
         ]);
 
@@ -392,19 +393,19 @@ class BillingController extends Controller
                 throw new Exception('Tagihan ini sudah lunas sebelumnya.');
             }
 
-            $methodName = 'EDC ' . $cardType . ' - ' . $bankName . ' (' . $approvalCode . ($cardLastFour ? ' *' . $cardLastFour : '') . ')';
+            $methodName = 'EDC '.$cardType.' - '.$bankName.' ('.$approvalCode.($cardLastFour ? ' *'.$cardLastFour : '').')';
 
             $bill->update([
-                'status'                => 'paid',
-                'payment_method'        => $methodName,
+                'status' => 'paid',
+                'payment_method' => $methodName,
                 'processed_by_nurse_id' => $nurseId,
-                'paid_at'               => now(),
+                'paid_at' => now(),
             ]);
 
             // Sinkronisasi status reservasi & resep obat
             if ($bill->reservation) {
                 $bill->reservation->update(['status' => 'completed']);
-                
+
                 $prescription = $bill->reservation->medicalRecord?->prescription;
                 if ($prescription && in_array($prescription->status, ['menunggu', 'diproses'])) {
                     $prescription->update(['status' => 'selesai']);
@@ -415,7 +416,7 @@ class BillingController extends Controller
         });
 
         // Siarkan konfirmasi pembayaran instan ke channel WebSocket private billing
-        event(new \App\Events\PaymentSettledEvent(
+        event(new PaymentSettledEvent(
             billingId: (int) $billing->billing_id,
             invoiceNumber: (string) $billing->invoice_number,
             status: 'paid',
@@ -425,9 +426,9 @@ class BillingController extends Controller
         ));
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Pembayaran via Mesin EDC berhasil diverifikasi.',
-            'data'    => $billing,
+            'data' => $billing,
         ]);
     }
 
@@ -442,7 +443,7 @@ class BillingController extends Controller
 
         if ($billing->status === 'paid') {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Tagihan sudah lunas.',
             ], 422);
         }
@@ -451,18 +452,18 @@ class BillingController extends Controller
         $xenditInvoice = $this->xenditService->createBillingInvoice($billing);
 
         $billing->update([
-            'xendit_id'          => $xenditInvoice['id'] ?? null,
+            'xendit_id' => $xenditInvoice['id'] ?? null,
             'xendit_payment_url' => $xenditInvoice['invoice_url'] ?? null,
-            'payment_method'     => 'xendit_invoice',
-            'status'             => 'pending',
+            'payment_method' => 'xendit_invoice',
+            'status' => 'pending',
         ]);
 
         return response()->json([
-            'status'             => true,
-            'message'            => 'Invoice Xendit berhasil digenerate.',
+            'status' => true,
+            'message' => 'Invoice Xendit berhasil digenerate.',
             'xendit_payment_url' => $billing->xendit_payment_url,
-            'xendit_id'          => $billing->xendit_id,
-            'data'               => $billing,
+            'xendit_id' => $billing->xendit_id,
+            'data' => $billing,
         ]);
     }
 
@@ -482,16 +483,16 @@ class BillingController extends Controller
         ])->findOrFail($id);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Data struk thermal berhasil dimuat.',
-            'data'    => [
+            'data' => [
                 'hospital' => [
-                    'name'    => 'Hospital Population',
+                    'name' => 'Hospital Population',
                     'address' => 'Jl. Kesehatan No. 123, Jakarta',
-                    'phone'   => '(021) 555-0199',
-                    'unit'    => 'Instalasi Kasir & Farmasi Rawat Jalan',
+                    'phone' => '(021) 555-0199',
+                    'unit' => 'Instalasi Kasir & Farmasi Rawat Jalan',
                 ],
-                'billing'  => $billing,
+                'billing' => $billing,
             ],
         ]);
     }

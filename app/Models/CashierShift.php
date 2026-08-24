@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,8 +16,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $cashier_shift_id
  * @property int $nurse_id
  * @property string $shift_name
- * @property \Carbon\Carbon $opened_at
- * @property \Carbon\Carbon|null $closed_at
+ * @property Carbon $opened_at
+ * @property Carbon|null $closed_at
  * @property float $opening_cash
  * @property float|null $closing_cash_actual
  * @property float $total_cash_system
@@ -32,6 +33,7 @@ class CashierShift extends Model
     use HasFactory;
 
     protected $table = 'cashier_shift';
+
     protected $primaryKey = 'cashier_shift_id';
 
     protected $fillable = [
@@ -51,15 +53,15 @@ class CashierShift extends Model
     protected function casts(): array
     {
         return [
-            'cashier_shift_id'    => 'integer',
-            'nurse_id'            => 'integer',
-            'opened_at'           => 'datetime',
-            'closed_at'           => 'datetime',
-            'opening_cash'        => 'decimal:2',
+            'cashier_shift_id' => 'integer',
+            'nurse_id' => 'integer',
+            'opened_at' => 'datetime',
+            'closed_at' => 'datetime',
+            'opening_cash' => 'decimal:2',
             'closing_cash_actual' => 'decimal:2',
-            'total_cash_system'   => 'decimal:2',
-            'total_qris_system'   => 'decimal:2',
-            'discrepancy'         => 'decimal:2',
+            'total_cash_system' => 'decimal:2',
+            'total_qris_system' => 'decimal:2',
+            'discrepancy' => 'decimal:2',
         ];
     }
 
@@ -73,9 +75,6 @@ class CashierShift extends Model
 
     /**
      * Scope shift yang masih aktif terbuka
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeOpen(Builder $query): Builder
     {
@@ -84,9 +83,6 @@ class CashierShift extends Model
 
     /**
      * Scope shift yang sudah ditutup
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeClosed(Builder $query): Builder
     {

@@ -31,7 +31,7 @@ function createDoctorConsultationContext(): array
 
     $doctorUser = User::factory()->create([
         'name' => 'dr. Hendra Pratama, Sp.PD',
-        'email' => 'drhendra' . uniqid() . '@test.com',
+        'email' => 'drhendra'.uniqid().'@test.com',
         'role' => 'doctor',
     ]);
 
@@ -39,7 +39,7 @@ function createDoctorConsultationContext(): array
         'user_id' => $doctorUser->id,
         'specialization_id' => $spec->specialization_id,
         'name' => 'dr. Hendra Pratama, Sp.PD',
-        'sip_number' => 'SIP-PD-' . uniqid(),
+        'sip_number' => 'SIP-PD-'.uniqid(),
         'gender' => 'Laki-laki',
         'number_phone' => '081299990001',
         'join_date' => now()->toDateString(),
@@ -59,7 +59,7 @@ function createDoctorConsultationContext(): array
 
     $patientUser = User::factory()->create([
         'name' => 'Siti Nurhaliza',
-        'email' => 'siti' . uniqid() . '@test.com',
+        'email' => 'siti'.uniqid().'@test.com',
         'role' => 'patient',
     ]);
 
@@ -84,7 +84,7 @@ function createDoctorConsultationContext(): array
     ]);
 
     $medParacetamol = Medicine::create([
-        'code_medicine' => 'MED-TEST-PCT-' . uniqid(),
+        'code_medicine' => 'MED-TEST-PCT-'.uniqid(),
         'name_medicine' => 'Paracetamol 500mg Test',
         'type' => 'Tablet',
         'stock' => 50,
@@ -93,7 +93,7 @@ function createDoctorConsultationContext(): array
     ]);
 
     $medAntasida = Medicine::create([
-        'code_medicine' => 'MED-TEST-ANT-' . uniqid(),
+        'code_medicine' => 'MED-TEST-ANT-'.uniqid(),
         'name_medicine' => 'Antasida Doen Test',
         'type' => 'Sirup',
         'stock' => 20,

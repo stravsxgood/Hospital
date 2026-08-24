@@ -32,7 +32,7 @@ class PrescriptionCreatedEvent implements ShouldBroadcastNow
     /**
      * Tentukan channel siaran WebSocket
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
@@ -55,13 +55,13 @@ class PrescriptionCreatedEvent implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'prescription_id'     => $this->prescriptionId,
+            'prescription_id' => $this->prescriptionId,
             'prescription_number' => $this->prescriptionNumber,
-            'patient_name'        => $this->patientName,
-            'doctor_name'         => $this->doctorName,
-            'poli_name'           => $this->poliName,
-            'total_items'         => $this->totalItems,
-            'created_at'          => $this->createdAt,
+            'patient_name' => $this->patientName,
+            'doctor_name' => $this->doctorName,
+            'poli_name' => $this->poliName,
+            'total_items' => $this->totalItems,
+            'created_at' => $this->createdAt,
         ];
     }
 }

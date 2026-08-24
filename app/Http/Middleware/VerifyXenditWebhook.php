@@ -16,16 +16,16 @@ class VerifyXenditWebhook
         // Pastikan token terkonfigurasi di aplikasi
         if (empty($validToken)) {
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Server webhook token is not configured.'
+                'status' => 'error',
+                'message' => 'Server webhook token is not configured.',
             ], 500);
         }
 
         // Bandingkan token masuk dengan token resmi dari config secara aman
-        if (!$incomingToken || !hash_equals($validToken, $incomingToken)) {
+        if (! $incomingToken || ! hash_equals($validToken, $incomingToken)) {
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Invalid or missing x-callback-token header.'
+                'status' => 'error',
+                'message' => 'Invalid or missing x-callback-token header.',
             ], 401);
         }
 

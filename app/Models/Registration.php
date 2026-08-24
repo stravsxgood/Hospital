@@ -13,6 +13,7 @@ class Registration extends Model
     use HasFactory;
 
     protected $table = 'registration';
+
     protected $primaryKey = 'registration_id';
 
     protected $fillable = [

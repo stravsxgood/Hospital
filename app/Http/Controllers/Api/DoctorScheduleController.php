@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DoctorSchedule;
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DoctorScheduleController extends Controller
 {
@@ -35,13 +35,13 @@ class DoctorScheduleController extends Controller
         }
 
         $schedules = $query->orderBy('day', 'asc')
-                           ->orderBy('start_time', 'asc')
-                           ->get();
+            ->orderBy('start_time', 'asc')
+            ->get();
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Daftar jadwal dokter berhasil diambil.',
-            'data'    => $schedules
+            'data' => $schedules,
         ], 200);
     }
 
@@ -51,23 +51,23 @@ class DoctorScheduleController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'doctor_id'  => ['required', 'integer', 'exists:doctor,doctor_id'],
-            'poli_id'    => ['required', 'integer', 'exists:poli,poli_id'],
-            'room_id'    => ['required', 'integer', 'exists:room,room_id'],
-            'day'        => ['required', 'string', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu'],
+            'doctor_id' => ['required', 'integer', 'exists:doctor,doctor_id'],
+            'poli_id' => ['required', 'integer', 'exists:poli,poli_id'],
+            'room_id' => ['required', 'integer', 'exists:room,room_id'],
+            'day' => ['required', 'string', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu'],
             'start_time' => ['required', 'date_format:H:i'],
-            'end_time'   => ['required', 'date_format:H:i', 'after:start_time'],
-            'quota_day'  => ['sometimes', 'integer', 'min:1'],
-            'status'     => ['sometimes', 'string', 'in:Aktif,Nonaktif'],
+            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+            'quota_day' => ['sometimes', 'integer', 'min:1'],
+            'status' => ['sometimes', 'string', 'in:Aktif,Nonaktif'],
         ]);
 
         $schedule = DoctorSchedule::create($validated);
         $schedule->load(['doctor', 'poli', 'room']);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Jadwal dokter berhasil ditambahkan.',
-            'data'    => $schedule
+            'data' => $schedule,
         ], 201);
     }
 
@@ -78,17 +78,17 @@ class DoctorScheduleController extends Controller
     {
         $schedule = DoctorSchedule::with(['doctor', 'poli', 'room'])->find($id);
 
-        if (!$schedule) {
+        if (! $schedule) {
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Jadwal dokter tidak ditemukan.'
+                'status' => 'error',
+                'message' => 'Jadwal dokter tidak ditemukan.',
             ], 404);
         }
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Detail jadwal dokter berhasil diambil.',
-            'data'    => $schedule
+            'data' => $schedule,
         ], 200);
     }
 
@@ -99,31 +99,31 @@ class DoctorScheduleController extends Controller
     {
         $schedule = DoctorSchedule::find($id);
 
-        if (!$schedule) {
+        if (! $schedule) {
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Jadwal dokter tidak ditemukan.'
+                'status' => 'error',
+                'message' => 'Jadwal dokter tidak ditemukan.',
             ], 404);
         }
 
         $validated = $request->validate([
-            'doctor_id'  => ['sometimes', 'integer', 'exists:doctor,doctor_id'],
-            'poli_id'    => ['sometimes', 'integer', 'exists:poli,poli_id'],
-            'room_id'    => ['sometimes', 'integer', 'exists:room,room_id'],
-            'day'        => ['sometimes', 'string', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu'],
+            'doctor_id' => ['sometimes', 'integer', 'exists:doctor,doctor_id'],
+            'poli_id' => ['sometimes', 'integer', 'exists:poli,poli_id'],
+            'room_id' => ['sometimes', 'integer', 'exists:room,room_id'],
+            'day' => ['sometimes', 'string', 'in:Senin,Selasa,Rabu,Kamis,Jumat,Sabtu,Minggu'],
             'start_time' => ['sometimes', 'date_format:H:i'],
-            'end_time'   => ['sometimes', 'date_format:H:i', 'after:start_time'],
-            'quota_day'  => ['sometimes', 'integer', 'min:1'],
-            'status'     => ['sometimes', 'string', 'in:Aktif,Nonaktif'],
+            'end_time' => ['sometimes', 'date_format:H:i', 'after:start_time'],
+            'quota_day' => ['sometimes', 'integer', 'min:1'],
+            'status' => ['sometimes', 'string', 'in:Aktif,Nonaktif'],
         ]);
 
         $schedule->update($validated);
         $schedule->load(['doctor', 'poli', 'room']);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Jadwal dokter berhasil diperbarui.',
-            'data'    => $schedule
+            'data' => $schedule,
         ], 200);
     }
 
@@ -134,18 +134,18 @@ class DoctorScheduleController extends Controller
     {
         $schedule = DoctorSchedule::find($id);
 
-        if (!$schedule) {
+        if (! $schedule) {
             return response()->json([
-                'status'  => 'error',
-                'message' => 'Jadwal dokter tidak ditemukan.'
+                'status' => 'error',
+                'message' => 'Jadwal dokter tidak ditemukan.',
             ], 404);
         }
 
         $schedule->delete();
 
         return response()->json([
-            'status'  => 'success',
-            'message' => 'Jadwal dokter berhasil dihapus.'
+            'status' => 'success',
+            'message' => 'Jadwal dokter berhasil dihapus.',
         ], 200);
     }
 }

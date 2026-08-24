@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Billing;
+use App\Services\AuditLogService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -29,7 +30,7 @@ class MedicalDocumentController extends Controller
         $nurse = $request->user()?->nurse;
 
         if ($medicalRecord) {
-            \App\Services\AuditLogService::logAccess(
+            AuditLogService::logAccess(
                 medicalRecordId: (int) $medicalRecord->medical_record_id,
                 action: 'export_pdf',
                 payloadDiff: ['document' => 'Resume Medis', 'stream' => $request->query('stream') === '1']
@@ -37,13 +38,13 @@ class MedicalDocumentController extends Controller
         }
 
         $pdf = Pdf::loadView('pdf.medical_resume', [
-            'appointment'   => $appointment,
-            'patient'       => $patient,
+            'appointment' => $appointment,
+            'patient' => $patient,
             'medicalRecord' => $medicalRecord,
-            'nurse'         => $nurse,
+            'nurse' => $nurse,
         ])->setPaper('a4', 'portrait');
 
-        $filename = 'Resume_Medis_' . str_replace(' ', '_', $patient->name) . '_' . date('Ymd') . '.pdf';
+        $filename = 'Resume_Medis_'.str_replace(' ', '_', $patient->name).'_'.date('Ymd').'.pdf';
 
         if ($request->query('stream') === '1') {
             return $pdf->stream($filename);
@@ -70,14 +71,14 @@ class MedicalDocumentController extends Controller
         $nurse = $request->user()?->nurse;
 
         $pdf = Pdf::loadView('pdf.sick_letter', [
-            'appointment'   => $appointment,
-            'patient'       => $patient,
+            'appointment' => $appointment,
+            'patient' => $patient,
             'medicalRecord' => $medicalRecord,
-            'nurse'         => $nurse,
-            'days'          => $days,
+            'nurse' => $nurse,
+            'days' => $days,
         ])->setPaper('a4', 'portrait');
 
-        $filename = 'Surat_Keterangan_Sakit_' . str_replace(' ', '_', $patient->name) . '_' . date('Ymd') . '.pdf';
+        $filename = 'Surat_Keterangan_Sakit_'.str_replace(' ', '_', $patient->name).'_'.date('Ymd').'.pdf';
 
         if ($request->query('stream') === '1') {
             return $pdf->stream($filename);
@@ -103,13 +104,13 @@ class MedicalDocumentController extends Controller
         $nurse = $request->user()?->nurse;
 
         $pdf = Pdf::loadView('pdf.referral_letter', [
-            'appointment'   => $appointment,
-            'patient'       => $patient,
+            'appointment' => $appointment,
+            'patient' => $patient,
             'medicalRecord' => $medicalRecord,
-            'nurse'         => $nurse,
+            'nurse' => $nurse,
         ])->setPaper('a4', 'portrait');
 
-        $filename = 'Surat_Rujukan_' . str_replace(' ', '_', $patient->name) . '_' . date('Ymd') . '.pdf';
+        $filename = 'Surat_Rujukan_'.str_replace(' ', '_', $patient->name).'_'.date('Ymd').'.pdf';
 
         if ($request->query('stream') === '1') {
             return $pdf->stream($filename);
@@ -138,7 +139,7 @@ class MedicalDocumentController extends Controller
             'billing' => $billing,
         ])->setPaper('a4', 'portrait');
 
-        $filename = 'Kuitansi_Pembayaran_' . $billing->invoice_number . '.pdf';
+        $filename = 'Kuitansi_Pembayaran_'.$billing->invoice_number.'.pdf';
 
         if ($request->query('stream') === '1') {
             return $pdf->stream($filename);

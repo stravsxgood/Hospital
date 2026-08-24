@@ -16,7 +16,9 @@ class Appointment extends Model
     use HasFactory;
 
     protected $table = 'appointments';
+
     protected $primaryKey = 'appointment_id';
+
     protected $guarded = ['appointment_id'];
 
     protected $fillable = [
@@ -36,10 +38,10 @@ class Appointment extends Model
     protected function casts(): array
     {
         return [
-            'appointment_id'     => 'integer',
-            'patient_id'         => 'integer',
+            'appointment_id' => 'integer',
+            'patient_id' => 'integer',
             'doctor_schedule_id' => 'integer',
-            'appointment_date'   => 'date',
+            'appointment_date' => 'date',
         ];
     }
 
@@ -80,9 +82,6 @@ class Appointment extends Model
 
     /**
      * Scope antrean dengan status pending (menunggu check-in di meja depan).
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopePending(Builder $query): Builder
     {
@@ -91,9 +90,6 @@ class Appointment extends Model
 
     /**
      * Scope antrean dengan status confirmed (telah hadir & siap diperiksa dokter).
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeConfirmed(Builder $query): Builder
     {
@@ -102,9 +98,6 @@ class Appointment extends Model
 
     /**
      * Scope antrean yang sedang dalam proses pemeriksaan dokter.
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeInProgress(Builder $query): Builder
     {
@@ -113,9 +106,6 @@ class Appointment extends Model
 
     /**
      * Scope antrean dengan status completed (pemeriksaan selesai).
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeCompleted(Builder $query): Builder
     {
@@ -124,13 +114,9 @@ class Appointment extends Model
 
     /**
      * Scope antrean dengan tanggal kunjungan hari ini.
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeToday(Builder $query): Builder
     {
         return $query->whereDate('appointment_date', today());
     }
 }
-

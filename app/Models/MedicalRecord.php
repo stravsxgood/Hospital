@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /**
  * Model MedicalRecord - Rekam Medis Elektronik (EMR)
@@ -21,15 +23,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $assessment
  * @property string $plan
  * @property string|null $physical_check
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class MedicalRecord extends Model
 {
     use HasFactory;
 
     protected $table = 'medical_record';
+
     protected $primaryKey = 'medical_record_id';
+
     protected $guarded = [];
 
     /**
@@ -39,10 +43,10 @@ class MedicalRecord extends Model
     {
         return [
             'medical_record_id' => 'integer',
-            'reservation_id'    => 'integer',
-            'patient_id'        => 'integer',
-            'doctor_id'         => 'integer',
-            'objective'         => 'array',
+            'reservation_id' => 'integer',
+            'patient_id' => 'integer',
+            'doctor_id' => 'integer',
+            'objective' => 'array',
         ];
     }
 
@@ -89,7 +93,7 @@ class MedicalRecord extends Model
     /**
      * Relasi ke log audit akses UU PDP
      */
-    public function auditLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function auditLogs(): HasMany
     {
         return $this->hasMany(MedicalRecordAuditLog::class, 'medical_record_id', 'medical_record_id');
     }
@@ -97,7 +101,7 @@ class MedicalRecord extends Model
     /**
      * Relasi ke logbook klinis koas terkait
      */
-    public function clinicalLogbooks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function clinicalLogbooks(): HasMany
     {
         return $this->hasMany(ClinicalLogbook::class, 'medical_record_id', 'medical_record_id');
     }

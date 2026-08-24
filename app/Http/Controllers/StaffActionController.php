@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PatientConfirmedEvent;
 use App\Models\Appointment;
 use App\Models\Medicine;
 use App\Models\Prescription;
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Gate;
 
 /**
  * Class StaffActionController
- * 
+ *
  * Menangani aksi operasional meja depan (front-office check-in) dan
  * penyiapan obat farmasi (prescription fulfillment & FEFO batch stock deduction).
  * Audio queue calling diisolasi secara eksklusif hanya untuk Dokter.
@@ -25,12 +26,13 @@ class StaffActionController extends Controller
     public function __construct(
         private readonly FEFODispensationService $fefoDispensationService
     ) {}
+
     /**
      * Konfirmasi kedatangan / Check-in pasien di Front-Office meja depan.
      * Mengubah status reservasi dari 'pending' (menunggu) menjadi 'confirmed' (dikonfirmasi/hadir),
      * sehingga dokter dapat melihat pasien siap di ruang periksa.
      *
-     * @param int|string $id ID appointment / reservasi
+     * @param  int|string  $id  ID appointment / reservasi
      */
     public function confirmArrival(Request $request, int $id): JsonResponse|RedirectResponse
     {
@@ -40,21 +42,23 @@ class StaffActionController extends Controller
         if ($appointment->status === 'cancelled') {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Janji temu pasien ini telah dibatalkan sebelumnya.',
                 ], 422);
             }
+
             return redirect()->back()->with('error', 'Janji temu pasien ini telah dibatalkan.');
         }
 
         if ($appointment->status !== 'pending') {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => 'Status kedatangan pasien sudah dikonfirmasi sebelumnya.',
-                    'data'    => $appointment,
+                    'data' => $appointment,
                 ]);
             }
+
             return redirect()->back()->with('info', 'Kedatangan pasien sudah dikonfirmasi.');
         }
 
@@ -70,7 +74,7 @@ class StaffActionController extends Controller
 
         // Siarkan event kedatangan pasien langsung ke konsol dokter DPJP via Reverb
         if ($doctorId > 0) {
-            event(new \App\Events\PatientConfirmedEvent(
+            event(new PatientConfirmedEvent(
                 reservationId: (int) $appointment->appointment_id,
                 queueNumber: (string) $queueNumber,
                 patientName: (string) $patientName,
@@ -84,9 +88,9 @@ class StaffActionController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => $successMessage,
-                'data'    => $appointment->fresh(['patient', 'doctorSchedule.doctor', 'doctorSchedule.poli']),
+                'data' => $appointment->fresh(['patient', 'doctorSchedule.doctor', 'doctorSchedule.poli']),
             ]);
         }
 
@@ -107,10 +111,11 @@ class StaffActionController extends Controller
         if ($prescription->status === 'selesai') {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Resep ini sudah selesai diracik sebelumnya.',
                 ], 422);
             }
+
             return redirect()->back()->with('info', 'Resep ini sudah selesai diracik.');
         }
 
@@ -122,9 +127,9 @@ class StaffActionController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => $message,
-                'data'    => $prescription->fresh(),
+                'data' => $prescription->fresh(),
             ]);
         }
 
@@ -145,11 +150,12 @@ class StaffActionController extends Controller
         if ($prescription->status === 'selesai') {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => 'Resep ini sudah ditandai selesai sebelumnya.',
-                    'data'    => $prescription,
+                    'data' => $prescription,
                 ]);
             }
+
             return redirect()->back()->with('info', 'Resep ini sudah ditandai selesai.');
         }
 
@@ -178,9 +184,9 @@ class StaffActionController extends Controller
 
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => true,
+                    'status' => true,
                     'message' => $message,
-                    'data'    => $prescription->fresh(['medicalRecord.patient', 'items.medicine']),
+                    'data' => $prescription->fresh(['medicalRecord.patient', 'items.medicine']),
                 ]);
             }
 
@@ -188,11 +194,12 @@ class StaffActionController extends Controller
         } catch (Exception $e) {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => false,
-                    'message' => 'Gagal menyelesaikan resep: ' . $e->getMessage(),
+                    'status' => false,
+                    'message' => 'Gagal menyelesaikan resep: '.$e->getMessage(),
                 ], 500);
             }
-            return redirect()->back()->with('error', 'Gagal memproses resep: ' . $e->getMessage());
+
+            return redirect()->back()->with('error', 'Gagal memproses resep: '.$e->getMessage());
         }
     }
 }

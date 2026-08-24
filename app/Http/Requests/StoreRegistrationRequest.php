@@ -6,7 +6,6 @@ use App\Models\DoctorSchedule;
 use App\Models\Registration;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\Validator;
 
 class StoreRegistrationRequest extends FormRequest
@@ -41,6 +40,7 @@ class StoreRegistrationRequest extends FormRequest
 
             if ($alreadyBooked) {
                 $validator->errors()->add('registration_date', 'Anda sudah memiliki antrean aktif dengan dokter ini pada tanggal yang dipilih.');
+
                 return;
             }
 
@@ -51,8 +51,9 @@ class StoreRegistrationRequest extends FormRequest
                 ->where('status', 'Aktif')
                 ->first();
 
-            if (!$schedule) {
+            if (! $schedule) {
                 $validator->errors()->add('doctor_id', "Dokter tidak memiliki jadwal praktik aktif pada hari {$dayName}.");
+
                 return;
             }
 

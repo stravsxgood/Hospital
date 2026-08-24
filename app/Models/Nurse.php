@@ -25,6 +25,7 @@ class Nurse extends Model
     use HasFactory;
 
     protected $table = 'nurse';
+
     protected $primaryKey = 'nurse_id';
 
     protected $fillable = [
@@ -41,10 +42,10 @@ class Nurse extends Model
     protected function casts(): array
     {
         return [
-            'nurse_id'   => 'integer',
-            'user_id'    => 'integer',
+            'nurse_id' => 'integer',
+            'user_id' => 'integer',
             'date_start' => 'date',
-            'date_end'   => 'date',
+            'date_end' => 'date',
         ];
     }
 

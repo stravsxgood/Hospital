@@ -5,13 +5,14 @@ namespace Database\Seeders;
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
 use App\Models\Nurse;
+use App\Models\Patient;
 use App\Models\Poli;
 use App\Models\Room;
 use App\Models\Specialization;
-use App\Models\Patient;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class HospitalMasterSeeder extends Seeder
 {
@@ -72,7 +73,7 @@ class HospitalMasterSeeder extends Seeder
         );
 
         // Hubungkan Dokter ke Poli jika belum terhubung
-        if (!$doctor->polis()->where('doctor_poli.poli_id', $poli->poli_id)->exists()) {
+        if (! $doctor->polis()->where('doctor_poli.poli_id', $poli->poli_id)->exists()) {
             $doctor->polis()->attach($poli->poli_id);
         }
 
@@ -145,7 +146,7 @@ class HospitalMasterSeeder extends Seeder
         // 8. Inisialisasi Spatie Roles
         $roles = ['super-admin', 'dpjp-doctor', 'staff-pekerja', 'koas-intern', 'patient'];
         foreach ($roles as $roleName) {
-            \Spatie\Permission\Models\Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
+            Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
         }
 
         // 9. Akun Super Admin

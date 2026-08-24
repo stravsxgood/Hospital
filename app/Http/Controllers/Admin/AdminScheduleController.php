@@ -23,9 +23,6 @@ class AdminScheduleController extends Controller
 {
     /**
      * Display Doctor Practice Schedule Grid & Daily Quotas.
-     *
-     * @param Request $request
-     * @return Response|JsonResponse
      */
     public function index(Request $request): Response|JsonResponse
     {
@@ -60,21 +57,21 @@ class AdminScheduleController extends Controller
 
         $payload = [
             'schedules' => $schedules,
-            'doctors'   => $doctors,
-            'polis'     => $polis,
-            'rooms'     => $rooms,
-            'filters'   => [
-                'day'     => $dayFilter,
+            'doctors' => $doctors,
+            'polis' => $polis,
+            'rooms' => $rooms,
+            'filters' => [
+                'day' => $dayFilter,
                 'poli_id' => $poliFilter,
-                'status'  => $statusFilter,
+                'status' => $statusFilter,
             ],
         ];
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Schedules retrieved successfully.',
-                'data'    => $payload,
+                'data' => $payload,
             ]);
         }
 
@@ -83,9 +80,6 @@ class AdminScheduleController extends Controller
 
     /**
      * Store a newly created Doctor Schedule.
-     *
-     * @param StoreScheduleRequest $request
-     * @return RedirectResponse|JsonResponse
      */
     public function store(StoreScheduleRequest $request): RedirectResponse|JsonResponse
     {
@@ -93,9 +87,9 @@ class AdminScheduleController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Jadwal praktik dokter berhasil ditambahkan.',
-                'data'    => $schedule,
+                'data' => $schedule,
             ], 201);
         }
 
@@ -104,10 +98,6 @@ class AdminScheduleController extends Controller
 
     /**
      * Update the specified Doctor Schedule.
-     *
-     * @param UpdateScheduleRequest $request
-     * @param DoctorSchedule $schedule
-     * @return RedirectResponse|JsonResponse
      */
     public function update(UpdateScheduleRequest $request, DoctorSchedule $schedule): RedirectResponse|JsonResponse
     {
@@ -115,9 +105,9 @@ class AdminScheduleController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Jadwal praktik dokter berhasil diperbarui.',
-                'data'    => $schedule,
+                'data' => $schedule,
             ]);
         }
 
@@ -126,10 +116,6 @@ class AdminScheduleController extends Controller
 
     /**
      * Remove the specified Doctor Schedule safely.
-     *
-     * @param Request $request
-     * @param DoctorSchedule $schedule
-     * @return RedirectResponse|JsonResponse
      */
     public function destroy(Request $request, DoctorSchedule $schedule): RedirectResponse|JsonResponse
     {
@@ -144,6 +130,7 @@ class AdminScheduleController extends Controller
             if ($request->wantsJson()) {
                 return response()->json(['status' => false, 'message' => $msg], 422);
             }
+
             return redirect()->back()->with('error', $msg);
         }
 
@@ -151,7 +138,7 @@ class AdminScheduleController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Jadwal praktik berhasil dihapus.',
             ]);
         }

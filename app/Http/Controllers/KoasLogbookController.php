@@ -53,10 +53,10 @@ class KoasLogbookController extends Controller
             $search = trim((string) $request->query('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('case_title', 'like', "%{$search}%")
-                  ->orWhere('clinical_findings', 'like', "%{$search}%")
-                  ->orWhereHas('patient', function ($pq) use ($search) {
-                      $pq->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('clinical_findings', 'like', "%{$search}%")
+                    ->orWhereHas('patient', function ($pq) use ($search) {
+                        $pq->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -67,7 +67,7 @@ class KoasLogbookController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'status' => true,
-                'data'   => $logbooks,
+                'data' => $logbooks,
             ]);
         }
 
@@ -80,19 +80,19 @@ class KoasLogbookController extends Controller
 
         return Inertia::render('koas/Logbook/Index', [
             'logbooks' => $logbooks,
-            'doctors'  => $doctors,
+            'doctors' => $doctors,
             'patients' => $patients,
-            'filters'  => [
-                'status'        => $request->query('status', ''),
+            'filters' => [
+                'status' => $request->query('status', ''),
                 'activity_type' => $request->query('activity_type', ''),
-                'search'        => $request->query('search', ''),
+                'search' => $request->query('search', ''),
             ],
             'stats' => [
-                'total'            => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->count(),
-                'draft'            => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'draft')->count(),
-                'submitted'        => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'submitted')->count(),
-                'approved'         => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'approved')->count(),
-                'revision_needed'  => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'revision_needed')->count(),
+                'total' => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->count(),
+                'draft' => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'draft')->count(),
+                'submitted' => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'submitted')->count(),
+                'approved' => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'approved')->count(),
+                'revision_needed' => ClinicalLogbook::where('nurse_id', $nurse->nurse_id)->where('status', 'revision_needed')->count(),
             ],
         ]);
     }
@@ -110,25 +110,25 @@ class KoasLogbookController extends Controller
 
         $logbook = DB::transaction(function () use ($nurse, $validated, $status, $submittedAt) {
             return ClinicalLogbook::create([
-                'nurse_id'            => (int) $nurse->nurse_id,
-                'patient_id'          => (int) $validated['patient_id'],
-                'doctor_id'           => (int) $validated['doctor_id'],
-                'medical_record_id'   => ! empty($validated['medical_record_id']) ? (int) $validated['medical_record_id'] : null,
-                'activity_type'       => $validated['activity_type'],
-                'case_title'          => $validated['case_title'],
-                'clinical_findings'   => $validated['clinical_findings'],
+                'nurse_id' => (int) $nurse->nurse_id,
+                'patient_id' => (int) $validated['patient_id'],
+                'doctor_id' => (int) $validated['doctor_id'],
+                'medical_record_id' => ! empty($validated['medical_record_id']) ? (int) $validated['medical_record_id'] : null,
+                'activity_type' => $validated['activity_type'],
+                'case_title' => $validated['case_title'],
+                'clinical_findings' => $validated['clinical_findings'],
                 'procedure_performed' => $validated['procedure_performed'] ?? null,
                 'learning_reflection' => $validated['learning_reflection'],
-                'status'              => $status,
-                'submitted_at'        => $submittedAt,
+                'status' => $status,
+                'submitted_at' => $submittedAt,
             ]);
         });
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => $status === 'submitted' ? 'Logbook klinis berhasil diajukan ke DPJP.' : 'Draft logbook klinis berhasil disimpan.',
-                'data'    => $logbook->load(['patient', 'doctor.specialization', 'medicalRecord']),
+                'data' => $logbook->load(['patient', 'doctor.specialization', 'medicalRecord']),
             ], 201);
         }
 
@@ -146,10 +146,11 @@ class KoasLogbookController extends Controller
         if (in_array($logbook->status, ['approved', 'submitted'])) {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Logbook yang sudah diajukan atau disetujui tidak dapat diubah.',
                 ], 422);
             }
+
             return redirect()->back()->with('error', 'Logbook yang sudah diajukan tidak dapat diubah.');
         }
 
@@ -158,23 +159,23 @@ class KoasLogbookController extends Controller
         $submittedAt = $status === 'submitted' ? now() : $logbook->submitted_at;
 
         $logbook->update([
-            'patient_id'          => $validated['patient_id'] ?? $logbook->patient_id,
-            'doctor_id'           => $validated['doctor_id'] ?? $logbook->doctor_id,
-            'medical_record_id'   => array_key_exists('medical_record_id', $validated) ? $validated['medical_record_id'] : $logbook->medical_record_id,
-            'activity_type'       => $validated['activity_type'] ?? $logbook->activity_type,
-            'case_title'          => $validated['case_title'] ?? $logbook->case_title,
-            'clinical_findings'   => $validated['clinical_findings'] ?? $logbook->clinical_findings,
+            'patient_id' => $validated['patient_id'] ?? $logbook->patient_id,
+            'doctor_id' => $validated['doctor_id'] ?? $logbook->doctor_id,
+            'medical_record_id' => array_key_exists('medical_record_id', $validated) ? $validated['medical_record_id'] : $logbook->medical_record_id,
+            'activity_type' => $validated['activity_type'] ?? $logbook->activity_type,
+            'case_title' => $validated['case_title'] ?? $logbook->case_title,
+            'clinical_findings' => $validated['clinical_findings'] ?? $logbook->clinical_findings,
             'procedure_performed' => array_key_exists('procedure_performed', $validated) ? $validated['procedure_performed'] : $logbook->procedure_performed,
             'learning_reflection' => $validated['learning_reflection'] ?? $logbook->learning_reflection,
-            'status'              => $status,
-            'submitted_at'        => $submittedAt,
+            'status' => $status,
+            'submitted_at' => $submittedAt,
         ]);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Logbook klinis berhasil diperbarui.',
-                'data'    => $logbook->fresh(['patient', 'doctor.specialization', 'medicalRecord']),
+                'data' => $logbook->fresh(['patient', 'doctor.specialization', 'medicalRecord']),
             ]);
         }
 
@@ -192,23 +193,24 @@ class KoasLogbookController extends Controller
         if ($logbook->status === 'approved') {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Logbook ini sudah disetujui sebelumnya.',
                 ], 422);
             }
+
             return redirect()->back()->with('info', 'Logbook ini sudah disetujui.');
         }
 
         $logbook->update([
-            'status'       => 'submitted',
+            'status' => 'submitted',
             'submitted_at' => now(),
         ]);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Logbook klinis berhasil diajukan ke Dokter DPJP Pembimbing.',
-                'data'    => $logbook->fresh(['patient', 'doctor.specialization']),
+                'data' => $logbook->fresh(['patient', 'doctor.specialization']),
             ]);
         }
 
@@ -226,10 +228,11 @@ class KoasLogbookController extends Controller
         if ($logbook->status === 'approved') {
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => 'Logbook yang sudah disetujui tidak dapat dihapus.',
                 ], 422);
             }
+
             return redirect()->back()->with('error', 'Logbook yang sudah disetujui tidak dapat dihapus.');
         }
 
@@ -237,7 +240,7 @@ class KoasLogbookController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Draft logbook klinis berhasil dihapus.',
             ]);
         }

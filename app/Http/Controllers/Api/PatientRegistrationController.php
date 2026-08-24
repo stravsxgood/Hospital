@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRegistrationRequest;
-use App\Models\Doctor;
 use App\Models\Poli;
 use App\Models\Registration;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +21,7 @@ class PatientRegistrationController extends Controller
                 'doctors.specialization',
                 'doctors.schedules' => function ($query) {
                     $query->where('status', 'Aktif')->orderBy('day');
-                }
+                },
             ])
             ->get();
 

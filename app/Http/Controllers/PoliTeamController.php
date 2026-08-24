@@ -6,7 +6,6 @@ use App\Models\Doctor;
 use App\Models\DoctorSchedule;
 use App\Models\Nurse;
 use App\Models\Poli;
-use App\Models\Room;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,9 +19,6 @@ class PoliTeamController extends Controller
 {
     /**
      * Menampilkan profil tim medis dan fasilitas poliklinik terpilih.
-     *
-     * @param Request $request
-     * @return Response
      */
     public function index(Request $request): Response
     {
@@ -49,7 +45,7 @@ class PoliTeamController extends Controller
         $currentPoli = $allPolis[$currentPoliKey];
 
         // Ambil data database jika tersedia (Poli, Dokter, Jadwal)
-        $dbPoli = Poli::where('name_poli', 'LIKE', '%' . $currentPoli['short_name'] . '%')
+        $dbPoli = Poli::where('name_poli', 'LIKE', '%'.$currentPoli['short_name'].'%')
             ->orWhere('kode_poli', $currentPoli['code'])
             ->first();
 
@@ -96,8 +92,6 @@ class PoliTeamController extends Controller
 
     /**
      * Dataset komprehensif 10 Unit Poliklinik & Tim Medis Hospital Population.
-     *
-     * @return array
      */
     private function getPolisDataset(): array
     {

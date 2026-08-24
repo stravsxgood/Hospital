@@ -6,7 +6,6 @@ namespace Tests\Feature;
 
 use App\Models\Doctor;
 use App\Models\MedicalRecord;
-use App\Models\MedicalRecordAuditLog;
 use App\Models\Nurse;
 use App\Models\Patient;
 use App\Models\Specialization;

@@ -11,6 +11,7 @@ class Inspection extends Model
     use HasFactory;
 
     protected $table = 'inspection';
+
     protected $primaryKey = 'inspection_id';
 
     protected $fillable = [

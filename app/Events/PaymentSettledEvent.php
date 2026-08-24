@@ -32,12 +32,12 @@ class PaymentSettledEvent implements ShouldBroadcastNow
     /**
      * Tentukan channel siaran WebSocket
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('billing.' . $this->billingId),
+            new PrivateChannel('billing.'.$this->billingId),
         ];
     }
 
@@ -55,12 +55,12 @@ class PaymentSettledEvent implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'billing_id'     => $this->billingId,
+            'billing_id' => $this->billingId,
             'invoice_number' => $this->invoiceNumber,
-            'status'         => $this->status,
+            'status' => $this->status,
             'payment_method' => $this->paymentMethod,
-            'paid_amount'    => $this->paidAmount,
-            'paid_at'        => $this->paidAt,
+            'paid_amount' => $this->paidAmount,
+            'paid_at' => $this->paidAt,
         ];
     }
 }

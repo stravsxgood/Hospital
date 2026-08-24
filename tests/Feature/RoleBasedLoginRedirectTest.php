@@ -6,7 +6,9 @@ use App\Models\Specialization;
 use App\Models\User;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Fortify\Contracts\LoginResponse;
 
 test('doctor api login redirects to /staff and returns doctor role', function () {
     $this->withoutMiddleware([
@@ -111,10 +113,10 @@ test('doctor web login response redirects to /staff', function () {
         'status' => 'aktif',
     ]);
 
-    $request = \Illuminate\Http\Request::create('/login', 'POST');
+    $request = Request::create('/login', 'POST');
     $request->setUserResolver(fn () => $user);
 
-    $response = app(\Laravel\Fortify\Contracts\LoginResponse::class)->toResponse($request);
+    $response = app(LoginResponse::class)->toResponse($request);
 
     expect($response->getTargetUrl())->toBe(url('/staff'));
 });
@@ -130,12 +132,10 @@ test('patient web login response redirects to /patient/dashboard', function () {
         'birthday_date' => '1992-02-02',
     ]);
 
-    $request = \Illuminate\Http\Request::create('/login', 'POST');
+    $request = Request::create('/login', 'POST');
     $request->setUserResolver(fn () => $user);
 
-    $response = app(\Laravel\Fortify\Contracts\LoginResponse::class)->toResponse($request);
+    $response = app(LoginResponse::class)->toResponse($request);
 
     expect($response->getTargetUrl())->toBe(route('patient.dashboard'));
 });
-
-

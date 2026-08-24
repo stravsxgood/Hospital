@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $ip_address
  * @property string|null $user_agent
  * @property array|null $payload_diff
- * @property \Carbon\Carbon $created_at
+ * @property Carbon $created_at
  */
 class MedicalRecordAuditLog extends Model
 {
@@ -28,6 +29,7 @@ class MedicalRecordAuditLog extends Model
     public $timestamps = false; // Hanya menggunakan created_at yang immutable
 
     protected $table = 'medical_record_audit_log';
+
     protected $primaryKey = 'audit_log_id';
 
     protected $fillable = [
@@ -46,11 +48,11 @@ class MedicalRecordAuditLog extends Model
     protected function casts(): array
     {
         return [
-            'audit_log_id'      => 'integer',
+            'audit_log_id' => 'integer',
             'medical_record_id' => 'integer',
-            'user_id'           => 'integer',
-            'payload_diff'      => 'array',
-            'created_at'        => 'datetime',
+            'user_id' => 'integer',
+            'payload_diff' => 'array',
+            'created_at' => 'datetime',
         ];
     }
 

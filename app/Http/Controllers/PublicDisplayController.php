@@ -65,14 +65,14 @@ class PublicDisplayController extends Controller
                 ->count();
 
             return [
-                'schedule_id'     => $sch->doctor_schedule_id,
-                'doctor_name'     => $sch->doctor?->name ?? 'Dokter',
-                'poli_name'       => $sch->poli?->name_poli ?? $sch->poli?->name ?? 'Poliklinik',
-                'room_name'       => $sch->room?->name_room ?? 'Ruang Periksa',
+                'schedule_id' => $sch->doctor_schedule_id,
+                'doctor_name' => $sch->doctor?->name ?? 'Dokter',
+                'poli_name' => $sch->poli?->name_poli ?? $sch->poli?->name ?? 'Poliklinik',
+                'room_name' => $sch->room?->name_room ?? 'Ruang Periksa',
                 'current_calling' => $current?->queue_number ?? null,
-                'patient_name'    => $current?->patient?->name ?? null,
-                'next_calling'    => $next?->queue_number ?? '-',
-                'waiting_count'   => $waitingCount,
+                'patient_name' => $current?->patient?->name ?? null,
+                'next_calling' => $next?->queue_number ?? '-',
+                'waiting_count' => $waitingCount,
             ];
         });
 
@@ -88,15 +88,15 @@ class PublicDisplayController extends Controller
             ->first();
 
         return [
-            'clinics'      => $clinics,
+            'clinics' => $clinics,
             'latestCalled' => $latestCalled ? [
                 'appointment_id' => $latestCalled->appointment_id,
-                'queue_number'   => $latestCalled->queue_number,
-                'patient_name'   => $latestCalled->patient?->name ?? 'Pasien',
-                'poli_name'      => $latestCalled->doctorSchedule?->poli?->name_poli ?? $latestCalled->doctorSchedule?->poli?->name ?? 'Poliklinik',
-                'room_name'      => $latestCalled->doctorSchedule?->room?->name_room ?? 'Ruang Periksa',
-                'doctor_name'    => $latestCalled->doctorSchedule?->doctor?->name ?? 'Dokter',
-                'updated_at'     => $latestCalled->updated_at ? $latestCalled->updated_at->toIso8601String() : now()->toIso8601String(),
+                'queue_number' => $latestCalled->queue_number,
+                'patient_name' => $latestCalled->patient?->name ?? 'Pasien',
+                'poli_name' => $latestCalled->doctorSchedule?->poli?->name_poli ?? $latestCalled->doctorSchedule?->poli?->name ?? 'Poliklinik',
+                'room_name' => $latestCalled->doctorSchedule?->room?->name_room ?? 'Ruang Periksa',
+                'doctor_name' => $latestCalled->doctorSchedule?->doctor?->name ?? 'Dokter',
+                'updated_at' => $latestCalled->updated_at ? $latestCalled->updated_at->toIso8601String() : now()->toIso8601String(),
             ] : null,
         ];
     }

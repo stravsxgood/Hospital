@@ -5,17 +5,16 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Models\Appointment;
 use App\Models\DoctorSchedule;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class AppointmentController extends Controller
 {
-
     // Menampilkan Daftar Antrean Pasien
     public function index(Request $request): Response|RedirectResponse
     {
@@ -39,7 +38,6 @@ class AppointmentController extends Controller
             'appointments' => $appointments,
         ]);
     }
-
 
     public function store(StoreAppointmentRequest $request): RedirectResponse
     {
@@ -88,24 +86,24 @@ class AppointmentController extends Controller
 
                 // 6. Buat data reservasi
                 $appointment = Appointment::create([
-                    'patient_id'         => $patient->patient_id,
+                    'patient_id' => $patient->patient_id,
                     'doctor_schedule_id' => $schedule->doctor_schedule_id,
-                    'appointment_date'   => $request->appointment_date,
-                    'queue_number'       => $nextQueueNumber,
-                    'complaint'          => $request->complaint,
-                    'status'             => 'pending',
+                    'appointment_date' => $request->appointment_date,
+                    'queue_number' => $nextQueueNumber,
+                    'complaint' => $request->complaint,
+                    'status' => 'pending',
                 ]);
 
                 return [
                     'appointment' => $appointment,
-                    'schedule'    => $schedule,
+                    'schedule' => $schedule,
                 ];
             });
         } catch (ValidationException $e) {
             throw $e;
         } catch (\Throwable $e) {
             return back()->withErrors([
-                'appointment_date' => 'Gagal simpan antrean: ' . $e->getMessage(),
+                'appointment_date' => 'Gagal simpan antrean: '.$e->getMessage(),
             ]);
         }
 
@@ -115,13 +113,13 @@ class AppointmentController extends Controller
         return redirect()->back()->with('success', [
             'message' => 'Tiket antrean berhasil dibuat!',
             'ticket' => [
-                'appointment_id'   => $appointment->appointment_id,
-                'queue_number'     => $appointment->queue_number,
-                'doctor_name'      => $schedule->doctor?->name,
-                'poli_name'        => $schedule->poli?->name_poli ?? $schedule->poli?->name,
+                'appointment_id' => $appointment->appointment_id,
+                'queue_number' => $appointment->queue_number,
+                'doctor_name' => $schedule->doctor?->name,
+                'poli_name' => $schedule->poli?->name_poli ?? $schedule->poli?->name,
                 'appointment_date' => Carbon::parse($appointment->appointment_date)->format('d-m-Y'),
-                'patient_name'     => $patient->name,
-                'resident_n'       => $patient->resident_n,
+                'patient_name' => $patient->name,
+                'resident_n' => $patient->resident_n,
             ],
         ]);
     }

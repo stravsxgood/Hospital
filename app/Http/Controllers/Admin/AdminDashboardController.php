@@ -25,9 +25,6 @@ class AdminDashboardController extends Controller
 {
     /**
      * Display the Super Admin Executive Governance & Financial Dashboard.
-     *
-     * @param Request $request
-     * @return Response|JsonResponse
      */
     public function index(Request $request): Response|JsonResponse
     {
@@ -55,14 +52,14 @@ class AdminDashboardController extends Controller
             ->get()
             ->map(fn ($item) => [
                 'method' => $item->payment_method ?? 'cash',
-                'label'  => match ($item->payment_method) {
+                'label' => match ($item->payment_method) {
                     'xendit_qris' => 'Xendit QRIS',
-                    'edc'         => 'Mesin EDC',
+                    'edc' => 'Mesin EDC',
                     'xendit_va', 'transfer' => 'Virtual Account',
-                    default       => 'Tunai (Cash)',
+                    default => 'Tunai (Cash)',
                 },
-                'total'  => (float) $item->total,
-                'count'  => (int) $item->count,
+                'total' => (float) $item->total,
+                'count' => (int) $item->count,
             ]);
 
         // Monthly Trend (6 Bulan Terakhir)
@@ -77,7 +74,7 @@ class AdminDashboardController extends Controller
                 ->sum('total_amount');
 
             $monthlyTrend[] = [
-                'month'   => $month->translatedFormat('M Y'),
+                'month' => $month->translatedFormat('M Y'),
                 'revenue' => $sum,
             ];
         }
@@ -91,7 +88,7 @@ class AdminDashboardController extends Controller
             ->limit(10)
             ->get()
             ->map(fn ($item) => [
-                'diagnosis'  => $item->assessment,
+                'diagnosis' => $item->assessment,
                 'case_count' => (int) $item->case_count,
             ]);
 
@@ -127,55 +124,55 @@ class AdminDashboardController extends Controller
             }
 
             return [
-                'poli_id'         => $poli->poli_id,
-                'name_poli'       => $poli->name_poli,
-                'kode_poli'       => $poli->kode_poli,
-                'location'        => $poli->location,
-                'doctor_name'     => $schedule?->doctor?->name ?? 'Tidak Ada Praktik',
-                'room_name'       => $schedule?->room?->name_room ?? '-',
-                'waiting_count'   => $waitingCount,
+                'poli_id' => $poli->poli_id,
+                'name_poli' => $poli->name_poli,
+                'kode_poli' => $poli->kode_poli,
+                'location' => $poli->location,
+                'doctor_name' => $schedule?->doctor?->name ?? 'Tidak Ada Praktik',
+                'room_name' => $schedule?->room?->name_room ?? '-',
+                'waiting_count' => $waitingCount,
                 'is_active_today' => $schedule !== null,
             ];
         });
 
         // 4. Staff & Demographics Summary
         $staffStats = [
-            'total_users'     => User::count(),
-            'total_doctors'   => Doctor::count(),
-            'doctors_active'  => Doctor::where('status', 'aktif')->count(),
-            'total_nurses'    => Nurse::count(),
-            'nurses_tetap'    => Nurse::where('type', 'tetap')->count(),
-            'nurses_koas'     => Nurse::where('type', 'koas')->count(),
-            'total_patients'  => Patient::count(),
-            'total_polis'     => Poli::count(),
+            'total_users' => User::count(),
+            'total_doctors' => Doctor::count(),
+            'doctors_active' => Doctor::where('status', 'aktif')->count(),
+            'total_nurses' => Nurse::count(),
+            'nurses_tetap' => Nurse::where('type', 'tetap')->count(),
+            'nurses_koas' => Nurse::where('type', 'koas')->count(),
+            'total_patients' => Patient::count(),
+            'total_polis' => Poli::count(),
         ];
 
         $payload = [
             'financial' => [
-                'today_revenue'     => $todayRevenue,
-                'week_revenue'      => $weekRevenue,
-                'month_revenue'     => $monthRevenue,
+                'today_revenue' => $todayRevenue,
+                'week_revenue' => $weekRevenue,
+                'month_revenue' => $monthRevenue,
                 'revenue_by_method' => $revenueByMethod,
-                'monthly_trend'     => $monthlyTrend,
+                'monthly_trend' => $monthlyTrend,
             ],
             'morbidity' => [
-                'top_diagnoses'            => $topDiagnoses,
+                'top_diagnoses' => $topDiagnoses,
                 'today_consultations_count' => MedicalRecord::whereDate('created_at', $today)->count(),
             ],
             'operational' => [
-                'today_active_queues'    => $todayActiveQueues,
+                'today_active_queues' => $todayActiveQueues,
                 'today_completed_queues' => $todayCompletedQueues,
-                'doctors_on_duty_count'  => $doctorsOnDutyCount,
-                'clinic_matrix'          => $clinicMatrix,
+                'doctors_on_duty_count' => $doctorsOnDutyCount,
+                'clinic_matrix' => $clinicMatrix,
             ],
             'staff_stats' => $staffStats,
         ];
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Super admin dashboard metrics retrieved successfully.',
-                'data'    => $payload,
+                'data' => $payload,
             ]);
         }
 

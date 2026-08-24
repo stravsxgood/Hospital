@@ -20,17 +20,17 @@ class StoreNurseUserRequest extends FormRequest
     {
         return [
             // User Account
-            'name'                => ['required', 'string', 'max:255'],
-            'email'               => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password'            => ['nullable', 'string', 'min:8'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['nullable', 'string', 'min:8'],
 
             // Nurse / Intern Profile
-            'type'                => ['required', 'string', 'in:tetap,koas'],
+            'type' => ['required', 'string', 'in:tetap,koas'],
             'registration_number' => ['nullable', 'string', 'max:50', 'unique:nurse,registration_number'],
-            'gender'              => ['required', 'string', 'in:Laki-laki,Perempuan'],
-            'institute'           => ['required_if:type,koas', 'nullable', 'string', 'max:255'],
-            'date_start'          => ['nullable', 'date'],
-            'date_end'            => ['nullable', 'date', 'after_or_equal:date_start'],
+            'gender' => ['required', 'string', 'in:Laki-laki,Perempuan'],
+            'institute' => ['required_if:type,koas', 'nullable', 'string', 'max:255'],
+            'date_start' => ['nullable', 'date'],
+            'date_end' => ['nullable', 'date', 'after_or_equal:date_start'],
         ];
     }
 }

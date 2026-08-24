@@ -1,9 +1,8 @@
 <?php
 
-use App\Models\Billing;
-use App\Models\CashierShift;
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
+use App\Models\MedicalRecord;
 use App\Models\Medicine;
 use App\Models\MedicineBatch;
 use App\Models\Nurse;
@@ -11,7 +10,6 @@ use App\Models\Patient;
 use App\Models\Poli;
 use App\Models\Prescription;
 use App\Models\PrescriptionItem;
-use App\Models\Registration;
 use App\Models\Room;
 use App\Models\Specialization;
 use App\Models\User;
@@ -36,7 +34,7 @@ function setupPharmacyAndCashierEnvironment(): array
 
     $doctorUser = User::factory()->create([
         'name' => 'dr. Anton',
-        'email' => 'anton.' . uniqid() . '@hospital.test',
+        'email' => 'anton.'.uniqid().'@hospital.test',
         'role' => 'doctor',
     ]);
 
@@ -44,7 +42,7 @@ function setupPharmacyAndCashierEnvironment(): array
         'user_id' => $doctorUser->id,
         'specialization_id' => $spec->specialization_id,
         'name' => 'dr. Anton',
-        'sip_number' => 'SIP-GEN-' . uniqid(),
+        'sip_number' => 'SIP-GEN-'.uniqid(),
         'gender' => 'Laki-laki',
         'number_phone' => '081233445577',
         'join_date' => now()->toDateString(),
@@ -65,14 +63,14 @@ function setupPharmacyAndCashierEnvironment(): array
     // Permanent Staff Nurse (Pekerja Tetap)
     $nurseUser = User::factory()->create([
         'name' => 'Suster Maya, S.Kep',
-        'email' => 'maya.' . uniqid() . '@hospital.test',
+        'email' => 'maya.'.uniqid().'@hospital.test',
         'role' => 'nurse',
     ]);
 
     $nurse = Nurse::create([
         'user_id' => $nurseUser->id,
         'name' => 'Suster Maya, S.Kep',
-        'registration_number' => 'STR-NURSE-' . uniqid(),
+        'registration_number' => 'STR-NURSE-'.uniqid(),
         'type' => 'tetap',
         'gender' => 'Perempuan',
         'date_start' => now()->toDateString(),
@@ -80,13 +78,13 @@ function setupPharmacyAndCashierEnvironment(): array
 
     $patientUser = User::factory()->create([
         'name' => 'Budi Santoso',
-        'email' => 'budi.' . uniqid() . '@patient.test',
+        'email' => 'budi.'.uniqid().'@patient.test',
         'role' => 'patient',
     ]);
 
     $patient = Patient::create([
         'user_id' => $patientUser->id,
-        'resident_n' => '3172' . rand(100000000000, 999999999999),
+        'resident_n' => '3172'.rand(100000000000, 999999999999),
         'name' => 'Budi Santoso',
         'gender' => 'Laki-laki',
         'birthday_date' => '1985-08-20',
@@ -129,7 +127,7 @@ test('fefo dispensation service deducts earliest expiring medicine batches first
     ]);
 
     // Rekam Medis Pasien
-    $emr = \App\Models\MedicalRecord::create([
+    $emr = MedicalRecord::create([
         'patient_id' => $env['patient']->patient_id,
         'doctor_id' => $env['doctor']->doctor_id,
         'subjective' => 'Demam dan sakit kepala',
@@ -140,7 +138,7 @@ test('fefo dispensation service deducts earliest expiring medicine batches first
 
     // Resep meminta 15 tablet Paracetamol
     $prescription = Prescription::create([
-        'prescription_number' => 'RX-' . strtoupper(uniqid()),
+        'prescription_number' => 'RX-'.strtoupper(uniqid()),
         'medical_record_id' => $emr->medical_record_id,
         'status' => 'menunggu',
     ]);

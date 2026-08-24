@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PatientCalledEvent;
 use App\Models\Appointment;
 use App\Models\DoctorSchedule;
 use Carbon\Carbon;
@@ -51,10 +52,11 @@ class DoctorQueueController extends Controller
                 ->get()
                 ->map(function ($row) {
                     $d = Carbon::parse($row->appointment_date);
+
                     return [
-                        'date'     => $d->toDateString(),
-                        'label'    => $d->translatedFormat('D, d M Y'),
-                        'count'    => (int) $row->count,
+                        'date' => $d->toDateString(),
+                        'label' => $d->translatedFormat('D, d M Y'),
+                        'count' => (int) $row->count,
                         'is_today' => $d->isToday(),
                     ];
                 })
@@ -110,16 +112,16 @@ class DoctorQueueController extends Controller
         }
 
         return Inertia::render('doctor/QueueBoard', [
-            'schedules'        => $schedules,
-            'allSchedules'     => $allSchedules,
+            'schedules' => $schedules,
+            'allSchedules' => $allSchedules,
             'selectedSchedule' => $selectedSchedule,
-            'appointments'     => $appointments,
-            'availableDates'   => $availableDates,
-            'selectedDate'     => $selectedDate,
-            'todayDate'        => $today,
-            'currentDate'      => Carbon::today()->translatedFormat('l, d F Y'),
-            'isDoctor'         => (bool) $doctor,
-            'doctorName'       => $doctor?->name,
+            'appointments' => $appointments,
+            'availableDates' => $availableDates,
+            'selectedDate' => $selectedDate,
+            'todayDate' => $today,
+            'currentDate' => Carbon::today()->translatedFormat('l, d F Y'),
+            'isDoctor' => (bool) $doctor,
+            'doctorName' => $doctor?->name,
         ]);
     }
 
@@ -152,7 +154,7 @@ class DoctorQueueController extends Controller
         $voiceText = "Nomor antrean {$cleanQueue}, atas nama {$patientName}, silakan menuju ke {$poliName}, {$roomName}.";
 
         // Siarkan pemanggilan pasien via Laravel Reverb WebSockets
-        event(new \App\Events\PatientCalledEvent(
+        event(new PatientCalledEvent(
             appointmentId: (int) $appointment->appointment_id,
             queueNumber: (string) $appointment->queue_number,
             patientName: (string) $patientName,

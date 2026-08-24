@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * Model Billing - Manajemen Tagihan & Kasir Rumah Sakit
- * 
+ *
  * Terhubung dengan Pasien, Reservasi Rawat Jalan, Petugas Perawat/Kasir,
  * dan Rincian Tagihan (BillingItem). Mendukung Pembayaran Tunai & Xendit Gateway.
  *
@@ -23,13 +24,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string|null $payment_method ('cash', 'xendit_invoice', 'xendit_qris')
  * @property string|null $xendit_id
  * @property string|null $xendit_payment_url
- * @property \Illuminate\Support\Carbon|null $paid_at
+ * @property Carbon|null $paid_at
  */
 class Billing extends Model
 {
     use HasFactory;
 
     protected $table = 'billing';
+
     protected $primaryKey = 'billing_id';
 
     protected $fillable = [
@@ -52,14 +54,14 @@ class Billing extends Model
     protected function casts(): array
     {
         return [
-            'billing_id'             => 'integer',
-            'reservation_id'         => 'integer',
-            'patient_id'             => 'integer',
-            'processed_by_nurse_id'  => 'integer',
-            'total_amount'           => 'decimal:2',
-            'paid_at'                => 'datetime',
-            'created_at'             => 'datetime',
-            'updated_at'             => 'datetime',
+            'billing_id' => 'integer',
+            'reservation_id' => 'integer',
+            'patient_id' => 'integer',
+            'processed_by_nurse_id' => 'integer',
+            'total_amount' => 'decimal:2',
+            'paid_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 

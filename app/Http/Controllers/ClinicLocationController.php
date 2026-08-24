@@ -14,9 +14,6 @@ class ClinicLocationController extends Controller
 {
     /**
      * Menampilkan daftar cabang jaringan rumah sakit dan klinik publik.
-     *
-     * @param Request $request
-     * @return Response
      */
     public function index(Request $request): Response
     {

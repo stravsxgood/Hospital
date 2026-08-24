@@ -24,10 +24,10 @@ class UpdatePoliRequest extends FormRequest
         }
 
         return [
-            'kode_poli' => ['required', 'string', 'max:20', 'unique:poli,kode_poli,' . $poliId . ',poli_id'],
+            'kode_poli' => ['required', 'string', 'max:20', 'unique:poli,kode_poli,'.$poliId.',poli_id'],
             'name_poli' => ['required', 'string', 'max:255'],
-            'location'  => ['required', 'string', 'max:255'],
-            'status'    => ['required', 'string', 'in:Aktif,Nonaktif'],
+            'location' => ['required', 'string', 'max:255'],
+            'status' => ['required', 'string', 'in:Aktif,Nonaktif'],
         ];
     }
 }

@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $medicine_batch_id
  * @property int $medicine_id
  * @property string $batch_number
- * @property \Carbon\Carbon $expiry_date
+ * @property Carbon $expiry_date
  * @property int $stock_quantity
  * @property float $purchase_price
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -27,6 +27,7 @@ class MedicineBatch extends Model
     use HasFactory;
 
     protected $table = 'medicine_batch';
+
     protected $primaryKey = 'medicine_batch_id';
 
     protected $fillable = [
@@ -41,10 +42,10 @@ class MedicineBatch extends Model
     {
         return [
             'medicine_batch_id' => 'integer',
-            'medicine_id'       => 'integer',
-            'stock_quantity'    => 'integer',
-            'purchase_price'    => 'decimal:2',
-            'expiry_date'       => 'date',
+            'medicine_id' => 'integer',
+            'stock_quantity' => 'integer',
+            'purchase_price' => 'decimal:2',
+            'expiry_date' => 'date',
         ];
     }
 
@@ -58,9 +59,6 @@ class MedicineBatch extends Model
 
     /**
      * Scope batch dengan stok tersedia (> 0)
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeAvailable(Builder $query): Builder
     {
@@ -69,9 +67,6 @@ class MedicineBatch extends Model
 
     /**
      * Scope FEFO (Urutkan dari tanggal kedaluwarsa terdekat)
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeFefoOrder(Builder $query): Builder
     {
@@ -80,10 +75,6 @@ class MedicineBatch extends Model
 
     /**
      * Scope batch yang akan kedaluwarsa dalam X hari ke depan
-     *
-     * @param Builder $query
-     * @param int $days
-     * @return Builder
      */
     public function scopeExpiringSoon(Builder $query, int $days = 30): Builder
     {
@@ -96,9 +87,6 @@ class MedicineBatch extends Model
 
     /**
      * Scope batch yang sudah kedaluwarsa
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeExpired(Builder $query): Builder
     {

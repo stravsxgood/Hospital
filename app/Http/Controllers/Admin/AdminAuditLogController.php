@@ -17,9 +17,6 @@ class AdminAuditLogController extends Controller
 {
     /**
      * Display Global Regulatory Access Audit Logs for Super Admin.
-     *
-     * @param Request $request
-     * @return Response|JsonResponse
      */
     public function index(Request $request): Response|JsonResponse
     {
@@ -52,26 +49,26 @@ class AdminAuditLogController extends Controller
 
         $today = Carbon::today()->toDateString();
         $stats = [
-            'total_access'   => MedicalRecordAuditLog::count(),
-            'views_today'    => MedicalRecordAuditLog::where('action', 'view')->whereDate('created_at', $today)->count(),
-            'creates_today'  => MedicalRecordAuditLog::where('action', 'create')->whereDate('created_at', $today)->count(),
-            'exports_today'  => MedicalRecordAuditLog::where('action', 'export_pdf')->whereDate('created_at', $today)->count(),
+            'total_access' => MedicalRecordAuditLog::count(),
+            'views_today' => MedicalRecordAuditLog::where('action', 'view')->whereDate('created_at', $today)->count(),
+            'creates_today' => MedicalRecordAuditLog::where('action', 'create')->whereDate('created_at', $today)->count(),
+            'exports_today' => MedicalRecordAuditLog::where('action', 'export_pdf')->whereDate('created_at', $today)->count(),
         ];
 
         $payload = [
-            'logs'    => $logs,
+            'logs' => $logs,
             'filters' => [
                 'action' => $action,
                 'search' => $search,
             ],
-            'stats'   => $stats,
+            'stats' => $stats,
         ];
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Audit logs retrieved successfully.',
-                'data'    => $payload,
+                'data' => $payload,
             ]);
         }
 

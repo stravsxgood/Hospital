@@ -22,17 +22,19 @@ class BillingItem extends Model
     use HasFactory;
 
     protected $table = 'billing_item';
+
     protected $primaryKey = 'billing_item_id';
+
     protected $guarded = ['billing_item_id'];
 
     protected function casts(): array
     {
         return [
             'billing_item_id' => 'integer',
-            'billing_id'      => 'integer',
-            'quantity'        => 'integer',
-            'unit_price'      => 'decimal:2',
-            'subtotal'        => 'decimal:2',
+            'billing_id' => 'integer',
+            'quantity' => 'integer',
+            'unit_price' => 'decimal:2',
+            'subtotal' => 'decimal:2',
         ];
     }
 

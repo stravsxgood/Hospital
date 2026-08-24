@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * Model Medicine - Master Data Obat & Farmasi
@@ -20,15 +21,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $stock
  * @property string $unit
  * @property float $price
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Medicine extends Model
 {
     use HasFactory;
 
     protected $table = 'medicine';
+
     protected $primaryKey = 'medicine_id';
+
     protected $guarded = [];
 
     /**
@@ -38,8 +41,8 @@ class Medicine extends Model
     {
         return [
             'medicine_id' => 'integer',
-            'stock'       => 'integer',
-            'price'       => 'decimal:2',
+            'stock' => 'integer',
+            'price' => 'decimal:2',
         ];
     }
 
@@ -61,9 +64,6 @@ class Medicine extends Model
 
     /**
      * Scope obat habis (stok 0)
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeOutOfStock(Builder $query): Builder
     {
@@ -72,10 +72,6 @@ class Medicine extends Model
 
     /**
      * Scope obat stok menipis (1 s/d threshold)
-     *
-     * @param Builder $query
-     * @param int $threshold
-     * @return Builder
      */
     public function scopeLowStock(Builder $query, int $threshold = 10): Builder
     {
@@ -84,13 +80,9 @@ class Medicine extends Model
 
     /**
      * Scope obat tersedia (stok > 0)
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeAvailable(Builder $query): Builder
     {
         return $query->where('stock', '>', 0);
     }
 }
-

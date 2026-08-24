@@ -7,6 +7,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Model Icd10Diagnosis - Master Data Standar Diagnosis ICD-10 WHO
@@ -16,14 +17,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name_id
  * @property string|null $name_en
  * @property bool $is_common
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  */
 class Icd10Diagnosis extends Model
 {
     use HasFactory;
 
     protected $table = 'icd10_diagnosis';
+
     protected $primaryKey = 'icd10_diagnosis_id';
 
     protected $fillable = [
@@ -37,16 +39,12 @@ class Icd10Diagnosis extends Model
     {
         return [
             'icd10_diagnosis_id' => 'integer',
-            'is_common'          => 'boolean',
+            'is_common' => 'boolean',
         ];
     }
 
     /**
      * Scope pencarian kode atau nama diagnosis ICD-10
-     *
-     * @param Builder $query
-     * @param string $term
-     * @return Builder
      */
     public function scopeSearch(Builder $query, string $term): Builder
     {
@@ -60,16 +58,13 @@ class Icd10Diagnosis extends Model
 
         return $query->where(function (Builder $q) use ($term, $likeOp) {
             $q->where('code', $likeOp, "{$term}%")
-              ->orWhere('name_id', $likeOp, "%{$term}%")
-              ->orWhere('name_en', $likeOp, "%{$term}%");
+                ->orWhere('name_id', $likeOp, "%{$term}%")
+                ->orWhere('name_en', $likeOp, "%{$term}%");
         });
     }
 
     /**
      * Scope hanya diagnosis yang sering digunakan
-     *
-     * @param Builder $query
-     * @return Builder
      */
     public function scopeCommon(Builder $query): Builder
     {

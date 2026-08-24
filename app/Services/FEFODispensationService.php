@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Models\Medicine;
 use App\Models\MedicineBatch;
+use App\Models\Prescription;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use RuntimeException;
@@ -21,15 +22,16 @@ class FEFODispensationService
     /**
      * Potong stok obat menggunakan prinsip FEFO lintas batch aktif.
      *
-     * @param Medicine $medicine Master obat yang akan dipotong
-     * @param int $requestedQty Jumlah obat yang diminta dalam resep
+     * @param  Medicine  $medicine  Master obat yang akan dipotong
+     * @param  int  $requestedQty  Jumlah obat yang diminta dalam resep
      * @return array Daftar batch dan kuantitas yang dipotong
+     *
      * @throws InvalidArgumentException|RuntimeException
      */
     public function deductMedicine(Medicine $medicine, int $requestedQty): array
     {
         if ($requestedQty <= 0) {
-            throw new InvalidArgumentException("Kuantitas pengeluaran obat harus lebih dari 0.");
+            throw new InvalidArgumentException('Kuantitas pengeluaran obat harus lebih dari 0.');
         }
 
         if ($medicine->stock < $requestedQty) {
@@ -56,14 +58,14 @@ class FEFODispensationService
             }
 
             $deductFromThisBatch = min($batch->stock_quantity, $remainingToDeduct);
-            
+
             $batch->stock_quantity -= $deductFromThisBatch;
             $batch->save();
 
             $deductedBatches[] = [
                 'medicine_batch_id' => $batch->medicine_batch_id,
-                'batch_number'      => $batch->batch_number,
-                'expiry_date'       => $batch->expiry_date->toDateString(),
+                'batch_number' => $batch->batch_number,
+                'expiry_date' => $batch->expiry_date->toDateString(),
                 'quantity_deducted' => $deductFromThisBatch,
             ];
 
@@ -79,11 +81,8 @@ class FEFODispensationService
 
     /**
      * Potong seluruh item obat dalam resep sekaligus secara transaksional
-     *
-     * @param \App\Models\Prescription $prescription
-     * @return array
      */
-    public function dispensePrescription(\App\Models\Prescription $prescription): array
+    public function dispensePrescription(Prescription $prescription): array
     {
         return DB::transaction(function () use ($prescription) {
             $results = [];

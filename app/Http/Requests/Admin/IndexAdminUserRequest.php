@@ -19,10 +19,10 @@ class IndexAdminUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'search'    => ['sometimes', 'nullable', 'string', 'max:100'],
-            'role'      => ['sometimes', 'nullable', 'string', 'in:all,doctor,nurse,nurse_tetap,koas,admin,super-admin,patient'],
-            'status'    => ['sometimes', 'nullable', 'string', 'in:all,active,inactive'],
-            'per_page'  => ['sometimes', 'nullable', 'integer', 'min:5', 'max:100'],
+            'search' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'role' => ['sometimes', 'nullable', 'string', 'in:all,doctor,nurse,nurse_tetap,koas,admin,super-admin,patient'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:all,active,inactive'],
+            'per_page' => ['sometimes', 'nullable', 'integer', 'min:5', 'max:100'],
         ];
     }
 }

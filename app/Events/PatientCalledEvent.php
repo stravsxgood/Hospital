@@ -35,13 +35,13 @@ class PatientCalledEvent implements ShouldBroadcastNow
     /**
      * Tentukan channel siaran WebSocket
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
         return [
             new Channel('queue-display'),
-            new PrivateChannel('doctor.' . $this->doctorId),
+            new PrivateChannel('doctor.'.$this->doctorId),
         ];
     }
 
@@ -60,14 +60,14 @@ class PatientCalledEvent implements ShouldBroadcastNow
     {
         return [
             'appointment_id' => $this->appointmentId,
-            'queue_number'   => $this->queueNumber,
-            'patient_name'   => $this->patientName,
-            'poli_name'      => $this->poliName,
-            'room_name'      => $this->roomName,
-            'doctor_name'    => $this->doctorName,
-            'doctor_id'      => $this->doctorId,
-            'voice_text'     => $this->voiceText,
-            'called_at'      => $this->calledAt,
+            'queue_number' => $this->queueNumber,
+            'patient_name' => $this->patientName,
+            'poli_name' => $this->poliName,
+            'room_name' => $this->roomName,
+            'doctor_name' => $this->doctorName,
+            'doctor_id' => $this->doctorId,
+            'voice_text' => $this->voiceText,
+            'called_at' => $this->calledAt,
         ];
     }
 }

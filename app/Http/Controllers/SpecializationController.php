@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
-use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -18,9 +17,6 @@ class SpecializationController extends Controller
 {
     /**
      * Menampilkan katalog spesialisasi medis dan detail sub-spesialisasi aktif.
-     *
-     * @param Request $request
-     * @return Response
      */
     public function index(Request $request): Response
     {
@@ -69,8 +65,6 @@ class SpecializationController extends Controller
 
     /**
      * Dataset komprehensif layanan dan sub-spesialisasi medis berstandar internasional.
-     *
-     * @return array
      */
     private function getSpecializationsDataset(): array
     {

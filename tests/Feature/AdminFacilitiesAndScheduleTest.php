@@ -1,14 +1,11 @@
 <?php
 
-use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
-use App\Models\Patient;
 use App\Models\Poli;
 use App\Models\Room;
 use App\Models\Specialization;
 use App\Models\User;
-use Carbon\Carbon;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
@@ -23,8 +20,8 @@ test('super admin can create, update, and delete a Poliklinik', function () {
     $createResponse = $this->actingAs($admin)->post('/admin/polis', [
         'kode_poli' => 'POL-SARAF',
         'name_poli' => 'Poli Saraf & Neurologi',
-        'location'  => 'Lantai 3 Sayap Barat',
-        'status'    => 'Aktif',
+        'location' => 'Lantai 3 Sayap Barat',
+        'status' => 'Aktif',
     ]);
     $createResponse->assertSessionHas('success');
 
@@ -36,8 +33,8 @@ test('super admin can create, update, and delete a Poliklinik', function () {
     $updateResponse = $this->actingAs($admin)->put("/admin/polis/{$poli->poli_id}", [
         'kode_poli' => 'POL-SARAF',
         'name_poli' => 'Poli Neurologi Terpadu',
-        'location'  => 'Lantai 3 Sayap Timur',
-        'status'    => 'Aktif',
+        'location' => 'Lantai 3 Sayap Timur',
+        'status' => 'Aktif',
     ]);
     $updateResponse->assertSessionHas('success');
 
@@ -61,24 +58,24 @@ test('super admin cannot delete poliklinik that has attached schedules', functio
 
     $docUser = User::factory()->create(['role' => 'doctor']);
     $doctor = Doctor::create([
-        'user_id'           => $docUser->id,
+        'user_id' => $docUser->id,
         'specialization_id' => $spec->specialization_id,
-        'name'              => 'dr. Hendra Sp.THT',
-        'sip_number'        => 'SIP-THT-001',
-        'gender'            => 'Laki-laki',
-        'join_date'         => now(),
-        'status'            => 'aktif',
+        'name' => 'dr. Hendra Sp.THT',
+        'sip_number' => 'SIP-THT-001',
+        'gender' => 'Laki-laki',
+        'join_date' => now(),
+        'status' => 'aktif',
     ]);
 
     DoctorSchedule::create([
-        'doctor_id'  => $doctor->doctor_id,
-        'poli_id'    => $poli->poli_id,
-        'room_id'    => $room->room_id,
-        'day'        => 'Kamis',
+        'doctor_id' => $doctor->doctor_id,
+        'poli_id' => $poli->poli_id,
+        'room_id' => $room->room_id,
+        'day' => 'Kamis',
         'start_time' => '10:00',
-        'end_time'   => '14:00',
-        'quota_day'  => 20,
-        'status'     => 'Aktif',
+        'end_time' => '14:00',
+        'quota_day' => 20,
+        'status' => 'Aktif',
     ]);
 
     // Hapus poli harus ditolak
@@ -98,25 +95,25 @@ test('super admin can create, update, and manage doctor practice schedule quotas
 
     $docUser = User::factory()->create(['role' => 'doctor']);
     $doctor = Doctor::create([
-        'user_id'           => $docUser->id,
+        'user_id' => $docUser->id,
         'specialization_id' => $spec->specialization_id,
-        'name'              => 'dr. Citra Sp.A',
-        'sip_number'        => 'SIP-ANAK-001',
-        'gender'            => 'Perempuan',
-        'join_date'         => now(),
-        'status'            => 'aktif',
+        'name' => 'dr. Citra Sp.A',
+        'sip_number' => 'SIP-ANAK-001',
+        'gender' => 'Perempuan',
+        'join_date' => now(),
+        'status' => 'aktif',
     ]);
 
     // 1. Create Schedule
     $createResponse = $this->actingAs($admin)->post('/admin/schedules', [
-        'doctor_id'  => $doctor->doctor_id,
-        'poli_id'    => $poli->poli_id,
-        'room_id'    => $room->room_id,
-        'day'        => 'Jumat',
+        'doctor_id' => $doctor->doctor_id,
+        'poli_id' => $poli->poli_id,
+        'room_id' => $room->room_id,
+        'day' => 'Jumat',
         'start_time' => '08:00',
-        'end_time'   => '11:30',
-        'quota_day'  => 25,
-        'status'     => 'Aktif',
+        'end_time' => '11:30',
+        'quota_day' => 25,
+        'status' => 'Aktif',
     ]);
     $createResponse->assertSessionHas('success');
 
@@ -126,14 +123,14 @@ test('super admin can create, update, and manage doctor practice schedule quotas
 
     // 2. Update Schedule
     $updateResponse = $this->actingAs($admin)->put("/admin/schedules/{$schedule->doctor_schedule_id}", [
-        'doctor_id'  => $doctor->doctor_id,
-        'poli_id'    => $poli->poli_id,
-        'room_id'    => $room->room_id,
-        'day'        => 'Jumat',
+        'doctor_id' => $doctor->doctor_id,
+        'poli_id' => $poli->poli_id,
+        'room_id' => $room->room_id,
+        'day' => 'Jumat',
         'start_time' => '08:30',
-        'end_time'   => '12:00',
-        'quota_day'  => 30,
-        'status'     => 'Aktif',
+        'end_time' => '12:00',
+        'quota_day' => 30,
+        'status' => 'Aktif',
     ]);
     $updateResponse->assertSessionHas('success');
 

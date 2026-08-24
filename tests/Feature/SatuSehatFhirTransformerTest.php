@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Models\Doctor;
-use App\Models\DoctorSchedule;
 use App\Models\MedicalRecord;
 use App\Models\Patient;
 use App\Models\Poli;

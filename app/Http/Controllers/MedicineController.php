@@ -6,18 +6,16 @@ use App\Http\Requests\AdjustStockRequest;
 use App\Http\Requests\StoreMedicineRequest;
 use App\Http\Requests\UpdateMedicineRequest;
 use App\Models\Medicine;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
 /**
  * Class MedicineController
- * 
+ *
  * Manajemen Master Data & Inventori Obat Farmasi Rumah Sakit.
  * Dibatasi secara ketat hanya untuk Staf / Perawat Tetap (Pekerja) via Gate 'access-pekerja-only'.
  */
@@ -59,11 +57,11 @@ class MedicineController extends Controller
 
         // Agregasi Inventori Farmasi (Zero in-memory overhead)
         $stats = [
-            'total_items'           => Medicine::count(),
-            'out_of_stock_count'    => Medicine::outOfStock()->count(),
-            'low_stock_count'       => Medicine::lowStock()->count(),
-            'available_count'       => Medicine::available()->count(),
-            'total_stock_units'     => (int) Medicine::sum('stock'),
+            'total_items' => Medicine::count(),
+            'out_of_stock_count' => Medicine::outOfStock()->count(),
+            'low_stock_count' => Medicine::lowStock()->count(),
+            'available_count' => Medicine::available()->count(),
+            'total_stock_units' => (int) Medicine::sum('stock'),
             'total_inventory_value' => (float) (Medicine::selectRaw('SUM(stock * price) as val')->value('val') ?? 0),
         ];
 
@@ -75,12 +73,12 @@ class MedicineController extends Controller
             ->pluck('type');
 
         return Inertia::render('staff/Medicines/Index', [
-            'medicines'      => $medicines,
-            'stats'          => $stats,
+            'medicines' => $medicines,
+            'stats' => $stats,
             'availableTypes' => $availableTypes,
-            'filters'        => [
-                'search'       => $search,
-                'type'         => $type,
+            'filters' => [
+                'search' => $search,
+                'type' => $type,
                 'stock_status' => $stockStatus,
             ],
         ]);
@@ -96,17 +94,17 @@ class MedicineController extends Controller
         $medicine = Medicine::create([
             'code_medicine' => strtoupper(trim($validated['code_medicine'])),
             'name_medicine' => trim($validated['name_medicine']),
-            'type'          => trim($validated['type']),
-            'stock'         => (int) $validated['stock'],
-            'unit'          => trim($validated['unit']),
-            'price'         => (float) $validated['price'],
+            'type' => trim($validated['type']),
+            'stock' => (int) $validated['stock'],
+            'unit' => trim($validated['unit']),
+            'price' => (float) $validated['price'],
         ]);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Obat baru berhasil ditambahkan ke inventori.',
-                'data'    => $medicine,
+                'data' => $medicine,
             ], 201);
         }
 
@@ -124,17 +122,17 @@ class MedicineController extends Controller
         $medicine->update([
             'code_medicine' => strtoupper(trim($validated['code_medicine'])),
             'name_medicine' => trim($validated['name_medicine']),
-            'type'          => trim($validated['type']),
-            'stock'         => (int) $validated['stock'],
-            'unit'          => trim($validated['unit']),
-            'price'         => (float) $validated['price'],
+            'type' => trim($validated['type']),
+            'stock' => (int) $validated['stock'],
+            'unit' => trim($validated['unit']),
+            'price' => (float) $validated['price'],
         ]);
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'Data obat berhasil diperbarui.',
-                'data'    => $medicine->fresh(),
+                'data' => $medicine->fresh(),
             ]);
         }
 
@@ -154,10 +152,10 @@ class MedicineController extends Controller
         $currentStock = (int) $medicine->stock;
 
         $newStock = match ($type) {
-            'add'      => $currentStock + $amount,
+            'add' => $currentStock + $amount,
             'subtract' => max(0, $currentStock - $amount),
-            'set'      => max(0, $amount),
-            default    => $currentStock,
+            'set' => max(0, $amount),
+            default => $currentStock,
         };
 
         $medicine->update([
@@ -168,11 +166,11 @@ class MedicineController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'        => true,
-                'message'       => $message,
-                'data'          => $medicine->fresh(),
-                'previous_stock'=> $currentStock,
-                'new_stock'     => $newStock,
+                'status' => true,
+                'message' => $message,
+                'data' => $medicine->fresh(),
+                'previous_stock' => $currentStock,
+                'new_stock' => $newStock,
             ]);
         }
 
@@ -192,10 +190,11 @@ class MedicineController extends Controller
             $errorMsg = "Obat {$medicine->name_medicine} tidak dapat dihapus karena sudah memiliki riwayat resep medis terkait.";
             if ($request->wantsJson()) {
                 return response()->json([
-                    'status'  => false,
+                    'status' => false,
                     'message' => $errorMsg,
                 ], 422);
             }
+
             return redirect()->back()->with('error', $errorMsg);
         }
 
@@ -204,7 +203,7 @@ class MedicineController extends Controller
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => "Obat {$medicineName} berhasil dihapus dari sistem.",
             ]);
         }

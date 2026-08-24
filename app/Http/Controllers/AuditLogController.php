@@ -37,15 +37,15 @@ class AuditLogController extends Controller
             $search = trim((string) $request->query('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('ip_address', 'like', "%{$search}%")
-                  ->orWhere('action', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('name', 'like', "%{$search}%")
-                         ->orWhere('email', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('medicalRecord.patient', function ($pq) use ($search) {
-                      $pq->where('name', 'like', "%{$search}%")
-                         ->orWhere('resident_n', 'like', "%{$search}%");
-                  });
+                    ->orWhere('action', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('medicalRecord.patient', function ($pq) use ($search) {
+                        $pq->where('name', 'like', "%{$search}%")
+                            ->orWhere('resident_n', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -56,21 +56,21 @@ class AuditLogController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'status' => true,
-                'data'   => $logs,
+                'data' => $logs,
             ]);
         }
 
         return Inertia::render('staff/AuditLogs/Index', [
-            'logs'    => $logs,
+            'logs' => $logs,
             'filters' => [
                 'action' => $request->query('action', ''),
                 'search' => $request->query('search', ''),
             ],
             'stats' => [
                 'total_access' => MedicalRecordAuditLog::count(),
-                'views_today'  => MedicalRecordAuditLog::where('action', 'view')->whereDate('created_at', today())->count(),
-                'creates_today'=> MedicalRecordAuditLog::where('action', 'create')->whereDate('created_at', today())->count(),
-                'exports_today'=> MedicalRecordAuditLog::where('action', 'export_pdf')->whereDate('created_at', today())->count(),
+                'views_today' => MedicalRecordAuditLog::where('action', 'view')->whereDate('created_at', today())->count(),
+                'creates_today' => MedicalRecordAuditLog::where('action', 'create')->whereDate('created_at', today())->count(),
+                'exports_today' => MedicalRecordAuditLog::where('action', 'export_pdf')->whereDate('created_at', today())->count(),
             ],
         ]);
     }

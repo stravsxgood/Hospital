@@ -44,7 +44,7 @@ class NurseQueueController extends Controller
     {
         $nurse = $request->user()->nurse;
 
-        if (!$nurse) {
+        if (! $nurse) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Profil perawat tidak ditemukan untuk akun ini.',
@@ -69,7 +69,7 @@ class NurseQueueController extends Controller
 
             // Format nomor antrean (misal: A-001, A-002)
             $nextNumber = $lastQueueCount + 1;
-            $queueCode = 'A-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+            $queueCode = 'A-'.str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
 
             // Update data pendaftaran
             $registration->update([

@@ -2,7 +2,6 @@
 
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
-use App\Models\Nurse;
 use App\Models\Poli;
 use App\Models\Room;
 use App\Models\Specialization;
@@ -60,22 +59,22 @@ test('super admin can provision a new DPJP doctor with Spatie role and initial s
     );
 
     $payload = [
-        'name'              => 'dr. Amanda Sp.B',
-        'email'             => 'amanda.bedah@hospital.com',
-        'password'          => 'CustomPass123!',
+        'name' => 'dr. Amanda Sp.B',
+        'email' => 'amanda.bedah@hospital.com',
+        'password' => 'CustomPass123!',
         'specialization_id' => $spec->specialization_id,
-        'sip_number'        => 'SIP-BEDAH-999',
-        'gender'            => 'Perempuan',
-        'number_phone'      => '081299998888',
-        'alamat'            => 'Jl. Kesehatan No. 10',
-        'join_date'         => '2026-08-01',
-        'create_schedule'   => true,
-        'poli_id'           => $poli->poli_id,
-        'room_id'           => $room->room_id,
-        'day'               => 'Senin',
-        'start_time'        => '08:00',
-        'end_time'          => '12:00',
-        'quota_day'         => 15,
+        'sip_number' => 'SIP-BEDAH-999',
+        'gender' => 'Perempuan',
+        'number_phone' => '081299998888',
+        'alamat' => 'Jl. Kesehatan No. 10',
+        'join_date' => '2026-08-01',
+        'create_schedule' => true,
+        'poli_id' => $poli->poli_id,
+        'room_id' => $room->room_id,
+        'day' => 'Senin',
+        'start_time' => '08:00',
+        'end_time' => '12:00',
+        'quota_day' => 15,
     ];
 
     $response = $this->actingAs($admin)->post('/admin/users/doctors', $payload);
@@ -106,11 +105,11 @@ test('super admin can provision a new Nurse (tetap and koas) with appropriate Sp
 
     // 1. Perawat Tetap
     $nursePayload = [
-        'name'                => 'Ns. Ratna Dewi',
-        'email'               => 'ratna.perawat@hospital.com',
-        'type'                => 'tetap',
+        'name' => 'Ns. Ratna Dewi',
+        'email' => 'ratna.perawat@hospital.com',
+        'type' => 'tetap',
         'registration_number' => 'STR-RATNA-888',
-        'gender'              => 'Perempuan',
+        'gender' => 'Perempuan',
     ];
 
     $responseNurse = $this->actingAs($admin)->post('/admin/users/nurses', $nursePayload);
@@ -122,14 +121,14 @@ test('super admin can provision a new Nurse (tetap and koas) with appropriate Sp
 
     // 2. Dokter Muda (Koas)
     $koasPayload = [
-        'name'                => 'dr. Muda Kevin Pratama',
-        'email'               => 'kevin.koas@hospital.com',
-        'type'                => 'koas',
+        'name' => 'dr. Muda Kevin Pratama',
+        'email' => 'kevin.koas@hospital.com',
+        'type' => 'koas',
         'registration_number' => 'NIM-FK-2026-001',
-        'institute'           => 'FK Universitas Indonesia',
-        'gender'              => 'Laki-laki',
-        'date_start'          => '2026-08-01',
-        'date_end'            => '2026-10-31',
+        'institute' => 'FK Universitas Indonesia',
+        'gender' => 'Laki-laki',
+        'date_start' => '2026-08-01',
+        'date_end' => '2026-10-31',
     ];
 
     $responseKoas = $this->actingAs($admin)->post('/admin/users/nurses', $koasPayload);
@@ -151,24 +150,24 @@ test('super admin can toggle user status safely with automatic schedule deactiva
 
     $doctorUser = User::factory()->create(['role' => 'doctor', 'is_active' => true]);
     $doctor = Doctor::create([
-        'user_id'           => $doctorUser->id,
+        'user_id' => $doctorUser->id,
         'specialization_id' => $spec->specialization_id,
-        'name'              => 'dr. Farhan Sp.M',
-        'sip_number'        => 'SIP-MATA-101',
-        'gender'            => 'Laki-laki',
-        'join_date'         => now(),
-        'status'            => 'aktif',
+        'name' => 'dr. Farhan Sp.M',
+        'sip_number' => 'SIP-MATA-101',
+        'gender' => 'Laki-laki',
+        'join_date' => now(),
+        'status' => 'aktif',
     ]);
 
     $schedule = DoctorSchedule::create([
-        'doctor_id'  => $doctor->doctor_id,
-        'poli_id'    => $poli->poli_id,
-        'room_id'    => $room->room_id,
-        'day'        => 'Rabu',
+        'doctor_id' => $doctor->doctor_id,
+        'poli_id' => $poli->poli_id,
+        'room_id' => $room->room_id,
+        'day' => 'Rabu',
         'start_time' => '09:00',
-        'end_time'   => '13:00',
-        'quota_day'  => 20,
-        'status'     => 'Aktif',
+        'end_time' => '13:00',
+        'quota_day' => 20,
+        'status' => 'Aktif',
     ]);
 
     // Nonaktifkan Akun Dokter

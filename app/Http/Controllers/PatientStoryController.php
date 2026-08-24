@@ -15,9 +15,6 @@ class PatientStoryController extends Controller
 {
     /**
      * Menampilkan katalog cerita pasien dan kisah unggulan (featured story).
-     *
-     * @param Request $request
-     * @return Response
      */
     public function index(Request $request): Response
     {

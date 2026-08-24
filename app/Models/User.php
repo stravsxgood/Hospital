@@ -3,9 +3,6 @@
 namespace App\Models;
 
 use App\Concerns\HasTeams;
-use App\Models\Doctor;
-use App\Models\Nurse;
-use App\Models\Patient;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -45,6 +42,7 @@ class User extends Authenticatable implements PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens;
+
     use HasFactory;
     use HasRoles, HasTeams {
         HasTeams::teams insteadof HasRoles;
@@ -61,10 +59,10 @@ class User extends Authenticatable implements PasskeyUser
     protected function casts(): array
     {
         return [
-            'email_verified_at'       => 'datetime',
-            'password'                => 'hashed',
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
             'two_factor_confirmed_at' => 'datetime',
-            'is_active'               => 'boolean',
+            'is_active' => 'boolean',
         ];
     }
 

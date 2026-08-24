@@ -18,7 +18,7 @@ function setupClinicalDoctorEnvironment(): array
 
     $doctorUser = User::factory()->create([
         'name' => 'dr. Sarah Connor, Sp.PD',
-        'email' => 'sarah.' . uniqid() . '@hospital.test',
+        'email' => 'sarah.'.uniqid().'@hospital.test',
         'role' => 'doctor',
     ]);
 
@@ -26,7 +26,7 @@ function setupClinicalDoctorEnvironment(): array
         'user_id' => $doctorUser->id,
         'specialization_id' => $spec->specialization_id,
         'name' => 'dr. Sarah Connor, Sp.PD',
-        'sip_number' => 'SIP-CLI-' . uniqid(),
+        'sip_number' => 'SIP-CLI-'.uniqid(),
         'gender' => 'Perempuan',
         'number_phone' => '081299887766',
         'join_date' => now()->toDateString(),
@@ -35,13 +35,13 @@ function setupClinicalDoctorEnvironment(): array
 
     $patientUser = User::factory()->create([
         'name' => 'John Doe',
-        'email' => 'john.' . uniqid() . '@patient.test',
+        'email' => 'john.'.uniqid().'@patient.test',
         'role' => 'patient',
     ]);
 
     $patient = Patient::create([
         'user_id' => $patientUser->id,
-        'resident_n' => '3171' . rand(100000000000, 999999999999),
+        'resident_n' => '3171'.rand(100000000000, 999999999999),
         'name' => 'John Doe',
         'gender' => 'Laki-laki',
         'birthday_date' => '1990-05-15',

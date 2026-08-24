@@ -9,7 +9,6 @@ use App\Models\ClinicalLogbook;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -52,14 +51,14 @@ class DoctorSupervisionController extends Controller
             $search = trim((string) $request->query('search'));
             $query->where(function ($q) use ($search) {
                 $q->where('case_title', 'like', "%{$search}%")
-                  ->orWhere('clinical_findings', 'like', "%{$search}%")
-                  ->orWhereHas('nurse', function ($nq) use ($search) {
-                      $nq->where('name', 'like', "%{$search}%")
-                         ->orWhere('registration_number', 'like', "%{$search}%");
-                  })
-                  ->orWhereHas('patient', function ($pq) use ($search) {
-                      $pq->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('clinical_findings', 'like', "%{$search}%")
+                    ->orWhereHas('nurse', function ($nq) use ($search) {
+                        $nq->where('name', 'like', "%{$search}%")
+                            ->orWhere('registration_number', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('patient', function ($pq) use ($search) {
+                        $pq->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -78,22 +77,22 @@ class DoctorSupervisionController extends Controller
         if ($request->wantsJson()) {
             return response()->json([
                 'status' => true,
-                'data'   => $logbooks,
+                'data' => $logbooks,
             ]);
         }
 
         return Inertia::render('doctor/Supervision/Index', [
             'logbooks' => $logbooks,
-            'filters'  => [
-                'status'        => $request->query('status', ''),
+            'filters' => [
+                'status' => $request->query('status', ''),
                 'activity_type' => $request->query('activity_type', ''),
-                'search'        => $request->query('search', ''),
+                'search' => $request->query('search', ''),
             ],
             'stats' => [
                 'total_assigned' => ClinicalLogbook::where('doctor_id', $doctor->doctor_id)->count(),
                 'pending_review' => ClinicalLogbook::where('doctor_id', $doctor->doctor_id)->where('status', 'submitted')->count(),
-                'approved'       => ClinicalLogbook::where('doctor_id', $doctor->doctor_id)->where('status', 'approved')->count(),
-                'revision_needed'=> ClinicalLogbook::where('doctor_id', $doctor->doctor_id)->where('status', 'revision_needed')->count(),
+                'approved' => ClinicalLogbook::where('doctor_id', $doctor->doctor_id)->where('status', 'approved')->count(),
+                'revision_needed' => ClinicalLogbook::where('doctor_id', $doctor->doctor_id)->where('status', 'revision_needed')->count(),
             ],
         ]);
     }
@@ -120,7 +119,7 @@ class DoctorSupervisionController extends Controller
 
         return response()->json([
             'status' => true,
-            'data'   => $logbook,
+            'data' => $logbook,
         ]);
     }
 
@@ -135,19 +134,19 @@ class DoctorSupervisionController extends Controller
         $validated = $request->validated();
 
         $logbook->update([
-            'status'              => $validated['status'],
+            'status' => $validated['status'],
             'supervisor_feedback' => $validated['supervisor_feedback'],
-            'score'               => $validated['score'] ?? $logbook->score,
-            'reviewed_at'         => now(),
+            'score' => $validated['score'] ?? $logbook->score,
+            'reviewed_at' => now(),
         ]);
 
         $statusLabel = $validated['status'] === 'approved' ? 'disetujui (Approved)' : 'diminta revisi';
 
         if ($request->wantsJson()) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => "Supervisi logbook klinis berhasil disimpan. Status: {$statusLabel}.",
-                'data'    => $logbook->fresh(['nurse', 'patient']),
+                'data' => $logbook->fresh(['nurse', 'patient']),
             ]);
         }
 

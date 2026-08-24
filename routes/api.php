@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DoctorScheduleController;
 use App\Http\Controllers\Api\NurseQueueController;
 use App\Http\Controllers\Api\PatientRegistrationController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\XenditWebhookController;
 use App\Http\Middleware\VerifyXenditWebhook;
 use Illuminate\Support\Facades\Route;
 
@@ -18,8 +19,8 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('web');
 // 1. Endpoint Webhook Publik (Wajib di luar auth middleware)
 Route::post('/xendit/webhook', [PaymentController::class, 'handleWebhook'])
     ->middleware(VerifyXenditWebhook::class);
-Route::post('/webhooks/xendit', [\App\Http\Controllers\XenditWebhookController::class, 'handle']);
-Route::post('/webhooks/xendit/qr', [\App\Http\Controllers\XenditWebhookController::class, 'handleQrCallback']);
+Route::post('/webhooks/xendit', [XenditWebhookController::class, 'handle']);
+Route::post('/webhooks/xendit/qr', [XenditWebhookController::class, 'handleQrCallback']);
 
 // 2. Endpoint untuk jadwal dokter
 Route::apiResource('doctor-schedules', DoctorScheduleController::class);
@@ -48,18 +49,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/consultations', [DoctorConsultationController::class, 'index']);
         Route::patch('/consultations/{id}/status', [DoctorConsultationController::class, 'updateStatus']);
         Route::post('/consultations/{id}/inspection', [DoctorConsultationController::class, 'storeInspection']);
-        Route::post('/consultations', [\App\Http\Controllers\DoctorConsultationController::class, 'store']);
-        Route::get('/patients/{id}/history', [\App\Http\Controllers\DoctorConsultationController::class, 'getPatientHistory']);
-        Route::get('/medicines', [\App\Http\Controllers\DoctorConsultationController::class, 'getMedicines']);
+        Route::post('/consultations', [App\Http\Controllers\DoctorConsultationController::class, 'store']);
+        Route::get('/patients/{id}/history', [App\Http\Controllers\DoctorConsultationController::class, 'getPatientHistory']);
+        Route::get('/medicines', [App\Http\Controllers\DoctorConsultationController::class, 'getMedicines']);
     });
 
     // Rute Tagihan & Pembayaran
     Route::prefix('payments')->group(function () {
         Route::get('/{id}', [PaymentController::class, 'show']);
-        
+
         // Pasien meminta URL pembayaran online (QRIS/VA)
         Route::post('/{id}/online', [PaymentController::class, 'payOnline']);
-        
+
         // Perawat/Petugas Kasir memverifikasi pembayaran tunai
         Route::patch('/{id}/cash', [PaymentController::class, 'payCash'])
             ->middleware('role:nurse,admin');

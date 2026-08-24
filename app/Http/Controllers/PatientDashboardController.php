@@ -71,16 +71,16 @@ class PatientDashboardController extends Controller
             ->get();
 
         return Inertia::render('patient/PatientDashboard', [
-            'patientName'        => $patient?->name ?? $user->name,
-            'stats'              => [
+            'patientName' => $patient?->name ?? $user->name,
+            'stats' => [
                 'total_visits' => $totalVisits,
-                'upcoming'     => $upcomingCount,
-                'completed'    => $completedCount,
+                'upcoming' => $upcomingCount,
+                'completed' => $completedCount,
             ],
-            'activeAppointment'  => $activeAppointment,
+            'activeAppointment' => $activeAppointment,
             'recentAppointments' => $recentAppointments,
             'availableSchedules' => $availableSchedules,
-            'currentDate'        => Carbon::today()->translatedFormat('l, d F Y'),
+            'currentDate' => Carbon::today()->translatedFormat('l, d F Y'),
         ]);
     }
 }

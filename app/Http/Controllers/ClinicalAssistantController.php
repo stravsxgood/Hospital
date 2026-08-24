@@ -28,9 +28,6 @@ class ClinicalAssistantController extends Controller
 
     /**
      * Autocomplete pencarian diagnosis ICD-10
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function searchIcd10(Request $request): JsonResponse
     {
@@ -49,17 +46,14 @@ class ClinicalAssistantController extends Controller
             ->get(['icd10_diagnosis_id', 'code', 'name_id', 'name_en', 'is_common']);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'ICD-10 diagnoses retrieved.',
-            'data'    => $results,
+            'data' => $results,
         ]);
     }
 
     /**
      * Ambil template SOAP untuk dokter yang sedang login (termasuk template default sistem)
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function getSoapTemplates(Request $request): JsonResponse
     {
@@ -73,17 +67,14 @@ class ClinicalAssistantController extends Controller
             ->get();
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'SOAP templates retrieved.',
-            'data'    => $templates,
+            'data' => $templates,
         ]);
     }
 
     /**
      * Simpan template SOAP khusus buatan dokter
-     *
-     * @param StoreSoapTemplateRequest $request
-     * @return JsonResponse
      */
     public function storeSoapTemplate(StoreSoapTemplateRequest $request): JsonResponse
     {
@@ -96,17 +87,14 @@ class ClinicalAssistantController extends Controller
         $template = SoapTemplate::create($validated);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Template SOAP berhasil disimpan.',
-            'data'    => $template,
+            'data' => $template,
         ], 201);
     }
 
     /**
      * Cek keamanan klinis peresepan obat (alergi & interaksi obat)
-     *
-     * @param CheckClinicalSafetyRequest $request
-     * @return JsonResponse
      */
     public function checkSafety(CheckClinicalSafetyRequest $request): JsonResponse
     {
@@ -119,9 +107,9 @@ class ClinicalAssistantController extends Controller
         );
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'Clinical safety evaluated successfully.',
-            'data'    => $evaluation,
+            'data' => $evaluation,
         ]);
     }
 }

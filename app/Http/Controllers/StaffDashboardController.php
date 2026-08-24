@@ -15,7 +15,7 @@ use Inertia\Response;
 
 /**
  * Class StaffDashboardController
- * 
+ *
  * Pusat Komando Operasional & Meja Depan Rumah Sakit (Front-Office, Farmasi, & Billing POS).
  * Mengagregasi metrik KPI, verifikasi kedatangan pasien, antrean resep farmasi,
  * dan peringatan kritis inventori obat tanpa N+1 query.
@@ -102,18 +102,18 @@ class StaffDashboardController extends Controller
             $totalTodayClinic = $schTodayAppointments->count();
 
             return [
-                'schedule_id'     => $sch->doctor_schedule_id,
-                'doctor_name'     => $sch->doctor?->name ?? 'Dokter Spesialis',
-                'specialization'  => $sch->doctor?->specialization?->name_specialization ?? 'Umum',
-                'poli_name'       => $sch->poli?->name_poli ?? $sch->poli?->name ?? 'Poliklinik',
-                'room_name'       => $sch->room?->name_room ?? 'Ruang Periksa',
-                'start_time'      => substr((string) $sch->start_time, 0, 5),
-                'end_time'        => substr((string) $sch->end_time, 0, 5),
+                'schedule_id' => $sch->doctor_schedule_id,
+                'doctor_name' => $sch->doctor?->name ?? 'Dokter Spesialis',
+                'specialization' => $sch->doctor?->specialization?->name_specialization ?? 'Umum',
+                'poli_name' => $sch->poli?->name_poli ?? $sch->poli?->name ?? 'Poliklinik',
+                'room_name' => $sch->room?->name_room ?? 'Ruang Periksa',
+                'start_time' => substr((string) $sch->start_time, 0, 5),
+                'end_time' => substr((string) $sch->end_time, 0, 5),
                 'current_calling' => $currentServing?->queue_number ?? null,
-                'waiting_count'   => $waiting,
+                'waiting_count' => $waiting,
                 'completed_count' => $completed,
-                'total_patients'  => $totalTodayClinic,
-                'quota_day'       => $sch->quota_day ?? 30,
+                'total_patients' => $totalTodayClinic,
+                'quota_day' => $sch->quota_day ?? 30,
             ];
         });
 
@@ -143,8 +143,8 @@ class StaffDashboardController extends Controller
             $count = Appointment::whereDate('appointment_date', $dateStr)->count();
 
             $weeklyTrend[] = [
-                'day'   => $date->translatedFormat('D'),
-                'date'  => $date->format('d/m'),
+                'day' => $date->translatedFormat('D'),
+                'date' => $date->format('d/m'),
                 'count' => $count,
             ];
         }
@@ -160,16 +160,16 @@ class StaffDashboardController extends Controller
 
             return [
                 'poli_name' => $poli->name_poli ?? $poli->name ?? 'Poliklinik',
-                'count'     => $count,
-                'percent'   => $percent,
+                'count' => $count,
+                'percent' => $percent,
             ];
         })->filter(fn ($p) => $p['count'] > 0)->values();
 
         if ($poliDistribution->isEmpty()) {
             $poliDistribution = $poliList->take(3)->map(fn ($p) => [
                 'poli_name' => $p->name_poli ?? $p->name ?? 'Poliklinik',
-                'count'     => 0,
-                'percent'   => 0,
+                'count' => 0,
+                'percent' => 0,
             ]);
         }
 
@@ -188,30 +188,30 @@ class StaffDashboardController extends Controller
 
         return Inertia::render('StaffDashboard', [
             'stats' => [
-                'total'                     => $totalToday,
-                'total_upcoming'            => $totalUpcoming,
-                'total_all'                 => $totalAll,
-                'waiting_confirmation'      => $waitingConfirmationCount,
-                'confirmed'                 => $confirmedCount,
-                'in_progress'               => $inProgressCount,
-                'completed'                 => $completedCount,
-                'cancelled'                 => $cancelledCount,
-                'pending_prescriptions'     => $pendingPrescriptionsCount,
-                'out_of_stock_medicines'    => $outOfStockCount,
-                'low_stock_medicines'       => $lowStockCount,
-                'unpaid_billings'           => $unpaidBillingsCount,
-                'today_revenue'             => $todayRevenue,
-                'quota_percentage'          => $quotaPercentage,
+                'total' => $totalToday,
+                'total_upcoming' => $totalUpcoming,
+                'total_all' => $totalAll,
+                'waiting_confirmation' => $waitingConfirmationCount,
+                'confirmed' => $confirmedCount,
+                'in_progress' => $inProgressCount,
+                'completed' => $completedCount,
+                'cancelled' => $cancelledCount,
+                'pending_prescriptions' => $pendingPrescriptionsCount,
+                'out_of_stock_medicines' => $outOfStockCount,
+                'low_stock_medicines' => $lowStockCount,
+                'unpaid_billings' => $unpaidBillingsCount,
+                'today_revenue' => $todayRevenue,
+                'quota_percentage' => $quotaPercentage,
             ],
-            'todayQueue'           => $todayAppointments,
-            'recentAppointments'   => $recentAppointments,
+            'todayQueue' => $todayAppointments,
+            'recentAppointments' => $recentAppointments,
             'pendingPrescriptions' => $pendingPrescriptions,
-            'criticalMedicines'    => $criticalMedicines,
-            'clinicMatrix'         => $clinicMatrix,
-            'weeklyTrend'          => $weeklyTrend,
-            'poliDistribution'     => $poliDistribution,
-            'currentDate'          => Carbon::today()->translatedFormat('l, d F Y'),
-            'selectedDate'         => $selectedDate,
+            'criticalMedicines' => $criticalMedicines,
+            'clinicMatrix' => $clinicMatrix,
+            'weeklyTrend' => $weeklyTrend,
+            'poliDistribution' => $poliDistribution,
+            'currentDate' => Carbon::today()->translatedFormat('l, d F Y'),
+            'selectedDate' => $selectedDate,
         ]);
     }
 }

@@ -11,6 +11,7 @@ class DoctorSchedule extends Model
     use HasFactory;
 
     protected $table = 'doctor_schedule';
+
     protected $primaryKey = 'doctor_schedule_id';
 
     protected $fillable = [

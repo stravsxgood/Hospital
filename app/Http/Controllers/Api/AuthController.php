@@ -83,7 +83,7 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $request->validate([
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
@@ -98,7 +98,7 @@ class AuthController extends Controller
 
         if ($user->is_active === false || $user->is_active === 0) {
             return response()->json([
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'Akun Anda dinonaktifkan. Hubungi admin.',
             ], 403);
         }
@@ -113,9 +113,9 @@ class AuthController extends Controller
 
         $profile = match ($user->role) {
             'patient' => $user->patient,
-            'doctor'  => $user->doctor?->load('specialization'),
-            'nurse'   => $user->nurse,
-            default   => null,
+            'doctor' => $user->doctor?->load('specialization'),
+            'nurse' => $user->nurse,
+            default => null,
         };
 
         // 4. Tentukan URL Tujuan Berdasarkan Role (Dokter, Perawat, dan Staf Internal diarahkan ke /staff)
@@ -127,17 +127,17 @@ class AuthController extends Controller
         $redirectTo = $isStaff ? '/staff' : '/patient/dashboard';
 
         return response()->json([
-            'status'       => 'success',
-            'message'      => 'Login berhasil.',
+            'status' => 'success',
+            'message' => 'Login berhasil.',
             'access_token' => $token,
-            'token_type'   => 'Bearer',
-            'redirect_to'  => $redirectTo,
-            'data'         => [
+            'token_type' => 'Bearer',
+            'redirect_to' => $redirectTo,
+            'data' => [
                 'user' => [
-                    'id'    => $user->id,
-                    'name'  => $user->name,
+                    'id' => $user->id,
+                    'name' => $user->name,
                     'email' => $user->email,
-                    'role'  => $user->role,
+                    'role' => $user->role,
                 ],
                 'profile' => $profile,
             ],

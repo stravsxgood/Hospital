@@ -18,7 +18,7 @@ class DoctorSeeder extends Seeder
     {
         // 0. Bersihkan Data Lama (Menggunakan tabel singular 'doctor_schedule')
         DB::statement('TRUNCATE TABLE doctor_schedule, doctor, specialization, poli, room RESTART IDENTITY CASCADE;');
-        
+
         // Hapus akun user dokter lama
         User::where('email', 'LIKE', 'dokter%@hospital.com')->delete();
 
@@ -53,8 +53,8 @@ class DoctorSeeder extends Seeder
             $polis[] = Poli::create([
                 'kode_poli' => $unit['kode_poli'],
                 'name_poli' => $unit['poli'],
-                'location'  => $unit['location'],
-                'status'    => 'Aktif',
+                'location' => $unit['location'],
+                'status' => 'Aktif',
             ]);
         }
 
@@ -65,8 +65,8 @@ class DoctorSeeder extends Seeder
                 'code_room' => "RM-$i",
                 'name_room' => "Ruang Periksa $i",
                 'type_room' => 'Pemeriksaan',
-                'capacity'  => 1,
-                'floor'     => (int) substr((string) $i, 0, 1),
+                'capacity' => 1,
+                'floor' => (int) substr((string) $i, 0, 1),
             ]);
         }
 
@@ -74,13 +74,13 @@ class DoctorSeeder extends Seeder
         $maleFirstNames = [
             'Budi', 'Hendra', 'Agus', 'Dimas', 'Aditya', 'Faisal', 'Kevin', 'Bambang',
             'Doni', 'Farhan', 'Hari', 'Indra', 'Kemal', 'Lutfi', 'Naufal', 'Pandu',
-            'Rio', 'Taufik', 'Usman', 'Wahyu', 'Rian', 'Fajar', 'Satria', 'Bagas', 'Ilham'
+            'Rio', 'Taufik', 'Usman', 'Wahyu', 'Rian', 'Fajar', 'Satria', 'Bagas', 'Ilham',
         ];
 
         $femaleFirstNames = [
             'Siti', 'Ratna', 'Maya', 'Jessica', 'Lina', 'Anisa', 'Cynthia', 'Eka',
             'Gita', 'Julia', 'Mega', 'Olivia', 'Qory', 'Sarah', 'Vina', 'Dian',
-            'Nadia', 'Putri', 'Tiara', 'Zahra', 'Ayu', 'Rini', 'Tari', 'Bella', 'Dewi'
+            'Nadia', 'Putri', 'Tiara', 'Zahra', 'Ayu', 'Rini', 'Tari', 'Bella', 'Dewi',
         ];
 
         $lastNames = [
@@ -88,7 +88,7 @@ class DoctorSeeder extends Seeder
             'Nugraha', 'Iskandar', 'Rahman', 'Marlina', 'Sanjaya', 'Permata', 'Irawan',
             'Melati', 'Prasetyo', 'Putri', 'Maulana', 'Savitri', 'Wibowo', 'Gunawan',
             'Perez', 'Palevi', 'Hakim', 'Utami', 'Azhar', 'Zalianty', 'Wicaksono',
-            'Sandioriva', 'Febrian', 'Sechan', 'Hidayat', 'Harun', 'Panduwinata', 'Saputra'
+            'Sandioriva', 'Febrian', 'Sechan', 'Hidayat', 'Harun', 'Panduwinata', 'Saputra',
         ];
 
         $days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
@@ -111,33 +111,33 @@ class DoctorSeeder extends Seeder
 
             $specModel = $specializations[($i - 1) % count($specializations)];
             $prefix = ($specModel->code_specialization === 'SP-KG') ? 'drg. ' : 'dr. ';
-            $fullName = $prefix . $firstName . ' ' . $lastName;
+            $fullName = $prefix.$firstName.' '.$lastName;
 
             $email = "dokter{$i}@hospital.com";
 
             // User Account
             $user = User::create([
-                'name'              => $fullName,
-                'email'             => $email,
-                'password'          => $defaultPassword,
-                'role'              => 'doctor',
+                'name' => $fullName,
+                'email' => $email,
+                'password' => $defaultPassword,
+                'role' => 'doctor',
                 'email_verified_at' => now(),
             ]);
 
             // Doctor Entity
-            $sipNumber = 'SIP.503/' . str_pad((string) $i, 4, '0', STR_PAD_LEFT) . '/DS/2026';
+            $sipNumber = 'SIP.503/'.str_pad((string) $i, 4, '0', STR_PAD_LEFT).'/DS/2026';
 
             $doctor = Doctor::create([
-                'user_id'           => $user->id,
+                'user_id' => $user->id,
                 'specialization_id' => $specModel->specialization_id ?? $specModel->id,
-                'name'              => $fullName,
-                'sip_number'        => $sipNumber,
-                'gender'            => $gender,
-                'number_phone'      => '0812' . rand(10000000, 99999999),
-                'email'             => $email,
-                'alamat'            => 'Jl. Kesehatan Raya No. ' . $i . ', Magelang',
-                'join_date'         => now()->subDays(rand(30, 1000))->format('Y-m-d'),
-                'status'            => 'aktif',
+                'name' => $fullName,
+                'sip_number' => $sipNumber,
+                'gender' => $gender,
+                'number_phone' => '0812'.rand(10000000, 99999999),
+                'email' => $email,
+                'alamat' => 'Jl. Kesehatan Raya No. '.$i.', Magelang',
+                'join_date' => now()->subDays(rand(30, 1000))->format('Y-m-d'),
+                'status' => 'aktif',
             ]);
 
             // Pasangkan Poli & Ruangan
@@ -158,14 +158,14 @@ class DoctorSeeder extends Seeder
                 $slot = $timeSlots[($i + $dayIndex) % count($timeSlots)];
 
                 DoctorSchedule::create([
-                    'doctor_id'  => $doctor->doctor_id ?? $doctor->id,
-                    'poli_id'    => $poliModel->poli_id ?? $poliModel->id,
-                    'room_id'    => $assignedRoom->room_id ?? $assignedRoom->id,
-                    'day'        => $day,
+                    'doctor_id' => $doctor->doctor_id ?? $doctor->id,
+                    'poli_id' => $poliModel->poli_id ?? $poliModel->id,
+                    'room_id' => $assignedRoom->room_id ?? $assignedRoom->id,
+                    'day' => $day,
                     'start_time' => $slot['start'],
-                    'end_time'   => $slot['end'],
-                    'quota_day'  => rand(20, 40),
-                    'status'     => 'Aktif',
+                    'end_time' => $slot['end'],
+                    'quota_day' => rand(20, 40),
+                    'status' => 'Aktif',
                 ]);
             }
         }

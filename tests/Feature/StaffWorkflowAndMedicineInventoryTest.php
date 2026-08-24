@@ -33,7 +33,7 @@ function setupStaffWorkflowEnvironment(): array
 
     $doctorUser = User::factory()->create([
         'name' => 'dr. Handoko, Sp.PD',
-        'email' => 'handoko' . uniqid() . '@test.com',
+        'email' => 'handoko'.uniqid().'@test.com',
         'role' => 'doctor',
     ]);
 
@@ -41,7 +41,7 @@ function setupStaffWorkflowEnvironment(): array
         'user_id' => $doctorUser->id,
         'specialization_id' => $spec->specialization_id,
         'name' => 'dr. Handoko, Sp.PD',
-        'sip_number' => 'SIP-PD-' . uniqid(),
+        'sip_number' => 'SIP-PD-'.uniqid(),
         'gender' => 'Laki-laki',
         'number_phone' => '081233445566',
         'join_date' => now()->toDateString(),
@@ -62,14 +62,14 @@ function setupStaffWorkflowEnvironment(): array
     // Permanent Nurse (Pekerja / Tetap)
     $nurseTetapUser = User::factory()->create([
         'name' => 'Ns. Dewi Anggraini (Tetap)',
-        'email' => 'dewitetap' . uniqid() . '@test.com',
+        'email' => 'dewitetap'.uniqid().'@test.com',
         'role' => 'nurse',
     ]);
 
     $nurseTetap = Nurse::create([
         'user_id' => $nurseTetapUser->id,
         'name' => 'Ns. Dewi Anggraini (Tetap)',
-        'registration_number' => 'STR-N-TTP-' . uniqid(),
+        'registration_number' => 'STR-N-TTP-'.uniqid(),
         'type' => 'tetap',
         'gender' => 'Perempuan',
     ]);
@@ -77,14 +77,14 @@ function setupStaffWorkflowEnvironment(): array
     // Koas / Intern Nurse (Magang)
     $nurseKoasUser = User::factory()->create([
         'name' => 'dr. Muda Kevin (Koas)',
-        'email' => 'kevinkoas' . uniqid() . '@test.com',
+        'email' => 'kevinkoas'.uniqid().'@test.com',
         'role' => 'nurse',
     ]);
 
     $nurseKoas = Nurse::create([
         'user_id' => $nurseKoasUser->id,
         'name' => 'dr. Muda Kevin (Koas)',
-        'registration_number' => 'STR-N-KAS-' . uniqid(),
+        'registration_number' => 'STR-N-KAS-'.uniqid(),
         'type' => 'koas',
         'gender' => 'Laki-laki',
     ]);
@@ -92,13 +92,13 @@ function setupStaffWorkflowEnvironment(): array
     // Patient
     $patientUser = User::factory()->create([
         'name' => 'Pasien Hendra',
-        'email' => 'hendra' . uniqid() . '@test.com',
+        'email' => 'hendra'.uniqid().'@test.com',
         'role' => 'patient',
     ]);
 
     $patient = Patient::create([
         'user_id' => $patientUser->id,
-        'resident_n' => '33080' . rand(10000000000, 99999999999),
+        'resident_n' => '33080'.rand(10000000000, 99999999999),
         'name' => 'Pasien Hendra',
         'gender' => 'Laki-laki',
         'birthday_date' => '1992-07-20',
@@ -111,7 +111,7 @@ function setupStaffWorkflowEnvironment(): array
 
     // Medicine
     $medicine = Medicine::create([
-        'code_medicine' => 'MED-OMZ-' . rand(100, 999),
+        'code_medicine' => 'MED-OMZ-'.rand(100, 999),
         'name_medicine' => 'Omeprazole 20 mg',
         'type' => 'Kapsul',
         'stock' => 50,
@@ -219,7 +219,7 @@ test('permanent staff can process and complete pharmacy prescription with atomic
 
     $prescription = Prescription::create([
         'medical_record_id' => $medRecord->medical_record_id,
-        'prescription_number' => 'RX-' . date('Ymd') . '-001',
+        'prescription_number' => 'RX-'.date('Ymd').'-001',
         'status' => 'menunggu',
         'notes' => 'Diminum 30 menit sebelum makan',
     ]);

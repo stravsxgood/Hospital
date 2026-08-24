@@ -36,9 +36,9 @@ class SatuSehatController extends Controller
         $bundle = $this->transformer->toFhirBundle($record);
 
         return response()->json([
-            'status'  => true,
+            'status' => true,
             'message' => 'FHIR R4 SatuSehat Bundle generated successfully.',
-            'data'    => $bundle,
+            'data' => $bundle,
         ]);
     }
 }
