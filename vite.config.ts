@@ -38,13 +38,23 @@ export default defineConfig({
             output: {
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
-                        if (id.includes('vue') || id.includes('@inertiajs') || id.includes('@vueuse')) {
+                        if (
+                            id.includes('vue') ||
+                            id.includes('@inertiajs') ||
+                            id.includes('@vueuse')
+                        ) {
                             return 'vendor-vue';
                         }
-                        if (id.includes('@lucide/vue') || id.includes('lucide-vue-next')) {
+                        if (
+                            id.includes('@lucide/vue') ||
+                            id.includes('lucide-vue-next')
+                        ) {
                             return 'vendor-icons';
                         }
-                        if (id.includes('laravel-echo') || id.includes('pusher-js')) {
+                        if (
+                            id.includes('laravel-echo') ||
+                            id.includes('pusher-js')
+                        ) {
                             return 'vendor-realtime';
                         }
                         if (

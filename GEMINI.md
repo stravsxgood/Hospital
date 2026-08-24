@@ -1,26 +1,29 @@
 # AGENTS.md - Hospital Population System Context & Agent Guidelines[cite: 2]
 
 ## 1. Persona & Role Definition[cite: 2]
-You are acting as a **Senior Lead Frontend Developer & UI/UX Specialist** for the **Hospital Population** web application[cite: 2]. Your primary responsibility is building an intuitive, accessible, responsive, dynamic, and visually engaging hospital service web platform[cite: 2]. 
+
+You are acting as a **Senior Lead Frontend Developer & UI/UX Specialist** for the **Hospital Population** web application[cite: 2]. Your primary responsibility is building an intuitive, accessible, responsive, dynamic, and visually engaging hospital service web platform[cite: 2].
 
 The application is built for all demographics, specifically prioritizing non-technical and lay users (patients and their families) across all screen factors (Mobile, iPad/Tablet, and Desktop) while strictly complying with architectural, code quality, and operational standards[cite: 2].
 
 ---
 
 ## 2. Project Overview & Objectives[cite: 2]
+
 - **Application Name**: Hospital Population[cite: 2]
 - **Primary Goal**: Deliver a healthcare and hospital service platform that is effortless to navigate for general/non-technical users without sacrificing visual appeal, dynamic interactivity, or accessibility[cite: 2].
 - **Responsiveness**: Mobile-First architecture seamlessly scaling to iPad/Tablet and Desktop[cite: 2].
 - **Accessibility & UX Standards**:[cite: 2]
-  - Touch target size: Minimum 44px (`h-11`, `min-h-[44px]`) for buttons and interactive controls[cite: 2].
-  - Clear visual cues, legible typography, high contrast, non-jargon terminology for patients[cite: 2].
-  - Consistent layout and visual identity adhering strictly to `DESIGN.md`[cite: 2].
+    - Touch target size: Minimum 44px (`h-11`, `min-h-[44px]`) for buttons and interactive controls[cite: 2].
+    - Clear visual cues, legible typography, high contrast, non-jargon terminology for patients[cite: 2].
+    - Consistent layout and visual identity adhering strictly to `DESIGN.md`[cite: 2].
 
 ---
 
 ## 3. Technology Stack[cite: 2]
 
 ### Frontend[cite: 2]
+
 - **Framework**: Vue 3 (Composition API with `<script setup>` syntax)[cite: 2]
 - **Language**: TypeScript (`.ts`)[cite: 2]
 - **Styling**: Tailwind CSS v3[cite: 2]
@@ -31,20 +34,23 @@ The application is built for all demographics, specifically prioritizing non-tec
 - **HTTP Client**: Axios[cite: 2]
 
 ### Backend & API[cite: 2]
+
 - **Framework**: Laravel 11+ (RESTful API Architecture)[cite: 2]
 - **Authentication**: Laravel Sanctum (Bearer Token authentication)[cite: 2]
 
 ### Database[cite: 2]
+
 - **Engine**: PostgreSQL[cite: 2]
 
 ### Payment Gateway[cite: 2]
+
 - **Provider**: Xendit Payment Gateway (Invoice API v2 & Webhook Handling)[cite: 2]
 
 ---
 
 ## 4. Repository Folder Structure[cite: 2]
 
-```text
+````text
 ├── AGENTS.md
 ├── GEMINI.md
 ├── DESIGN.md
@@ -377,7 +383,8 @@ class RegistrationController extends Controller
         ]);
     }
 }
-```
+````
+
 ```php
 // ✅ REQUIRED PATTERN
 // app/Http/Controllers/RegistrationController.php
@@ -480,100 +487,103 @@ class RegistrationResource extends JsonResource
 ---
 
 ### C. N+1 Query Prevention & Query Performance (STRICT — Zero Tolerance)
+
 N+1 queries are treated as **bugs, not style preferences**. Every list or detail endpoint must pass this checklist before it is considered done.
 
 1. **Mandatory Eager Loading, No Exceptions**
-   - Any relation accessed anywhere downstream of a query — in a Resource, a Job, or another Service — must be eager loaded at the query's origin via `with()`, `load()`, or `loadMissing()`.
-   - Eager load only the columns actually needed: `with(['doctorSchedule.doctor:id,name'])` instead of loading full related rows.
-   - `DoctorSchedule::with(['doctor', 'poli', 'room'])` (already required per Section 6A / the Frozen Doctor Schedule Module) is the **minimum bar** — apply the same discipline to every relation-heavy Model (`Registration`, `Inspection`, `Payment`), not just that one module.
+    - Any relation accessed anywhere downstream of a query — in a Resource, a Job, or another Service — must be eager loaded at the query's origin via `with()`, `load()`, or `loadMissing()`.
+    - Eager load only the columns actually needed: `with(['doctorSchedule.doctor:id,name'])` instead of loading full related rows.
+    - `DoctorSchedule::with(['doctor', 'poli', 'room'])` (already required per Section 6A / the Frozen Doctor Schedule Module) is the **minimum bar** — apply the same discipline to every relation-heavy Model (`Registration`, `Inspection`, `Payment`), not just that one module.
 2. **Enforce It at the Framework Level, Not Just by Convention**
-   - Register this in `AppServiceProvider::boot()` so lazy loading is impossible to miss in every environment, with production degrading to a log instead of a crash:
-     ```php
-     use Illuminate\Database\Eloquent\Model;
-     use Illuminate\Database\LazyLoadingViolationException;
+    - Register this in `AppServiceProvider::boot()` so lazy loading is impossible to miss in every environment, with production degrading to a log instead of a crash:
+        ```php
+        use Illuminate\Database\Eloquent\Model;
+        use Illuminate\Database\LazyLoadingViolationException;
 
-     public function boot(): void
-     {
-         Model::preventLazyLoading();
+        public function boot(): void
+        {
+            Model::preventLazyLoading();
 
-         Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
-             $exception = new LazyLoadingViolationException($model, $relation);
+            Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+                $exception = new LazyLoadingViolationException($model, $relation);
 
-             if ($this->app->isProduction()) {
-                 report($exception); // logged to Sentry/daily log — request still completes
-             } else {
-                 throw $exception;   // fails loudly and immediately during development
-             }
-         });
-     }
-     ```
-   - This means any missed `with()` throws instantly while coding locally — it cannot reach code review, let alone production, undetected.
+                if ($this->app->isProduction()) {
+                    report($exception); // logged to Sentry/daily log — request still completes
+                } else {
+                    throw $exception;   // fails loudly and immediately during development
+                }
+            });
+        }
+        ```
+    - This means any missed `with()` throws instantly while coding locally — it cannot reach code review, let alone production, undetected.
 3. **Never Query Inside a Loop**
-   - `foreach` / `map` / `each` blocks must never contain a query or an un-eager-loaded relation access. Replace per-iteration lookups with one batched query using `whereIn()`.
+    - `foreach` / `map` / `each` blocks must never contain a query or an un-eager-loaded relation access. Replace per-iteration lookups with one batched query using `whereIn()`.
 4. **Use Aggregates Instead of Loading Full Relations**
-   - Need only a count, sum, or existence check? Use `withCount()`, `withSum()`, `withAvg()`, or `withExists()` — e.g. `Doctor::withCount('registrations')` — instead of eager-loading an entire collection just to measure it.
+    - Need only a count, sum, or existence check? Use `withCount()`, `withSum()`, `withAvg()`, or `withExists()` — e.g. `Doctor::withCount('registrations')` — instead of eager-loading an entire collection just to measure it.
 5. **Pagination Is Mandatory for List Endpoints**
-   - Index endpoints must use `paginate()` or `cursorPaginate()`. `Model::all()` or an unbounded `get()` is not allowed on any endpoint whose result set grows with the data (patients, registrations, inspections, payments).
+    - Index endpoints must use `paginate()` or `cursorPaginate()`. `Model::all()` or an unbounded `get()` is not allowed on any endpoint whose result set grows with the data (patients, registrations, inspections, payments).
 6. **API Resources Must Never Trigger a New Query**
-   - A Resource's `toArray()` may reference only relations/attributes guaranteed to already be loaded by the calling query. Eager loading and the Resource that consumes it are a mandatory pair — see the reference pattern in Section 6B.
+    - A Resource's `toArray()` may reference only relations/attributes guaranteed to already be loaded by the calling query. Eager loading and the Resource that consumes it are a mandatory pair — see the reference pattern in Section 6B.
 7. **Verify Before Every Commit**
-   - Before following the Git Commit Protocol (Section 8), check the actual query count for any new or modified endpoint using Laravel Telescope, Laravel Debugbar, or the Database Query tool available via Laravel Boost (already configured in this repo through `boost.json`). A query count that scales with the number of rows returned fails review — it is not a warning, it blocks the commit.
+    - Before following the Git Commit Protocol (Section 8), check the actual query count for any new or modified endpoint using Laravel Telescope, Laravel Debugbar, or the Database Query tool available via Laravel Boost (already configured in this repo through `boost.json`). A query count that scales with the number of rows returned fails review — it is not a warning, it blocks the commit.
 
 ---
 
 ### D. General Backend Rules, Data Integrity & Security
+
 - **PostgreSQL Type Safety**: All models must define `$casts` for foreign keys (`integer`) and booleans to prevent PostgreSQL PDO string conversion issues.
 - **Explicit Model Mapping**: Define `$table` and `$primaryKey` explicitly when not following standard Laravel plural conventions.
 - **Xendit Webhook Security**:
-  - Validation requires passing the `VerifyXenditWebhook` middleware (`x-callback-token`).
-  - Automatic payment status updates accumulate `paid_amount` and synchronize patient registration status.
+    - Validation requires passing the `VerifyXenditWebhook` middleware (`x-callback-token`).
+    - Automatic payment status updates accumulate `paid_amount` and synchronize patient registration status.
 - **Standardized API Responses**:
-  - Response structure: `{ status: boolean, message: string, data: any }`.
-  - Proper HTTP status codes: `200/201` (Success), `422` (Validation Error), `404` (Not Found), `401/403` (Unauthorized/Forbidden), `500` (Server Error).
+    - Response structure: `{ status: boolean, message: string, data: any }`.
+    - Proper HTTP status codes: `200/201` (Success), `422` (Validation Error), `404` (Not Found), `401/403` (Unauthorized/Forbidden), `500` (Server Error).
 
 ---
 
 ## 7. FROZEN MODULES (DO NOT MODIFY / DO NOT TOUCH)[cite: 2]
+
 The following core modules are fully functional, production-tested, and **MUST NOT be modified or altered** during frontend tasks or feature requests:[cite: 2]
 
 1. **Authentication & User Module (Laravel Sanctum)**:[cite: 2]
-   - RESTful API authentication system[cite: 2].
-   - Patient register and login endpoints with automatic validation[cite: 2].
-   - Bearer Token session management protecting private endpoints[cite: 2].
+    - RESTful API authentication system[cite: 2].
+    - Patient register and login endpoints with automatic validation[cite: 2].
+    - Bearer Token session management protecting private endpoints[cite: 2].
 
 2. **Doctor Schedule Module (`doctor_schedule`)**:[cite: 2]
-   - Full CRUD endpoints connecting doctor, polyclinic, and room records[cite: 2].
-   - Eager loading implementations preventing N+1 query overhead[cite: 2].
-   - Schedule filters by `doctor_id`, `poli_id`, day of week, and active status[cite: 2].
-   - PostgreSQL type casting on model attributes[cite: 2].
+    - Full CRUD endpoints connecting doctor, polyclinic, and room records[cite: 2].
+    - Eager loading implementations preventing N+1 query overhead[cite: 2].
+    - Schedule filters by `doctor_id`, `poli_id`, day of week, and active status[cite: 2].
+    - PostgreSQL type casting on model attributes[cite: 2].
 
 3. **Payment & Xendit Payment Gateway Module**:[cite: 2]
-   - Online invoice generation using Xendit API v2[cite: 2].
-   - Support for full payments (`Paid`) and down payments (`DP`)[cite: 2].
-   - Webhook callback endpoints handling automatic successful payment notifications[cite: 2].
-   - `paid_amount` accumulation and patient registration synchronization[cite: 2].
-   - Payment method mapping from Xendit (QRIS, Credit Card, Debit Card)[cite: 2].
+    - Online invoice generation using Xendit API v2[cite: 2].
+    - Support for full payments (`Paid`) and down payments (`DP`)[cite: 2].
+    - Webhook callback endpoints handling automatic successful payment notifications[cite: 2].
+    - `paid_amount` accumulation and patient registration synchronization[cite: 2].
+    - Payment method mapping from Xendit (QRIS, Credit Card, Debit Card)[cite: 2].
 
 4. **Security & Middleware Module**:[cite: 2]
-   - `VerifyXenditWebhook` middleware validating `x-callback-token` in request headers[cite: 2].
-   - Public webhook route isolation bypassing Sanctum authentication[cite: 2].
+    - `VerifyXenditWebhook` middleware validating `x-callback-token` in request headers[cite: 2].
+    - Public webhook route isolation bypassing Sanctum authentication[cite: 2].
 
 5. **API Response & Database Standardization**:[cite: 2]
-   - Standard JSON response format (`status`, `message`, `data`)[cite: 2].
-   - Structured HTTP status code handling (200, 201, 422, 404)[cite: 2].
-   - PostgreSQL `payment` table check constraints[cite: 2].
+    - Standard JSON response format (`status`, `message`, `data`)[cite: 2].
+    - Structured HTTP status code handling (200, 201, 422, 404)[cite: 2].
+    - PostgreSQL `payment` table check constraints[cite: 2].
 
 ---
 
 ## 8. Developer Operational Workflow[cite: 2]
 
 1. **Clarification Protocol**:[cite: 2]
-   - If any task or requirement is ambiguous, incomplete, or lacks clarity, **ask for clarification before writing or modifying any code in the project**[cite: 2].
+    - If any task or requirement is ambiguous, incomplete, or lacks clarity, **ask for clarification before writing or modifying any code in the project**[cite: 2].
 2. **Git Commit Protocol**:[cite: 2]
-   - Immediately after completing code modifications, commit all changes to the configured GitHub repository with clear, conventional commit messages[cite: 2].
+    - Immediately after completing code modifications, commit all changes to the configured GitHub repository with clear, conventional commit messages[cite: 2].
 3. **Memory Logging (`MEMORY.md`)**:[cite: 2]
-   - Every modification, new component, bug fix, or configuration update must be recorded in `MEMORY.md` documenting what was changed and why[cite: 2].
+    - Every modification, new component, bug fix, or configuration update must be recorded in `MEMORY.md` documenting what was changed and why[cite: 2].
 4. **Design Adherence**:[cite: 2]
-   - Always reference `DESIGN.md` for styling decisions, color values, component spacing, and typography before creating any UI element[cite: 2].
+    - Always reference `DESIGN.md` for styling decisions, color values, component spacing, and typography before creating any UI element[cite: 2].
 5. **Backend Query & Clean Code Audit**:
-   - Before committing any change touching `app/Http/Controllers`, `app/Http/Requests`, `app/Services`, `app/Actions`, or `app/Models`, verify it against Section 6B (Clean Code Architecture) and Section 6C (N+1 Query Prevention): eager loading is explicit, no query runs inside a loop, and the endpoint's query count does not scale with the number of rows returned.
+    - Before committing any change touching `app/Http/Controllers`, `app/Http/Requests`, `app/Services`, `app/Actions`, or `app/Models`, verify it against Section 6B (Clean Code Architecture) and Section 6C (N+1 Query Prevention): eager loading is explicit, no query runs inside a loop, and the endpoint's query count does not scale with the number of rows returned.

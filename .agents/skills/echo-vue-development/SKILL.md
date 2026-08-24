@@ -1,9 +1,9 @@
 ---
 name: echo-vue-development
-description: "Develops real-time broadcasting in Vue applications with Laravel Echo. Activates when configuring Echo in Vue (configureEcho); using composables (useEcho, useEchoPublic, useEchoPresence, useEchoModel, useEchoNotification, useConnectionStatus); listening for broadcast events in Vue components; implementing client events (whisper) in Vue; or when the user mentions Echo with Vue, real-time Vue composables, or broadcasting in Vue components."
+description: 'Develops real-time broadcasting in Vue applications with Laravel Echo. Activates when configuring Echo in Vue (configureEcho); using composables (useEcho, useEchoPublic, useEchoPresence, useEchoModel, useEchoNotification, useConnectionStatus); listening for broadcast events in Vue components; implementing client events (whisper) in Vue; or when the user mentions Echo with Vue, real-time Vue composables, or broadcasting in Vue components.'
 license: MIT
 metadata:
-  author: laravel
+    author: laravel
 ---
 
 # Laravel Echo Vue Integration
@@ -34,11 +34,12 @@ Use `search-docs` for detailed broadcasting patterns. Search for:
 Call once in your app entry point (e.g., `app.ts`):
 
 <!-- Configure Echo for Reverb -->
+
 ```typescript
-import { configureEcho } from "@laravel/echo-vue";
+import { configureEcho } from '@laravel/echo-vue';
 
 configureEcho({
-    broadcaster: "reverb",
+    broadcaster: 'reverb',
 });
 ```
 
@@ -47,24 +48,26 @@ All Reverb connection options (`key`, `wsHost`, `wsPort`, `wssPort`, `forceTLS`,
 For Pusher:
 
 <!-- Configure Echo for Pusher -->
+
 ```typescript
-import { configureEcho } from "@laravel/echo-vue";
+import { configureEcho } from '@laravel/echo-vue';
 
 configureEcho({
-    broadcaster: "pusher",
+    broadcaster: 'pusher',
 });
 ```
 
 ### Listen for Events
 
 <!-- Private Channel Composable -->
+
 ```vue
 <script setup lang="ts">
-import { useEcho } from "@laravel/echo-vue";
+import { useEcho } from '@laravel/echo-vue';
 
 const props = defineProps<{ orderId: number }>();
 
-useEcho(`orders.${props.orderId}`, "OrderShipmentStatusUpdated", (e) => {
+useEcho(`orders.${props.orderId}`, 'OrderShipmentStatusUpdated', (e) => {
     console.log(e.order);
 });
 </script>
@@ -75,13 +78,14 @@ useEcho(`orders.${props.orderId}`, "OrderShipmentStatusUpdated", (e) => {
 Listen to multiple events:
 
 <!-- Multiple Events -->
+
 ```vue
 <script setup lang="ts">
-import { useEcho } from "@laravel/echo-vue";
+import { useEcho } from '@laravel/echo-vue';
 
 useEcho(
     `orders.${orderId}`,
-    ["OrderShipmentStatusUpdated", "OrderShipped"],
+    ['OrderShipmentStatusUpdated', 'OrderShipped'],
     (e) => {
         console.log(e.order);
     },
@@ -92,11 +96,12 @@ useEcho(
 ### Public Channels
 
 <!-- Public Channel Composable -->
+
 ```vue
 <script setup lang="ts">
-import { useEchoPublic } from "@laravel/echo-vue";
+import { useEchoPublic } from '@laravel/echo-vue';
 
-useEchoPublic("posts", "PostPublished", (e) => {
+useEchoPublic('posts', 'PostPublished', (e) => {
     console.log(e.post);
 });
 </script>
@@ -105,11 +110,12 @@ useEchoPublic("posts", "PostPublished", (e) => {
 ### Presence Channels
 
 <!-- Presence Channel Composable -->
+
 ```vue
 <script setup lang="ts">
-import { useEchoPresence } from "@laravel/echo-vue";
+import { useEchoPresence } from '@laravel/echo-vue';
 
-const { channel } = useEchoPresence("chat.1", "NewMessage", (e) => {
+const { channel } = useEchoPresence('chat.1', 'NewMessage', (e) => {
     console.log(e.message);
 });
 
@@ -122,13 +128,14 @@ channel().leaving((user) => console.log(`${user.name} left`));
 ### Model Broadcasting
 
 <!-- Model Broadcasting Composable -->
+
 ```vue
 <script setup lang="ts">
-import { useEchoModel } from "@laravel/echo-vue";
+import { useEchoModel } from '@laravel/echo-vue';
 
 const props = defineProps<{ userId: number }>();
 
-useEchoModel("App.Models.User", props.userId, ["UserUpdated"], (e) => {
+useEchoModel('App.Models.User', props.userId, ['UserUpdated'], (e) => {
     console.log(e.model);
 });
 </script>
@@ -137,9 +144,10 @@ useEchoModel("App.Models.User", props.userId, ["UserUpdated"], (e) => {
 ### Notifications
 
 <!-- Notification Composable -->
+
 ```vue
 <script setup lang="ts">
-import { useEchoNotification } from "@laravel/echo-vue";
+import { useEchoNotification } from '@laravel/echo-vue';
 
 useEchoNotification(`App.Models.User.${userId}`, (notification) => {
     console.log(notification);
@@ -150,9 +158,10 @@ useEchoNotification(`App.Models.User.${userId}`, (notification) => {
 ### Client Events (Whisper)
 
 <!-- Client Events in Vue -->
+
 ```vue
 <script setup lang="ts">
-import { useEcho } from "@laravel/echo-vue";
+import { useEcho } from '@laravel/echo-vue';
 
 const { channel } = useEcho(`chat.${roomId}`, ['update'], (e) => {
     console.log('Chat event received:', e);
@@ -171,9 +180,10 @@ channel().listenForWhisper('typing', (e) => {
 ### Connection Status
 
 <!-- Connection Status -->
+
 ```vue
 <script setup lang="ts">
-import { useConnectionStatus } from "@laravel/echo-vue";
+import { useConnectionStatus } from '@laravel/echo-vue';
 
 const status = useConnectionStatus();
 // Possible values: connected, connecting, reconnecting, disconnected, failed
@@ -189,15 +199,16 @@ const status = useConnectionStatus();
 Specify payload shape using TypeScript generics:
 
 <!-- Type-safe Event Listening -->
+
 ```vue
 <script setup lang="ts">
-import { useEcho } from "@laravel/echo-vue";
+import { useEcho } from '@laravel/echo-vue';
 
 type OrderData = {
     order: { id: number; user: { id: number; name: string } };
 };
 
-useEcho<OrderData>(`orders.${orderId}`, "OrderShipmentStatusUpdated", (e) => {
+useEcho<OrderData>(`orders.${orderId}`, 'OrderShipmentStatusUpdated', (e) => {
     console.log(e.order.id);
     console.log(e.order.user.name);
 });
@@ -207,15 +218,21 @@ useEcho<OrderData>(`orders.${orderId}`, "OrderShipmentStatusUpdated", (e) => {
 For model broadcasts:
 
 <!-- Type-safe Model Broadcasting -->
+
 ```vue
 <script setup lang="ts">
-import { useEchoModel } from "@laravel/echo-vue";
+import { useEchoModel } from '@laravel/echo-vue';
 
 type User = { id: number; name: string; email: string };
 
-useEchoModel<User, "App.Models.User">("App.Models.User", userId, ["UserUpdated"], (e) => {
-    console.log(e.model.name);
-});
+useEchoModel<User, 'App.Models.User'>(
+    'App.Models.User',
+    userId,
+    ['UserUpdated'],
+    (e) => {
+        console.log(e.model.name);
+    },
+);
 </script>
 ```
 
@@ -224,13 +241,14 @@ useEchoModel<User, "App.Models.User">("App.Models.User", userId, ["UserUpdated"]
 All composables return methods for manual control:
 
 <!-- Manual Control -->
+
 ```vue
 <script setup lang="ts">
-import { useEcho } from "@laravel/echo-vue";
+import { useEcho } from '@laravel/echo-vue';
 
 const { leaveChannel, leave, stopListening, listen } = useEcho(
     `orders.${orderId}`,
-    "OrderShipmentStatusUpdated",
+    'OrderShipmentStatusUpdated',
     (e) => {
         console.log(e.order);
     },
@@ -284,6 +302,7 @@ php artisan make:event OrderShipped
 ```
 
 <!-- Broadcast Event -->
+
 ```php
 namespace App\Events;
 
@@ -311,6 +330,7 @@ class OrderShipped implements ShouldBroadcast
 Define in `routes/channels.php`:
 
 <!-- Channel Authorization -->
+
 ```php
 use App\Models\Order;
 use App\Models\User;

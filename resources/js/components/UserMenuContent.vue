@@ -34,7 +34,11 @@ defineProps<{
             class="cursor-pointer !rounded-lg !px-2.5 !py-2 text-sm font-medium text-[#2d2d2d] transition-colors duration-150 hover:!bg-[#f4f4ec] hover:!text-[#111111] focus:!bg-[#f4f4ec] focus:!text-[#111111] data-[highlighted]:!bg-[#f4f4ec] data-[highlighted]:!text-[#111111]"
         >
             <Link
-                :href="typeof route === 'function' ? route('profile.edit') : '/profile'"
+                :href="
+                    typeof route === 'function'
+                        ? route('profile.edit')
+                        : '/profile'
+                "
                 class="flex w-full items-center gap-2.5"
             >
                 <Settings class="size-4 text-[#666660]" />

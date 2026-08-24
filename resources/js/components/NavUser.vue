@@ -38,8 +38,14 @@ const currentTeam = computed(() => page.props.currentTeam as Team | null);
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
-                    class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl border border-[#333333]/15 bg-white p-1.5 shadow-xl text-[#222222]"
-                    :side="isMobile ? 'bottom' : state === 'collapsed' ? 'right' : 'top'"
+                    class="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl border border-[#333333]/15 bg-white p-1.5 text-[#222222] shadow-xl"
+                    :side="
+                        isMobile
+                            ? 'bottom'
+                            : state === 'collapsed'
+                              ? 'right'
+                              : 'top'
+                    "
                     align="end"
                     :side-offset="8"
                 >

@@ -11,5 +11,3 @@ withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 </script>
-
-

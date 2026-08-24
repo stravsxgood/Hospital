@@ -8,8 +8,23 @@
  *   - Patient: Public Services (Jadwal Dokter + Antrean Saya)
  */
 import { Link, usePage } from '@inertiajs/vue3';
-import type { Calendar} from '@lucide/vue';
-import { Activity, BookOpen, Building2, GraduationCap, Home, LayoutGrid, Pill, Receipt, Shield, ShieldCheck, Ticket, TrendingUp, Tv, Users } from '@lucide/vue';
+import type { Calendar } from '@lucide/vue';
+import {
+    Activity,
+    BookOpen,
+    Building2,
+    GraduationCap,
+    Home,
+    LayoutGrid,
+    Pill,
+    Receipt,
+    Shield,
+    ShieldCheck,
+    Ticket,
+    TrendingUp,
+    Tv,
+    Users,
+} from '@lucide/vue';
 import { motion } from 'motion-v';
 import { computed } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
@@ -36,11 +51,30 @@ const page = usePage();
 const user = computed(() => page.props.auth?.user);
 
 const isNurse = computed(() => Boolean(user.value?.nurse));
-const isNurseTetap = computed(() => isNurse.value && (Boolean(user.value?.nurse?.is_tetap) || user.value?.nurse?.type === 'tetap'));
-const isNurseKoas = computed(() => isNurse.value && (Boolean(user.value?.nurse?.is_koas) || user.value?.nurse?.type === 'koas'));
-const isDoctor = computed(() => user.value?.role === 'doctor' || Boolean(user.value?.is_doctor) || Boolean(user.value?.doctor));
-const isAdmin = computed(() => user.value?.role === 'admin' || user.value?.role === 'super-admin');
-const isStaffOrDoctor = computed(() => isNurse.value || isDoctor.value || isAdmin.value);
+const isNurseTetap = computed(
+    () =>
+        isNurse.value &&
+        (Boolean(user.value?.nurse?.is_tetap) ||
+            user.value?.nurse?.type === 'tetap'),
+);
+const isNurseKoas = computed(
+    () =>
+        isNurse.value &&
+        (Boolean(user.value?.nurse?.is_koas) ||
+            user.value?.nurse?.type === 'koas'),
+);
+const isDoctor = computed(
+    () =>
+        user.value?.role === 'doctor' ||
+        Boolean(user.value?.is_doctor) ||
+        Boolean(user.value?.doctor),
+);
+const isAdmin = computed(
+    () => user.value?.role === 'admin' || user.value?.role === 'super-admin',
+);
+const isStaffOrDoctor = computed(
+    () => isNurse.value || isDoctor.value || isAdmin.value,
+);
 
 /** Cek apakah user adalah pasien */
 const isPatient = computed(() => !isStaffOrDoctor.value);
@@ -87,21 +121,32 @@ const adminMenuItems = computed<MenuItem[]>(() => [
 
 /** URL tujuan dashboard staf / dokter */
 const dashboardUrl = computed(() =>
-    page.props.currentTeam ? dashboard(page.props.currentTeam.slug).url : (isDoctor.value ? '/doctor/queue' : '/staff')
+    page.props.currentTeam
+        ? dashboard(page.props.currentTeam.slug).url
+        : isDoctor.value
+          ? '/doctor/queue'
+          : '/staff',
 );
 
 /** Helper untuk active check */
-const isRouteActive = (pattern: string, fallbackUrl: string, exact: boolean = false): boolean => {
+const isRouteActive = (
+    pattern: string,
+    fallbackUrl: string,
+    exact: boolean = false,
+): boolean => {
     const currentPath = page.url.split('?')[0];
 
     // Jika menggunakan helper route() dari Ziggy
     if (typeof route === 'function' && route().current) {
         if (exact || fallbackUrl === '/staff') {
             // Khusus dashboard staf, hanya aktif jika persis pada route staff/staff.dashboard dan bukan sub-halaman
-            return (route().current('staff') || route().current('staff.dashboard')) && 
-                   !route().current('staff.billing.*') && 
-                   !route().current('staff.medicines.*') &&
-                   !route().current('staff.audit-logs.*');
+            return (
+                (route().current('staff') ||
+                    route().current('staff.dashboard')) &&
+                !route().current('staff.billing.*') &&
+                !route().current('staff.medicines.*') &&
+                !route().current('staff.audit-logs.*')
+            );
         }
 
         return route().current(pattern);
@@ -262,7 +307,13 @@ const patientMenuItems = computed<MenuItem[]>(() => [
                         class="rounded-[10px] transition-colors duration-150 hover:bg-[#fffff3]"
                     >
                         <Link
-                            :href="isStaffOrDoctor ? (isDoctor ? '/doctor/queue' : '/staff') : '/'"
+                            :href="
+                                isStaffOrDoctor
+                                    ? isDoctor
+                                        ? '/doctor/queue'
+                                        : '/staff'
+                                    : '/'
+                            "
                             class="flex items-center gap-3"
                         >
                             <motion.div
@@ -270,18 +321,31 @@ const patientMenuItems = computed<MenuItem[]>(() => [
                                 :animate="{ opacity: 1, scale: 1 }"
                                 :whileHover="{ scale: 1.08, rotate: 3 }"
                                 :whileTap="{ scale: 0.95 }"
-                                :transition="{ duration: 0.25, ease: 'easeOut' }"
+                                :transition="{
+                                    duration: 0.25,
+                                    ease: 'easeOut',
+                                }"
                                 class="flex h-11 w-11 items-center justify-center rounded-full bg-[#beedc0] shadow-[0_0_0_3px_rgba(190,237,192,0.3)]"
                             >
                                 <AppLogoIcon class="h-6 w-6 text-[#000000]" />
                             </motion.div>
 
-                            <div class="flex flex-col text-left group-data-[collapsible=icon]:hidden">
-                                <span class="font-['ivypresto-headline'] text-[16px] font-semibold leading-[1.4] tracking-tight text-[#000000]">
+                            <div
+                                class="flex flex-col text-left group-data-[collapsible=icon]:hidden"
+                            >
+                                <span
+                                    class="font-['ivypresto-headline'] text-[16px] leading-[1.4] font-semibold tracking-tight text-[#000000]"
+                                >
                                     Hospital Population
                                 </span>
-                                <span class="font-['Rubik'] text-[12px] font-medium leading-[1.6] text-[#333333]">
-                                    {{ isStaffOrDoctor ? 'Panel Tenaga Medis' : 'Portal Layanan Pasien' }}
+                                <span
+                                    class="font-['Rubik'] text-[12px] leading-[1.6] font-medium text-[#333333]"
+                                >
+                                    {{
+                                        isStaffOrDoctor
+                                            ? 'Panel Tenaga Medis'
+                                            : 'Portal Layanan Pasien'
+                                    }}
                                 </span>
                             </div>
                         </Link>
@@ -289,7 +353,10 @@ const patientMenuItems = computed<MenuItem[]>(() => [
                 </SidebarMenuItem>
             </SidebarMenu>
 
-            <SidebarMenu v-if="isStaffOrDoctor && page.props.currentTeam" class="mt-2">
+            <SidebarMenu
+                v-if="isStaffOrDoctor && page.props.currentTeam"
+                class="mt-2"
+            >
                 <SidebarMenuItem>
                     <TeamSwitcher />
                 </SidebarMenuItem>
@@ -299,8 +366,7 @@ const patientMenuItems = computed<MenuItem[]>(() => [
         <!-- ═══════════════════════════════════════════════════════════════
              Navigation Menu
              ═══════════════════════════════════════════════════════════════ -->
-        <SidebarContent class="bg-[#edede2] px-3 py-4 space-y-5">
-
+        <SidebarContent class="space-y-5 bg-[#edede2] px-3 py-4">
             <!-- ── 0. Khusus Super Admin / Tata Kelola Eksekutif ── -->
             <motion.div
                 v-if="isAdmin"
@@ -310,13 +376,19 @@ const patientMenuItems = computed<MenuItem[]>(() => [
             >
                 <SidebarGroup>
                     <SidebarGroupLabel
-                        class="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#333333]/70"
+                        class="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold tracking-[0.08em] text-[#333333]/70 uppercase"
                     >
-                        <span class="inline-block h-1.5 w-1.5 rounded-full bg-[#065f46]" aria-hidden="true" />
+                        <span
+                            class="inline-block h-1.5 w-1.5 rounded-full bg-[#065f46]"
+                            aria-hidden="true"
+                        />
                         <span>Super Administrator</span>
                     </SidebarGroupLabel>
 
-                    <div class="mx-3 mb-2 h-px bg-[#333333]/8" aria-hidden="true" />
+                    <div
+                        class="mx-3 mb-2 h-px bg-[#333333]/8"
+                        aria-hidden="true"
+                    />
 
                     <SidebarGroupContent>
                         <SidebarMenu class="space-y-1">
@@ -327,28 +399,53 @@ const patientMenuItems = computed<MenuItem[]>(() => [
                                 <motion.div
                                     :initial="{ opacity: 0, x: -10 }"
                                     :animate="{ opacity: 1, x: 0 }"
-                                    :transition="{ duration: 0.22, ease: 'easeOut', delay: 0.05 + index * 0.05 }"
+                                    :transition="{
+                                        duration: 0.22,
+                                        ease: 'easeOut',
+                                        delay: 0.05 + index * 0.05,
+                                    }"
                                 >
                                     <SidebarMenuButton
                                         as-child
                                         :tooltip="item.tooltip"
-                                        class="w-full min-h-[44px] rounded-[40.5px] px-4 py-2.5 font-['Rubik'] text-[14px] font-medium transition-all duration-150"
-                                        :class="isRouteActive(item.activePattern, item.fallbackUrl, item.exact)
-                                            ? 'bg-[#065f46] text-[#ffffff] font-semibold border-l-[3px] border-[#beedc0] shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-[#054d38] hover:text-[#ffffff]'
-                                            : 'border border-transparent text-[#333333] hover:border-[#333333]/12 hover:bg-[#fffff3] hover:text-[#000000]'"
+                                        class="min-h-[44px] w-full rounded-[40.5px] px-4 py-2.5 font-['Rubik'] text-[14px] font-medium transition-all duration-150"
+                                        :class="
+                                            isRouteActive(
+                                                item.activePattern,
+                                                item.fallbackUrl,
+                                                item.exact,
+                                            )
+                                                ? 'border-l-[3px] border-[#beedc0] bg-[#065f46] font-semibold text-[#ffffff] shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-[#054d38] hover:text-[#ffffff]'
+                                                : 'border border-transparent text-[#333333] hover:border-[#333333]/12 hover:bg-[#fffff3] hover:text-[#000000]'
+                                        "
                                     >
-                                        <Link :href="item.href" class="flex items-center gap-3">
+                                        <Link
+                                            :href="item.href"
+                                            class="flex items-center gap-3"
+                                        >
                                             <motion.div
-                                                :whileHover="{ x: 2, scale: 1.1 }"
+                                                :whileHover="{
+                                                    x: 2,
+                                                    scale: 1.1,
+                                                }"
                                                 :whileTap="{ scale: 0.9 }"
-                                                :transition="{ duration: 0.15, ease: 'easeOut' }"
+                                                :transition="{
+                                                    duration: 0.15,
+                                                    ease: 'easeOut',
+                                                }"
                                                 class="flex items-center justify-center"
                                             >
-                                                <component :is="item.icon" class="size-[18px]" />
+                                                <component
+                                                    :is="item.icon"
+                                                    class="size-[18px]"
+                                                />
                                             </motion.div>
                                             <motion.span
                                                 :whileHover="{ x: 2 }"
-                                                :transition="{ duration: 0.15, ease: 'easeOut' }"
+                                                :transition="{
+                                                    duration: 0.15,
+                                                    ease: 'easeOut',
+                                                }"
                                             >
                                                 {{ item.label }}
                                             </motion.span>
@@ -370,13 +467,19 @@ const patientMenuItems = computed<MenuItem[]>(() => [
             >
                 <SidebarGroup>
                     <SidebarGroupLabel
-                        class="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#333333]/70"
+                        class="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold tracking-[0.08em] text-[#333333]/70 uppercase"
                     >
-                        <span class="inline-block h-1.5 w-1.5 rounded-full bg-[#beedc0]" aria-hidden="true" />
+                        <span
+                            class="inline-block h-1.5 w-1.5 rounded-full bg-[#beedc0]"
+                            aria-hidden="true"
+                        />
                         <span>Manajemen Medis</span>
                     </SidebarGroupLabel>
 
-                    <div class="mx-3 mb-2 h-px bg-[#333333]/8" aria-hidden="true" />
+                    <div
+                        class="mx-3 mb-2 h-px bg-[#333333]/8"
+                        aria-hidden="true"
+                    />
 
                     <SidebarGroupContent>
                         <SidebarMenu class="space-y-1">
@@ -387,28 +490,53 @@ const patientMenuItems = computed<MenuItem[]>(() => [
                                 <motion.div
                                     :initial="{ opacity: 0, x: -10 }"
                                     :animate="{ opacity: 1, x: 0 }"
-                                    :transition="{ duration: 0.22, ease: 'easeOut', delay: 0.1 + index * 0.06 }"
+                                    :transition="{
+                                        duration: 0.22,
+                                        ease: 'easeOut',
+                                        delay: 0.1 + index * 0.06,
+                                    }"
                                 >
                                     <SidebarMenuButton
                                         as-child
                                         :tooltip="item.tooltip"
-                                        class="w-full min-h-[44px] rounded-[40.5px] px-4 py-2.5 font-['Rubik'] text-[14px] font-medium transition-all duration-150"
-                                        :class="isRouteActive(item.activePattern, item.fallbackUrl, item.exact)
-                                            ? 'bg-[#000000] text-[#ffffff] font-semibold border-l-[3px] border-[#beedc0] shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-[#333333] hover:text-[#ffffff]'
-                                            : 'border border-transparent text-[#333333] hover:border-[#333333]/12 hover:bg-[#fffff3] hover:text-[#000000]'"
+                                        class="min-h-[44px] w-full rounded-[40.5px] px-4 py-2.5 font-['Rubik'] text-[14px] font-medium transition-all duration-150"
+                                        :class="
+                                            isRouteActive(
+                                                item.activePattern,
+                                                item.fallbackUrl,
+                                                item.exact,
+                                            )
+                                                ? 'border-l-[3px] border-[#beedc0] bg-[#000000] font-semibold text-[#ffffff] shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-[#333333] hover:text-[#ffffff]'
+                                                : 'border border-transparent text-[#333333] hover:border-[#333333]/12 hover:bg-[#fffff3] hover:text-[#000000]'
+                                        "
                                     >
-                                        <Link :href="item.href" class="flex items-center gap-3">
+                                        <Link
+                                            :href="item.href"
+                                            class="flex items-center gap-3"
+                                        >
                                             <motion.div
-                                                :whileHover="{ x: 2, scale: 1.1 }"
+                                                :whileHover="{
+                                                    x: 2,
+                                                    scale: 1.1,
+                                                }"
                                                 :whileTap="{ scale: 0.9 }"
-                                                :transition="{ duration: 0.15, ease: 'easeOut' }"
+                                                :transition="{
+                                                    duration: 0.15,
+                                                    ease: 'easeOut',
+                                                }"
                                                 class="flex items-center justify-center"
                                             >
-                                                <component :is="item.icon" class="size-[18px]" />
+                                                <component
+                                                    :is="item.icon"
+                                                    class="size-[18px]"
+                                                />
                                             </motion.div>
                                             <motion.span
                                                 :whileHover="{ x: 2 }"
-                                                :transition="{ duration: 0.15, ease: 'easeOut' }"
+                                                :transition="{
+                                                    duration: 0.15,
+                                                    ease: 'easeOut',
+                                                }"
                                             >
                                                 {{ item.label }}
                                             </motion.span>
@@ -430,13 +558,19 @@ const patientMenuItems = computed<MenuItem[]>(() => [
             >
                 <SidebarGroup>
                     <SidebarGroupLabel
-                        class="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#333333]/70"
+                        class="mb-2 flex items-center gap-2 px-3 text-[11px] font-semibold tracking-[0.08em] text-[#333333]/70 uppercase"
                     >
-                        <span class="inline-block h-1.5 w-1.5 rounded-full bg-[#beedc0]" aria-hidden="true" />
+                        <span
+                            class="inline-block h-1.5 w-1.5 rounded-full bg-[#beedc0]"
+                            aria-hidden="true"
+                        />
                         <span>Layanan Pasien</span>
                     </SidebarGroupLabel>
 
-                    <div class="mx-3 mb-2 h-px bg-[#333333]/8" aria-hidden="true" />
+                    <div
+                        class="mx-3 mb-2 h-px bg-[#333333]/8"
+                        aria-hidden="true"
+                    />
 
                     <SidebarGroupContent>
                         <SidebarMenu class="space-y-1">
@@ -447,28 +581,53 @@ const patientMenuItems = computed<MenuItem[]>(() => [
                                 <motion.div
                                     :initial="{ opacity: 0, x: -10 }"
                                     :animate="{ opacity: 1, x: 0 }"
-                                    :transition="{ duration: 0.22, ease: 'easeOut', delay: 0.1 + index * 0.06 }"
+                                    :transition="{
+                                        duration: 0.22,
+                                        ease: 'easeOut',
+                                        delay: 0.1 + index * 0.06,
+                                    }"
                                 >
                                     <SidebarMenuButton
                                         as-child
                                         :tooltip="item.tooltip"
-                                        class="w-full min-h-[44px] rounded-[40.5px] px-4 py-2.5 font-['Rubik'] text-[14px] font-medium transition-all duration-150"
-                                        :class="isRouteActive(item.activePattern, item.fallbackUrl, item.exact)
-                                            ? 'bg-[#000000] text-[#ffffff] font-semibold border-l-[3px] border-[#beedc0] shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-[#333333] hover:text-[#ffffff]'
-                                            : 'border border-transparent text-[#333333] hover:border-[#333333]/12 hover:bg-[#fffff3] hover:text-[#000000]'"
+                                        class="min-h-[44px] w-full rounded-[40.5px] px-4 py-2.5 font-['Rubik'] text-[14px] font-medium transition-all duration-150"
+                                        :class="
+                                            isRouteActive(
+                                                item.activePattern,
+                                                item.fallbackUrl,
+                                                item.exact,
+                                            )
+                                                ? 'border-l-[3px] border-[#beedc0] bg-[#000000] font-semibold text-[#ffffff] shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:bg-[#333333] hover:text-[#ffffff]'
+                                                : 'border border-transparent text-[#333333] hover:border-[#333333]/12 hover:bg-[#fffff3] hover:text-[#000000]'
+                                        "
                                     >
-                                        <Link :href="item.href" class="flex items-center gap-3">
+                                        <Link
+                                            :href="item.href"
+                                            class="flex items-center gap-3"
+                                        >
                                             <motion.div
-                                                :whileHover="{ x: 2, scale: 1.1 }"
+                                                :whileHover="{
+                                                    x: 2,
+                                                    scale: 1.1,
+                                                }"
                                                 :whileTap="{ scale: 0.9 }"
-                                                :transition="{ duration: 0.15, ease: 'easeOut' }"
+                                                :transition="{
+                                                    duration: 0.15,
+                                                    ease: 'easeOut',
+                                                }"
                                                 class="flex items-center justify-center"
                                             >
-                                                <component :is="item.icon" class="size-[18px]" />
+                                                <component
+                                                    :is="item.icon"
+                                                    class="size-[18px]"
+                                                />
                                             </motion.div>
                                             <motion.span
                                                 :whileHover="{ x: 2 }"
-                                                :transition="{ duration: 0.15, ease: 'easeOut' }"
+                                                :transition="{
+                                                    duration: 0.15,
+                                                    ease: 'easeOut',
+                                                }"
                                             >
                                                 {{ item.label }}
                                             </motion.span>
@@ -486,7 +645,10 @@ const patientMenuItems = computed<MenuItem[]>(() => [
              Footer
              ═══════════════════════════════════════════════════════════════ -->
         <SidebarFooter class="border-t border-[#333333]/10 bg-[#edede2] p-3">
-            <div class="mx-auto mb-2 h-[2px] w-10 rounded-full bg-[#beedc0]/60 group-data-[collapsible=icon]:w-5" aria-hidden="true" />
+            <div
+                class="mx-auto mb-2 h-[2px] w-10 rounded-full bg-[#beedc0]/60 group-data-[collapsible=icon]:w-5"
+                aria-hidden="true"
+            />
             <motion.div
                 :initial="{ opacity: 0, y: 8 }"
                 :animate="{ opacity: 1, y: 0 }"

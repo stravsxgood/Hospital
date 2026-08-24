@@ -332,5 +332,3 @@ export interface Billing {
     processed_by_nurse?: Nurse | null;
     items?: BillingItem[];
 }
-
-

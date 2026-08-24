@@ -31,19 +31,23 @@ defineProps<{
                     :whileTap="{ scale: 0.95 }"
                     class="flex h-14 w-14 items-center justify-center rounded-full bg-[#beedc0]"
                 >
-                    <AppLogoIcon
-                        class="size-10 fill-current text-[#000000]"
-                    />
+                    <AppLogoIcon class="size-10 fill-current text-[#000000]" />
                 </motion.div>
             </Link>
 
             <div class="flex flex-col gap-6">
-                <Card class="rounded-[10px] bg-[#fffff3] border-neutral-200 shadow-none">
+                <Card
+                    class="rounded-[10px] border-neutral-200 bg-[#fffff3] shadow-none"
+                >
                     <CardHeader class="px-6 pt-8 pb-0 text-center md:px-10">
-                        <CardTitle class="font-['ivypresto-headline'] text-[30px] font-semibold leading-[1.41] text-[#000000] md:text-[54px] md:leading-[1.48]">
+                        <CardTitle
+                            class="font-['ivypresto-headline'] text-[30px] leading-[1.41] font-semibold text-[#000000] md:text-[54px] md:leading-[1.48]"
+                        >
                             {{ title }}
                         </CardTitle>
-                        <CardDescription class="font-['Rubik'] text-[17px] leading-[1.9] text-[#333333] md:text-[19px]">
+                        <CardDescription
+                            class="font-['Rubik'] text-[17px] leading-[1.9] text-[#333333] md:text-[19px]"
+                        >
                             {{ description }}
                         </CardDescription>
                     </CardHeader>

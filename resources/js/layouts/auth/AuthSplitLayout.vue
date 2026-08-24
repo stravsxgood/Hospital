@@ -19,7 +19,7 @@ defineProps<{
     >
         <!-- In Split layout, left side acts as the warm branding panel with linen styling & decorative items -->
         <div
-            class="relative hidden h-full flex-col bg-[#fffff3] border-r border-neutral-200 p-10 text-[#000000] lg:flex"
+            class="relative hidden h-full flex-col border-r border-neutral-200 bg-[#fffff3] p-10 text-[#000000] lg:flex"
         >
             <div class="relative z-20 flex items-center gap-3">
                 <motion.div
@@ -29,34 +29,52 @@ defineProps<{
                 >
                     <AppLogoIcon class="size-8 fill-current text-[#000000]" />
                 </motion.div>
-                <span class="font-['Rubik'] text-[19px] font-semibold text-[#000000]">
+                <span
+                    class="font-['Rubik'] text-[19px] font-semibold text-[#000000]"
+                >
                     {{ name }}
                 </span>
             </div>
 
             <!-- Warm editorial content on left pane -->
             <div class="relative z-20 my-auto max-w-lg space-y-6">
-                <h2 class="font-['ivypresto-headline'] text-[54px] font-semibold leading-[1.48] text-[#000000]">
-                    Pelayanan Medis <span class="bg-[#beedc0] px-2 rounded-[46px]">Lebih Mudah</span> & Cepat.
+                <h2
+                    class="font-['ivypresto-headline'] text-[54px] leading-[1.48] font-semibold text-[#000000]"
+                >
+                    Pelayanan Medis
+                    <span class="rounded-[46px] bg-[#beedc0] px-2"
+                        >Lebih Mudah</span
+                    >
+                    & Cepat.
                 </h2>
-                <p class="font-['Rubik'] text-[19px] leading-[1.9] text-[#333333]">
-                    Kami berkomitmen memberikan akses layanan kesehatan yang responsif, transparan, dan inklusif bagi Anda dan keluarga di setiap waktu.
+                <p
+                    class="font-['Rubik'] text-[19px] leading-[1.9] text-[#333333]"
+                >
+                    Kami berkomitmen memberikan akses layanan kesehatan yang
+                    responsif, transparan, dan inklusif bagi Anda dan keluarga
+                    di setiap waktu.
                 </p>
             </div>
         </div>
 
-        <div class="lg:p-8 w-full flex justify-center">
+        <div class="flex w-full justify-center lg:p-8">
             <motion.div
                 :initial="{ opacity: 0, y: 20 }"
                 :animate="{ opacity: 1, y: 0 }"
                 :transition="{ duration: 0.3, ease: 'easeOut' }"
-                class="mx-auto flex w-full flex-col justify-center space-y-6 max-w-md bg-[#fffff3] p-8 md:p-10 rounded-[10px] border border-neutral-200"
+                class="mx-auto flex w-full max-w-md flex-col justify-center space-y-6 rounded-[10px] border border-neutral-200 bg-[#fffff3] p-8 md:p-10"
             >
                 <div class="flex flex-col space-y-3 text-center">
-                    <h1 class="font-['ivypresto-headline'] text-[30px] font-semibold leading-[1.41] text-[#000000] md:text-[54px] md:leading-[1.48]" v-if="title">
+                    <h1
+                        class="font-['ivypresto-headline'] text-[30px] leading-[1.41] font-semibold text-[#000000] md:text-[54px] md:leading-[1.48]"
+                        v-if="title"
+                    >
                         {{ title }}
                     </h1>
-                    <p class="font-['Rubik'] text-[17px] leading-[1.9] text-[#333333] md:text-[19px]" v-if="description">
+                    <p
+                        class="font-['Rubik'] text-[17px] leading-[1.9] text-[#333333] md:text-[19px]"
+                        v-if="description"
+                    >
                         {{ description }}
                     </p>
                 </div>

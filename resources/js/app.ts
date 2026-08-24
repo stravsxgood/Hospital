@@ -25,21 +25,21 @@ createInertiaApp({
         switch (true) {
             // Bebaskan halaman publik, TV display, dan admin layout terdedikasi dari default AppLayout
             case name === 'Welcome' ||
-                 name === 'DisplayBoard' ||
-                 name === 'Display/QueueTv' ||
-                 name === 'MyAppointments' ||
-                 name === 'PatientStory' ||
-                 name === 'Patient/Story' ||
-                 name === 'Specializations/Index' ||
-                 name === 'Specializations/Show' ||
-                 name === 'Specialization' ||
-                 name === 'teams/Index' ||
-                 name === 'Teams/Index' ||
-                 name === 'Clinic/Location' ||
-                 name === 'clinic/Location' ||
-                 name === 'doctor/Schedule' ||
-                 name === 'doctor/Schedules' ||
-                 name === 'doctor/QueueBoard':
+                name === 'DisplayBoard' ||
+                name === 'Display/QueueTv' ||
+                name === 'MyAppointments' ||
+                name === 'PatientStory' ||
+                name === 'Patient/Story' ||
+                name === 'Specializations/Index' ||
+                name === 'Specializations/Show' ||
+                name === 'Specialization' ||
+                name === 'teams/Index' ||
+                name === 'Teams/Index' ||
+                name === 'Clinic/Location' ||
+                name === 'clinic/Location' ||
+                name === 'doctor/Schedule' ||
+                name === 'doctor/Schedules' ||
+                name === 'doctor/QueueBoard':
                 return null;
             case name.startsWith('admin/'):
                 return null; // Menggunakan AdminLayout terdedikasi

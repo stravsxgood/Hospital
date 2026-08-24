@@ -14,72 +14,75 @@ import {
     Receipt,
     RotateCcw,
     X,
-} from '@lucide/vue'
-import { motion } from 'motion-v'
-import { computed, ref } from 'vue'
+} from '@lucide/vue';
+import { motion } from 'motion-v';
+import { computed, ref } from 'vue';
 
 interface BillingReceiptData {
-    billing_id: number
-    invoice_number: string
-    total_amount: number | string
-    payment_method?: string | null
-    paid_at?: string | null
-    created_at?: string
-    status: string
+    billing_id: number;
+    invoice_number: string;
+    total_amount: number | string;
+    payment_method?: string | null;
+    paid_at?: string | null;
+    created_at?: string;
+    status: string;
     patient?: {
-        name: string
-        resident_n?: string
-    }
+        name: string;
+        resident_n?: string;
+    };
     reservation?: {
-        queue_number?: string
+        queue_number?: string;
         doctorSchedule?: {
-            doctor?: { name: string }
-            poli?: { name_poli?: string; name?: string }
-        }
-    }
+            doctor?: { name: string };
+            poli?: { name_poli?: string; name?: string };
+        };
+    };
     processedByNurse?: {
-        name?: string
-        user?: { name: string }
-    }
+        name?: string;
+        user?: { name: string };
+    };
     items?: Array<{
-        billing_item_id?: number
-        item_name: string
-        item_type: string
-        quantity: number
-        unit_price: number | string
-        subtotal: number | string
-    }>
+        billing_item_id?: number;
+        item_name: string;
+        item_type: string;
+        quantity: number;
+        unit_price: number | string;
+        subtotal: number | string;
+    }>;
 }
 
 const props = defineProps<{
-    open: boolean
-    billing: BillingReceiptData | null
+    open: boolean;
+    billing: BillingReceiptData | null;
     hospitalInfo?: {
-        name: string
-        address: string
-        phone: string
-        unit: string
-    }
-}>()
+        name: string;
+        address: string;
+        phone: string;
+        unit: string;
+    };
+}>();
 
 const emit = defineEmits<{
-    (e: 'update:open', value: boolean): void
-}>()
+    (e: 'update:open', value: boolean): void;
+}>();
 
 // Pilihan Lebar Kertas Thermal: 58mm vs 80mm
-const paperSize = ref<'58mm' | '80mm'>('58mm')
-const isCopied = ref(false)
+const paperSize = ref<'58mm' | '80mm'>('58mm');
+const isCopied = ref(false);
 
 const hospital = computed(() => ({
     name: props.hospitalInfo?.name || 'HOSPITAL POPULATION',
     address: props.hospitalInfo?.address || 'Jl. Kesehatan No. 123, Jakarta',
     phone: props.hospitalInfo?.phone || '(021) 555-0199',
     unit: props.hospitalInfo?.unit || 'Instalasi Kasir Rawat Jalan',
-}))
+}));
 
 const formattedDate = computed(() => {
-    const raw = props.billing?.paid_at || props.billing?.created_at || new Date().toISOString()
-    const d = new Date(raw)
+    const raw =
+        props.billing?.paid_at ||
+        props.billing?.created_at ||
+        new Date().toISOString();
+    const d = new Date(raw);
 
     return d.toLocaleString('id-ID', {
         day: '2-digit',
@@ -87,79 +90,90 @@ const formattedDate = computed(() => {
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-    })
-})
+    });
+});
 
 const cashierName = computed(() => {
-    return props.billing?.processedByNurse?.name ||
+    return (
+        props.billing?.processedByNurse?.name ||
         props.billing?.processedByNurse?.user?.name ||
         'Petugas Kasir'
-})
+    );
+});
 
 const formatCurrency = (val: number | string): string => {
-    return Number(val || 0).toLocaleString('id-ID')
-}
+    return Number(val || 0).toLocaleString('id-ID');
+};
 
 // Trigger browser print dialog
 const printReceipt = () => {
-    window.print()
-}
+    window.print();
+};
 
 const copyRawText = () => {
     if (!props.billing) {
-return
-}
+        return;
+    }
 
-    const divider = paperSize.value === '58mm' ? '--------------------------------' : '------------------------------------------------'
-    let text = `${hospital.value.name}\n${hospital.value.address}\nTelp: ${hospital.value.phone}\n${hospital.value.unit}\n`
-    text += `${divider}\n`
-    text += `No. Faktur : ${props.billing.invoice_number}\n`
-    text += `Waktu      : ${formattedDate.value}\n`
-    text += `Kasir      : ${cashierName.value}\n`
-    text += `Pasien     : ${props.billing.patient?.name || '-'}\n`
-    text += `No. Antrean: ${props.billing.reservation?.queue_number || '-'}\n`
-    text += `Poli/Dokter: ${props.billing.reservation?.doctorSchedule?.poli?.name_poli || 'Poli'} / ${props.billing.reservation?.doctorSchedule?.doctor?.name || 'Dokter'}\n`
-    text += `${divider}\n`
+    const divider =
+        paperSize.value === '58mm'
+            ? '--------------------------------'
+            : '------------------------------------------------';
+    let text = `${hospital.value.name}\n${hospital.value.address}\nTelp: ${hospital.value.phone}\n${hospital.value.unit}\n`;
+    text += `${divider}\n`;
+    text += `No. Faktur : ${props.billing.invoice_number}\n`;
+    text += `Waktu      : ${formattedDate.value}\n`;
+    text += `Kasir      : ${cashierName.value}\n`;
+    text += `Pasien     : ${props.billing.patient?.name || '-'}\n`;
+    text += `No. Antrean: ${props.billing.reservation?.queue_number || '-'}\n`;
+    text += `Poli/Dokter: ${props.billing.reservation?.doctorSchedule?.poli?.name_poli || 'Poli'} / ${props.billing.reservation?.doctorSchedule?.doctor?.name || 'Dokter'}\n`;
+    text += `${divider}\n`;
     props.billing.items?.forEach((item) => {
-        text += `${item.item_name}\n`
-        text += `  ${item.quantity} x Rp ${formatCurrency(item.unit_price)} = Rp ${formatCurrency(item.subtotal)}\n`
-    })
-    text += `${divider}\n`
-    text += `TOTAL AKHIR: Rp ${formatCurrency(props.billing.total_amount)}\n`
-    text += `Metode     : ${props.billing.payment_method || 'Tunai'}\n`
-    text += `Status     : LUNAS (${props.billing.status.toUpperCase()})\n`
-    text += `${divider}\n`
-    text += `     TERIMA KASIH ATAS KUNJUNGAN ANDA\n`
-    text += `          SEMOGA LEKAS SEMBUH\n`
+        text += `${item.item_name}\n`;
+        text += `  ${item.quantity} x Rp ${formatCurrency(item.unit_price)} = Rp ${formatCurrency(item.subtotal)}\n`;
+    });
+    text += `${divider}\n`;
+    text += `TOTAL AKHIR: Rp ${formatCurrency(props.billing.total_amount)}\n`;
+    text += `Metode     : ${props.billing.payment_method || 'Tunai'}\n`;
+    text += `Status     : LUNAS (${props.billing.status.toUpperCase()})\n`;
+    text += `${divider}\n`;
+    text += `     TERIMA KASIH ATAS KUNJUNGAN ANDA\n`;
+    text += `          SEMOGA LEKAS SEMBUH\n`;
 
     navigator.clipboard.writeText(text).then(() => {
-        isCopied.value = true
+        isCopied.value = true;
         setTimeout(() => {
-            isCopied.value = false
-        }, 2000)
-    })
-}
+            isCopied.value = false;
+        }, 2000);
+    });
+};
 </script>
 
 <template>
     <div
         v-if="open && billing"
-        class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#000000]/60 backdrop-blur-xs font-['Rubik'] overflow-y-auto"
+        class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#000000]/60 p-3 font-['Rubik'] backdrop-blur-xs sm:p-4"
     >
         <motion.div
             :initial="{ opacity: 0, scale: 0.95, y: 15 }"
             :animate="{ opacity: 1, scale: 1, y: 0 }"
             :transition="{ duration: 0.2, ease: 'easeOut' }"
-            class="w-full max-w-lg rounded-[12px] border border-[#333333]/20 bg-[#fffff3] text-[#000000] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh]"
+            class="my-auto flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-[12px] border border-[#333333]/20 bg-[#fffff3] text-[#000000] shadow-2xl"
         >
             <!-- Header Modal -->
-            <header class="bg-[#edede2] border-b border-[#333333]/15 px-5 py-3.5 flex items-center justify-between gap-3 shrink-0">
+            <header
+                class="flex shrink-0 items-center justify-between gap-3 border-b border-[#333333]/15 bg-[#edede2] px-5 py-3.5"
+            >
                 <div class="flex items-center gap-2.5">
-                    <div class="h-9 w-9 rounded-full bg-[#beedc0] flex items-center justify-center border border-[#333333]/15">
+                    <div
+                        class="flex h-9 w-9 items-center justify-center rounded-full border border-[#333333]/15 bg-[#beedc0]"
+                    >
                         <Receipt class="size-5 text-[#000000]" />
                     </div>
                     <div>
-                        <h3 class="font-['ivypresto-headline'] text-lg font-bold text-[#000000] leading-tight">
+                        <h3
+                            class="font-['ivypresto-headline'] text-lg leading-tight font-bold text-[#000000]"
+                        >
                             Struk Thermal POS
                         </h3>
                         <p class="text-xs text-[#333333]/70">
@@ -170,20 +184,30 @@ return
 
                 <div class="flex items-center gap-2">
                     <!-- Toggle Ukuran Kertas 58mm vs 80mm -->
-                    <div class="inline-flex rounded-[40.5px] bg-[#ffffff] border border-[#333333]/20 p-0.5 text-xs font-semibold">
+                    <div
+                        class="inline-flex rounded-[40.5px] border border-[#333333]/20 bg-[#ffffff] p-0.5 text-xs font-semibold"
+                    >
                         <button
                             type="button"
                             @click="paperSize = '58mm'"
-                            class="px-2.5 py-1 rounded-[40.5px] transition-colors cursor-pointer"
-                            :class="paperSize === '58mm' ? 'bg-[#000000] text-white' : 'text-[#333333] hover:bg-[#edede2]'"
+                            class="cursor-pointer rounded-[40.5px] px-2.5 py-1 transition-colors"
+                            :class="
+                                paperSize === '58mm'
+                                    ? 'bg-[#000000] text-white'
+                                    : 'text-[#333333] hover:bg-[#edede2]'
+                            "
                         >
                             58 mm
                         </button>
                         <button
                             type="button"
                             @click="paperSize = '80mm'"
-                            class="px-2.5 py-1 rounded-[40.5px] transition-colors cursor-pointer"
-                            :class="paperSize === '80mm' ? 'bg-[#000000] text-white' : 'text-[#333333] hover:bg-[#edede2]'"
+                            class="cursor-pointer rounded-[40.5px] px-2.5 py-1 transition-colors"
+                            :class="
+                                paperSize === '80mm'
+                                    ? 'bg-[#000000] text-white'
+                                    : 'text-[#333333] hover:bg-[#edede2]'
+                            "
                         >
                             80 mm
                         </button>
@@ -192,7 +216,7 @@ return
                     <button
                         type="button"
                         @click="emit('update:open', false)"
-                        class="h-8 w-8 rounded-full bg-[#ffffff] border border-[#333333]/20 flex items-center justify-center text-[#333333] hover:bg-rose-50 hover:text-rose-600 transition-colors cursor-pointer"
+                        class="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[#333333]/20 bg-[#ffffff] text-[#333333] transition-colors hover:bg-rose-50 hover:text-rose-600"
                     >
                         <X class="size-4" />
                     </button>
@@ -200,26 +224,42 @@ return
             </header>
 
             <!-- Scrollable Receipt Preview Area -->
-            <div class="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#edede2]/50 flex justify-center">
+            <div
+                class="flex flex-1 justify-center overflow-y-auto bg-[#edede2]/50 p-4 sm:p-6"
+            >
                 <!-- Receipt Paper Simulation -->
                 <div
                     id="thermal-receipt-print-area"
-                    class="bg-[#ffffff] text-[#000000] p-4 sm:p-5 shadow-md border border-[#333333]/15 font-mono text-xs transition-all duration-200"
+                    class="border border-[#333333]/15 bg-[#ffffff] p-4 font-mono text-xs text-[#000000] shadow-md transition-all duration-200 sm:p-5"
                     :class="paperSize === '58mm' ? 'w-[300px]' : 'w-[400px]'"
                 >
                     <!-- Hospital Brand Header -->
-                    <div class="text-center space-y-0.5 pb-2 border-b border-dashed border-[#000000]/40">
-                        <h4 class="font-bold text-sm uppercase tracking-wider">{{ hospital.name }}</h4>
-                        <p class="text-[11px] text-[#333333]">{{ hospital.address }}</p>
-                        <p class="text-[11px] text-[#333333]">Telp: {{ hospital.phone }}</p>
-                        <p class="text-[10px] font-semibold text-[#000000]">{{ hospital.unit }}</p>
+                    <div
+                        class="space-y-0.5 border-b border-dashed border-[#000000]/40 pb-2 text-center"
+                    >
+                        <h4 class="text-sm font-bold tracking-wider uppercase">
+                            {{ hospital.name }}
+                        </h4>
+                        <p class="text-[11px] text-[#333333]">
+                            {{ hospital.address }}
+                        </p>
+                        <p class="text-[11px] text-[#333333]">
+                            Telp: {{ hospital.phone }}
+                        </p>
+                        <p class="text-[10px] font-semibold text-[#000000]">
+                            {{ hospital.unit }}
+                        </p>
                     </div>
 
                     <!-- Meta Transaksi -->
-                    <div class="py-2 space-y-1 text-[11px] border-b border-dashed border-[#000000]/40">
+                    <div
+                        class="space-y-1 border-b border-dashed border-[#000000]/40 py-2 text-[11px]"
+                    >
                         <div class="flex justify-between">
                             <span>No. Faktur:</span>
-                            <span class="font-bold">{{ billing.invoice_number }}</span>
+                            <span class="font-bold">{{
+                                billing.invoice_number
+                            }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span>Waktu:</span>
@@ -231,76 +271,121 @@ return
                         </div>
                         <div class="flex justify-between">
                             <span>Pasien:</span>
-                            <span class="font-bold truncate max-w-[170px] text-right">{{ billing.patient?.name || '-' }}</span>
+                            <span
+                                class="max-w-[170px] truncate text-right font-bold"
+                                >{{ billing.patient?.name || '-' }}</span
+                            >
                         </div>
-                        <div v-if="billing.reservation?.queue_number" class="flex justify-between">
+                        <div
+                            v-if="billing.reservation?.queue_number"
+                            class="flex justify-between"
+                        >
                             <span>No. Antrean:</span>
-                            <span class="font-bold">{{ billing.reservation.queue_number }}</span>
+                            <span class="font-bold">{{
+                                billing.reservation.queue_number
+                            }}</span>
                         </div>
-                        <div v-if="billing.reservation?.doctorSchedule" class="flex justify-between">
+                        <div
+                            v-if="billing.reservation?.doctorSchedule"
+                            class="flex justify-between"
+                        >
                             <span>Poli / Dokter:</span>
-                            <span class="truncate max-w-[170px] text-right">
-                                {{ billing.reservation.doctorSchedule.poli?.name_poli || 'Poli' }}
+                            <span class="max-w-[170px] truncate text-right">
+                                {{
+                                    billing.reservation.doctorSchedule.poli
+                                        ?.name_poli || 'Poli'
+                                }}
                             </span>
                         </div>
                     </div>
 
                     <!-- Itemized Breakdown -->
-                    <div class="py-2 space-y-1.5 text-[11px] border-b border-dashed border-[#000000]/40">
+                    <div
+                        class="space-y-1.5 border-b border-dashed border-[#000000]/40 py-2 text-[11px]"
+                    >
                         <div
                             v-for="(item, idx) in billing.items"
                             :key="item.billing_item_id || idx"
                             class="space-y-0.5"
                         >
-                            <div class="font-semibold truncate">{{ item.item_name }}</div>
+                            <div class="truncate font-semibold">
+                                {{ item.item_name }}
+                            </div>
                             <div class="flex justify-between text-[#333333]">
-                                <span>{{ item.quantity }} x Rp {{ formatCurrency(item.unit_price) }}</span>
-                                <span class="font-bold text-[#000000]">Rp {{ formatCurrency(item.subtotal) }}</span>
+                                <span
+                                    >{{ item.quantity }} x Rp
+                                    {{ formatCurrency(item.unit_price) }}</span
+                                >
+                                <span class="font-bold text-[#000000]"
+                                    >Rp
+                                    {{ formatCurrency(item.subtotal) }}</span
+                                >
                             </div>
                         </div>
                     </div>
 
                     <!-- Total & Payment Method -->
-                    <div class="py-2 space-y-1 text-[11px] border-b border-dashed border-[#000000]/40">
-                        <div class="flex justify-between font-bold text-xs pt-1">
+                    <div
+                        class="space-y-1 border-b border-dashed border-[#000000]/40 py-2 text-[11px]"
+                    >
+                        <div
+                            class="flex justify-between pt-1 text-xs font-bold"
+                        >
                             <span>TOTAL TAGIHAN:</span>
-                            <span>Rp {{ formatCurrency(billing.total_amount) }}</span>
+                            <span
+                                >Rp
+                                {{ formatCurrency(billing.total_amount) }}</span
+                            >
                         </div>
                         <div class="flex justify-between pt-0.5">
                             <span>Metode Bayar:</span>
-                            <span class="font-semibold uppercase">{{ billing.payment_method || 'Tunai' }}</span>
+                            <span class="font-semibold uppercase">{{
+                                billing.payment_method || 'Tunai'
+                            }}</span>
                         </div>
-                        <div class="flex justify-between text-emerald-700 font-bold">
+                        <div
+                            class="flex justify-between font-bold text-emerald-700"
+                        >
                             <span>Status:</span>
                             <span>LUNAS (PAID)</span>
                         </div>
                     </div>
 
                     <!-- Footer Note -->
-                    <div class="text-center pt-3 text-[10px] text-[#333333] space-y-0.5">
-                        <p class="font-semibold uppercase tracking-wider">Terima Kasih Atas Kunjungan Anda</p>
+                    <div
+                        class="space-y-0.5 pt-3 text-center text-[10px] text-[#333333]"
+                    >
+                        <p class="font-semibold tracking-wider uppercase">
+                            Terima Kasih Atas Kunjungan Anda
+                        </p>
                         <p>Semoga Lekas Sembuh & Sehat Selalu</p>
-                        <p class="text-[9px] text-[#333333]/60 pt-1">Struk ini adalah bukti pembayaran sah Rumah Sakit.</p>
+                        <p class="pt-1 text-[9px] text-[#333333]/60">
+                            Struk ini adalah bukti pembayaran sah Rumah Sakit.
+                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- Footer Actions -->
-            <footer class="bg-[#edede2] border-t border-[#333333]/15 px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+            <footer
+                class="flex shrink-0 flex-wrap items-center justify-between gap-3 border-t border-[#333333]/15 bg-[#edede2] px-5 py-3.5"
+            >
                 <button
                     type="button"
                     @click="copyRawText"
-                    class="min-h-[40px] px-3.5 rounded-[40.5px] border border-[#333333]/20 bg-[#ffffff] text-xs font-semibold text-[#333333] hover:bg-[#edede2] inline-flex items-center gap-1.5 cursor-pointer"
+                    class="inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 rounded-[40.5px] border border-[#333333]/20 bg-[#ffffff] px-3.5 text-xs font-semibold text-[#333333] hover:bg-[#edede2]"
                 >
                     <Copy class="size-3.5" />
-                    <span>{{ isCopied ? 'Teks Disalin!' : 'Salin Teks Struk' }}</span>
+                    <span>{{
+                        isCopied ? 'Teks Disalin!' : 'Salin Teks Struk'
+                    }}</span>
                 </button>
 
                 <div class="flex items-center gap-2">
                     <button
                         type="button"
                         @click="emit('update:open', false)"
-                        class="min-h-[44px] px-4 rounded-[40.5px] border border-[#333333]/20 bg-[#ffffff] text-xs font-semibold text-[#333333] hover:bg-[#edede2] cursor-pointer"
+                        class="min-h-[44px] cursor-pointer rounded-[40.5px] border border-[#333333]/20 bg-[#ffffff] px-4 text-xs font-semibold text-[#333333] hover:bg-[#edede2]"
                     >
                         Tutup
                     </button>
@@ -310,7 +395,7 @@ return
                         :whileHover="{ scale: 1.03 }"
                         :whileTap="{ scale: 0.97 }"
                         @click="printReceipt"
-                        class="min-h-[44px] px-5 rounded-[40.5px] bg-[#000000] text-white text-xs font-bold hover:bg-[#222222] inline-flex items-center gap-2 shadow-md cursor-pointer"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-[40.5px] bg-[#000000] px-5 text-xs font-bold text-white shadow-md hover:bg-[#222222]"
                     >
                         <Printer class="size-4 text-[#beedc0]" />
                         <span>Cetak Struk POS</span>
