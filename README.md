@@ -50,5 +50,5 @@ Sebelum memulai instalasi, pastikan lingkungan server/lokal Anda memenuhi prasya
 
 **1. Clone Repositori**
 ```bash
-git clone [https://github.com/username/simrs-app.git](https://github.com/username/simrs-app.git)
+git clone https://github.com/username/simrs-app.git
 cd simrs-app
