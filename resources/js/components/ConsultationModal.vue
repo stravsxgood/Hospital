@@ -3,17 +3,10 @@
  * @file ConsultationModal.vue
  * @description Modul Konsultasi Dokter & Rekam Medis Elektronik (EMR).
  * Menyediakan 3 fitur klinis terintegrasi:
- *  1. Pencatatan SOAP Notes (Subjective, Objective/Vital Signs, Assessment, Plan)
- *  2. Dynamic E-Prescription Builder (Penyusunan resep obat & cek stok apotek otomatis)
- *  3. Patient Medical History Timeline Drawer (Riwayat klinis kunjungan terdahulu)
- *
- * Sesuai panduan DESIGN.md (Evergreen Theme) dan AGENTS.md:
- *  - Colors: Linen Canvas (#edede2), Bone Card (#fffff3), Sage Mint (#beedc0), Ink Black (#000000)
- *  - Typography: ivypresto-headline untuk judul, Rubik untuk formulir dan label
- *  - Touch target minimum 44px
- *  - Motion untuk Vue (motion-v)
+ *   1. Pencatatan SOAP Notes (Subjective, Objective/Vital Signs, Assessment, Plan)
+ *   2. Dynamic E-Prescription Builder (Penyusunan resep obat & cek stok apotek otomatis)
+ *   3. Patient Medical History Timeline Drawer (Riwayat klinis kunjungan terdahulu)
  */
-import axios from 'axios'
 import {
     Activity,
     AlertCircle,
@@ -43,6 +36,7 @@ import {
     Weight,
     X,
 } from '@lucide/vue'
+import axios from 'axios'
 import { motion } from 'motion-v'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import type { MedicalRecord, Medicine, PrescriptionItem, VitalSigns } from '@/types/hospital'
@@ -121,16 +115,13 @@ const emit = defineEmits<{
     (e: 'success', data: any): void
 }>()
 
-// Active Tab: 'consultation' (SOAP & Resep) vs 'history' (Riwayat Pasien)
 const activeTab = ref<'consultation' | 'history'>('consultation')
 
-// Form SOAP State
 const formSubjective = ref('')
 const formAssessment = ref('')
 const formPlan = ref('')
 const formPhysicalCheck = ref('')
 
-// Form Vital Signs
 const vitals = ref<VitalSigns>({
     systolic: null,
     diastolic: null,
@@ -142,13 +133,11 @@ const vitals = ref<VitalSigns>({
     oxygen_saturation: null,
 })
 
-// ICD-10 Autocomplete State
 const icd10Suggestions = ref<Icd10Item[]>([])
 const isSearchingIcd10 = ref(false)
 const showIcd10Dropdown = ref(false)
 let icd10DebounceTimeout: any = null
 
-// Quick SOAP Templates State
 const soapTemplates = ref<SoapTemplateItem[]>([])
 const isLoadingSoapTemplates = ref(false)
 const isSoapTemplateDropdownOpen = ref(false)
@@ -156,7 +145,6 @@ const isSaveTemplateModalOpen = ref(false)
 const newTemplateName = ref('')
 const isSavingTemplate = ref(false)
 
-// Clinical Drug Safety Interceptor State
 const safetyEvaluation = ref<SafetyEvaluation>({
     has_warnings: false,
     has_severe: false,
@@ -166,7 +154,6 @@ const safetyEvaluation = ref<SafetyEvaluation>({
 const isCheckingSafety = ref(false)
 let safetyDebounceTimeout: any = null
 
-// Dynamic Prescription Builder State
 interface FormPrescriptionRow {
     medicine_id: number | null
     selectedMedicine?: Medicine | null
@@ -182,17 +169,14 @@ const availableMedicines = ref<Medicine[]>([])
 const isLoadingMedicines = ref(false)
 const medicineSearchQuery = ref('')
 
-// Patient History Timeline State
 const patientHistory = ref<MedicalRecord[]>([])
 const isLoadingHistory = ref(false)
 const historyError = ref<string | null>(null)
 
-// Submission & Feedback State
 const isSubmitting = ref(false)
 const validationErrors = ref<Record<string, string>>({})
 const submitSuccessMessage = ref<string | null>(null)
 
-// Dosis & Signa Preset Templates
 const dosagePresets = [
     '3 x 1 Tablet Sehari',
     '3 x 1 Kapsul Sehari',
@@ -217,41 +201,68 @@ const instructionPresets = [
     'Teteskan pada mata / telinga',
 ]
 
-// Perhitungan Otomatis BMI (Body Mass Index)
 const calculatedBmi = computed(() => {
     const w = Number(vitals.value.weight)
     const h = Number(vitals.value.height)
-    if (!w || !h || h <= 0) return null
+
+    if (!w || !h || h <= 0) {
+        return null
+    }
+
     const heightInMeters = h / 100
     const bmiVal = w / (heightInMeters * heightInMeters)
+
     return Number(bmiVal.toFixed(1))
 })
 
 const bmiCategory = computed(() => {
     const bmi = calculatedBmi.value
-    if (!bmi) return null
-    if (bmi < 18.5) return { label: 'Underweight (Kurang)', color: 'bg-amber-100 text-amber-900 border-amber-300' }
-    if (bmi < 25.0) return { label: 'Normal / Ideal', color: 'bg-emerald-100 text-emerald-900 border-emerald-300' }
-    if (bmi < 30.0) return { label: 'Overweight (Berlebih)', color: 'bg-orange-100 text-orange-900 border-orange-300' }
+
+    if (!bmi) {
+        return null
+    }
+
+    if (bmi < 18.5) {
+        return { label: 'Underweight (Kurang)', color: 'bg-amber-100 text-amber-900 border-amber-300' }
+    }
+
+    if (bmi < 25.0) {
+        return { label: 'Normal / Ideal', color: 'bg-emerald-100 text-emerald-900 border-emerald-300' }
+    }
+
+    if (bmi < 30.0) {
+        return { label: 'Overweight (Berlebih)', color: 'bg-orange-100 text-orange-900 border-orange-300' }
+    }
+
     return { label: 'Obesitas', color: 'bg-rose-100 text-rose-900 border-rose-300' }
 })
 
-// Status Tekanan Darah
 const bloodPressureCategory = computed(() => {
     const sys = Number(vitals.value.systolic)
     const dia = Number(vitals.value.diastolic)
-    if (!sys || !dia) return null
-    if (sys < 120 && dia < 80) return { label: 'Optimal / Normal', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' }
-    if (sys <= 139 || dia <= 89) return { label: 'Pra-Hipertensi', color: 'text-amber-700 bg-amber-50 border-amber-200' }
+
+    if (!sys || !dia) {
+        return null
+    }
+
+    if (sys < 120 && dia < 80) {
+        return { label: 'Optimal / Normal', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' }
+    }
+
+    if (sys <= 139 || dia <= 89) {
+        return { label: 'Pra-Hipertensi', color: 'text-amber-700 bg-amber-50 border-amber-200' }
+    }
+
     return { label: 'Hipertensi', color: 'text-rose-700 bg-rose-50 border-rose-200' }
 })
 
-// Filtered Medicines for Search Dropdown
 const filteredMedicines = computed(() => {
     if (!medicineSearchQuery.value.trim()) {
         return availableMedicines.value
     }
+
     const q = medicineSearchQuery.value.toLowerCase()
+
     return availableMedicines.value.filter(m =>
         m.name_medicine.toLowerCase().includes(q) ||
         m.code_medicine.toLowerCase().includes(q) ||
@@ -259,22 +270,24 @@ const filteredMedicines = computed(() => {
     )
 })
 
-// Estimasi Total Biaya Resep
 const estimatedTotalPrescriptionCost = computed(() => {
     return prescriptionRows.value.reduce((total, row) => {
         if (row.selectedMedicine && row.quantity > 0) {
             const price = Number(row.selectedMedicine.price) || 0
+
             return total + (price * row.quantity)
         }
+
         return total
     }, 0)
 })
 
-// Fetch Daftar Obat dari Server
 const fetchMedicines = async () => {
     isLoadingMedicines.value = true
+
     try {
         const response = await axios.get('/doctor/medicines')
+
         if (response.data?.status && Array.isArray(response.data.data)) {
             availableMedicines.value = response.data.data
         }
@@ -285,12 +298,13 @@ const fetchMedicines = async () => {
     }
 }
 
-// Fetch Riwayat Klinis Pasien dari Server
 const fetchPatientHistory = async (patientId: number) => {
     isLoadingHistory.value = true
     historyError.value = null
+
     try {
         const response = await axios.get(`/doctor/patients/${patientId}/history`)
+
         if (response.data?.status && Array.isArray(response.data.data)) {
             patientHistory.value = response.data.data
         }
@@ -301,7 +315,6 @@ const fetchPatientHistory = async (patientId: number) => {
     }
 }
 
-// Reset dan Inisialisasi Form saat Appointment Berubah
 watch(
     () => props.appointment,
     (app) => {
@@ -334,11 +347,12 @@ watch(
     { immediate: true },
 )
 
-// ── 1. ICD-10 Autocomplete Methods ──
 const searchIcd10 = async (q: string) => {
     isSearchingIcd10.value = true
+
     try {
         const response = await axios.get('/api/clinical/icd10', { params: { q } })
+
         if (response.data?.status && Array.isArray(response.data.data)) {
             icd10Suggestions.value = response.data.data
             showIcd10Dropdown.value = true
@@ -363,11 +377,12 @@ const selectIcd10 = (item: Icd10Item) => {
     showIcd10Dropdown.value = false
 }
 
-// ── 2. Quick SOAP Templates Methods ──
 const fetchSoapTemplates = async () => {
     isLoadingSoapTemplates.value = true
+
     try {
         const response = await axios.get('/api/clinical/soap-templates')
+
         if (response.data?.status && Array.isArray(response.data.data)) {
             soapTemplates.value = response.data.data
         }
@@ -379,24 +394,56 @@ const fetchSoapTemplates = async () => {
 }
 
 const applySoapTemplate = (tpl: SoapTemplateItem) => {
-    if (tpl.subjective_template) formSubjective.value = tpl.subjective_template
-    if (tpl.assessment_template) formAssessment.value = tpl.assessment_template
-    if (tpl.plan_template) formPlan.value = tpl.plan_template
+    if (tpl.subjective_template) {
+        formSubjective.value = tpl.subjective_template
+    }
+
+    if (tpl.assessment_template) {
+        formAssessment.value = tpl.assessment_template
+    }
+
+    if (tpl.plan_template) {
+        formPlan.value = tpl.plan_template
+    }
+
     if (tpl.objective_template && typeof tpl.objective_template === 'object') {
         const obj = tpl.objective_template
-        if (obj.systolic) vitals.value.systolic = obj.systolic
-        if (obj.diastolic) vitals.value.diastolic = obj.diastolic
-        if (obj.pulse) vitals.value.pulse = obj.pulse
-        if (obj.temperature) vitals.value.temperature = obj.temperature
-        if (obj.respiratory_rate) vitals.value.respiratory_rate = obj.respiratory_rate
-        if (obj.notes) formPhysicalCheck.value = obj.notes
+
+        if (obj.systolic) {
+            vitals.value.systolic = obj.systolic
+        }
+
+        if (obj.diastolic) {
+            vitals.value.diastolic = obj.diastolic
+        }
+
+        if (obj.pulse) {
+            vitals.value.pulse = obj.pulse
+        }
+
+        if (obj.temperature) {
+            vitals.value.temperature = obj.temperature
+        }
+
+        if (obj.respiratory_rate) {
+            vitals.value.respiratory_rate = obj.respiratory_rate
+        }
+
+        if (obj.notes) {
+            formPhysicalCheck.value = obj.notes
+        }
     }
+
     isSoapTemplateDropdownOpen.value = false
 }
 
 const saveCurrentAsSoapTemplate = async () => {
-    if (!newTemplateName.value.trim()) return
+    if (!newTemplateName.value.trim()) {
+        return
+    }
+
     isSavingTemplate.value = true
+
     try {
         const response = await axios.post('/api/clinical/soap-templates', {
             template_name: newTemplateName.value.trim(),
@@ -412,6 +459,7 @@ const saveCurrentAsSoapTemplate = async () => {
             assessment_template: formAssessment.value,
             plan_template: formPlan.value,
         })
+
         if (response.data?.status) {
             await fetchSoapTemplates()
             isSaveTemplateModalOpen.value = false
@@ -424,7 +472,6 @@ const saveCurrentAsSoapTemplate = async () => {
     }
 }
 
-// ── 3. Clinical Safety Interceptor (Drug Allergies & Interactions) ──
 const evaluatePrescriptionSafety = async () => {
     const validMedicines = prescriptionRows.value
         .filter(r => r.selectedMedicine)
@@ -441,15 +488,18 @@ const evaluatePrescriptionSafety = async () => {
             allergy_alerts: [],
             interaction_alerts: [],
         }
+
         return
     }
 
     isCheckingSafety.value = true
+
     try {
         const response = await axios.post('/api/clinical/safety-check', {
             patient_id: props.appointment?.patient?.patient_id || null,
             medicines: validMedicines,
         })
+
         if (response.data?.status && response.data.data) {
             safetyEvaluation.value = response.data.data
         }
@@ -471,27 +521,21 @@ watch(
     { deep: true },
 )
 
-// ── 4. Power-User Hotkeys ──
 const handleKeydown = (e: KeyboardEvent) => {
-    if (!props.open) return
+    if (!props.open) {
+        return
+    }
 
-    // Ctrl + Shift + T -> Buka selector template SOAP
     if (e.ctrlKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
         e.preventDefault()
         isSoapTemplateDropdownOpen.value = !isSoapTemplateDropdownOpen.value
-    }
-    // Ctrl + Shift + P -> Tambah baris resep & fokus
-    else if (e.ctrlKey && e.shiftKey && (e.key === 'P' || e.key === 'p')) {
+    } else if (e.ctrlKey && e.shiftKey && (e.key === 'P' || e.key === 'p')) {
         e.preventDefault()
         addPrescriptionRow()
-    }
-    // Ctrl + Enter -> Submit form
-    else if (e.ctrlKey && e.key === 'Enter') {
+    } else if (e.ctrlKey && e.key === 'Enter') {
         e.preventDefault()
         submitConsultation()
-    }
-    // Escape -> Tutup dropdown / modal
-    else if (e.key === 'Escape') {
+    } else if (e.key === 'Escape') {
         if (showIcd10Dropdown.value) {
             showIcd10Dropdown.value = false
         } else if (isSoapTemplateDropdownOpen.value) {
@@ -512,7 +556,6 @@ onUnmounted(() => {
     window.removeEventListener('keydown', handleKeydown)
 })
 
-// Tambah Baris Resep Obat Baru
 const addPrescriptionRow = () => {
     prescriptionRows.value.push({
         medicine_id: null,
@@ -524,55 +567,60 @@ const addPrescriptionRow = () => {
     })
 }
 
-// Hapus Baris Resep
 const removePrescriptionRow = (index: number) => {
     prescriptionRows.value.splice(index, 1)
 }
 
-// Handler Pemilihan Obat pada Baris Resep
 const handleMedicineChange = (rowIndex: number, medicineId: number) => {
     const found = availableMedicines.value.find(m => m.medicine_id === Number(medicineId))
     prescriptionRows.value[rowIndex].medicine_id = found ? found.medicine_id : null
     prescriptionRows.value[rowIndex].selectedMedicine = found || null
+
     if (found && prescriptionRows.value[rowIndex].quantity > found.stock) {
         prescriptionRows.value[rowIndex].quantity = Math.max(1, found.stock)
     }
 }
 
-// Validasi Form Konsultasi sebelum dikirim
 const validateForm = (): boolean => {
     const errors: Record<string, string> = {}
 
     if (!formSubjective.value.trim()) {
         errors.subjective = 'Catatan keluhan subjektif (Subjective) wajib diisi.'
     }
+
     if (!formAssessment.value.trim()) {
         errors.assessment = 'Diagnosis medis (Assessment) wajib diisi.'
     }
+
     if (!formPlan.value.trim()) {
         errors.plan = 'Rencana penatalaksanaan (Plan) wajib diisi.'
     }
 
-    // Validasi baris resep obat jika ada
     prescriptionRows.value.forEach((row, idx) => {
         if (!row.medicine_id) {
             errors[`prescription_${idx}`] = `Pilih obat untuk item ke-${idx + 1}.`
         } else if (row.selectedMedicine && row.quantity > row.selectedMedicine.stock) {
             errors[`prescription_${idx}_stock`] = `Stok ${row.selectedMedicine.name_medicine} tidak mencukupi (Tersisa ${row.selectedMedicine.stock} ${row.selectedMedicine.unit}).`
         }
+
         if (row.quantity < 1) {
             errors[`prescription_${idx}_qty`] = `Jumlah obat ke-${idx + 1} minimal 1.`
         }
     })
 
     validationErrors.value = errors
+
     return Object.keys(errors).length === 0
 }
 
-// Submit Konsultasi & Resep Obat ke Server
 const submitConsultation = async () => {
-    if (!validateForm()) return
-    if (!props.appointment?.patient?.patient_id) return
+    if (!validateForm()) {
+        return
+    }
+
+    if (!props.appointment?.patient?.patient_id) {
+        return
+    }
 
     isSubmitting.value = true
     submitSuccessMessage.value = null
@@ -613,9 +661,11 @@ const submitConsultation = async () => {
     } catch (err: any) {
         if (err.response?.status === 422 && err.response?.data?.errors) {
             const serverErrors: Record<string, string> = {}
+
             for (const [key, msg] of Object.entries(err.response.data.errors)) {
                 serverErrors[key] = Array.isArray(msg) ? msg[0] : String(msg)
             }
+
             validationErrors.value = serverErrors
         } else {
             validationErrors.value = {
@@ -632,12 +682,17 @@ const closeModal = () => {
 }
 
 const formatDate = (dateStr?: string | null): string => {
-    if (!dateStr) return '-'
+    if (!dateStr) {
+        return '-'
+    }
+
     const clean = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr
     const parts = clean.split('-')
+
     if (parts.length === 3) {
         return `${parts[2]}/${parts[1]}/${parts[0]}`
     }
+
     return dateStr
 }
 </script>
@@ -650,7 +705,6 @@ const formatDate = (dateStr?: string | null): string => {
             :transition="{ duration: 0.22, ease: 'easeOut' }"
             class="w-full max-w-5xl rounded-[12px] border border-[#333333]/20 bg-[#fffff3] text-[#000000] shadow-2xl overflow-hidden flex flex-col my-auto max-h-[92vh]"
         >
-            <!-- Header Modal Konsultasi -->
             <header class="bg-[#edede2] border-b border-[#333333]/15 px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="h-11 w-11 rounded-full bg-[#beedc0] flex items-center justify-center shrink-0 border border-[#333333]/15">
@@ -671,7 +725,6 @@ const formatDate = (dateStr?: string | null): string => {
                     </div>
                 </div>
 
-                <!-- Tab Navigasi & Tombol Tutup -->
                 <div class="flex items-center gap-2">
                     <div class="inline-flex rounded-[40.5px] bg-[#ffffff] border border-[#333333]/20 p-1">
                         <button
@@ -709,7 +762,6 @@ const formatDate = (dateStr?: string | null): string => {
                 </div>
             </header>
 
-            <!-- Patient Quick Identity Banner -->
             <div class="bg-[#fffff3] border-b border-[#333333]/10 px-5 py-3 flex flex-wrap items-center justify-between gap-4 text-xs shrink-0">
                 <div class="flex items-center gap-3">
                     <div class="h-8 w-8 rounded-full bg-[#edede2] flex items-center justify-center font-bold text-[#000000] border border-[#333333]/15">
@@ -734,11 +786,8 @@ const formatDate = (dateStr?: string | null): string => {
                 </div>
             </div>
 
-            <!-- Modal Body Scrollable -->
             <div class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-6">
-                <!-- TAB 1: FORMULIR PEMERIKSAAN MEDIS (SOAP) & E-PRESCRIBING -->
                 <div v-if="activeTab === 'consultation'" class="space-y-6">
-                    <!-- SECTION 1: TANDA-TANDA VITAL (VITAL SIGNS) -->
                     <div class="rounded-[10px] bg-[#ffffff] border border-[#333333]/15 p-4 sm:p-5 shadow-xs space-y-4">
                         <div class="flex items-center justify-between border-b border-[#333333]/10 pb-3">
                             <div class="flex items-center gap-2">
@@ -753,7 +802,6 @@ const formatDate = (dateStr?: string | null): string => {
                         </div>
 
                         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-                            <!-- Sistolik -->
                             <div class="space-y-1">
                                 <label class="text-[11px] font-semibold text-[#333333]">Sistolik (mmHg)</label>
                                 <input
@@ -764,7 +812,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 />
                             </div>
 
-                            <!-- Diastolik -->
                             <div class="space-y-1">
                                 <label class="text-[11px] font-semibold text-[#333333]">Diastolik (mmHg)</label>
                                 <input
@@ -775,7 +822,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 />
                             </div>
 
-                            <!-- Denyut Nadi -->
                             <div class="space-y-1">
                                 <label class="text-[11px] font-semibold text-[#333333]">Nadi (bpm)</label>
                                 <input
@@ -786,7 +832,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 />
                             </div>
 
-                            <!-- Suhu Tubuh -->
                             <div class="space-y-1">
                                 <label class="text-[11px] font-semibold text-[#333333]">Suhu (°C)</label>
                                 <input
@@ -798,7 +843,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 />
                             </div>
 
-                            <!-- Berat Badan -->
                             <div class="space-y-1">
                                 <label class="text-[11px] font-semibold text-[#333333]">Berat Badan (kg)</label>
                                 <input
@@ -810,7 +854,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 />
                             </div>
 
-                            <!-- Tinggi Badan -->
                             <div class="space-y-1">
                                 <label class="text-[11px] font-semibold text-[#333333]">Tinggi Badan (cm)</label>
                                 <input
@@ -822,7 +865,6 @@ const formatDate = (dateStr?: string | null): string => {
                             </div>
                         </div>
 
-                        <!-- Baris Tambahan: Frekuensi Napas, Saturasi O2 & Perhitungan BMI Otomatis -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-[#333333]/10 text-xs">
                             <div class="flex items-center gap-2">
                                 <span class="text-[#333333] font-medium">Laju Napas (RR):</span>
@@ -855,7 +897,6 @@ const formatDate = (dateStr?: string | null): string => {
                         </div>
                     </div>
 
-                    <!-- SECTION 2: CATATAN MEDIS SOAP (SUBJECTIVE, OBJECTIVE, ASSESSMENT, PLAN) -->
                     <div class="rounded-[10px] bg-[#ffffff] border border-[#333333]/15 p-4 sm:p-5 shadow-xs space-y-4">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#333333]/10 pb-3">
                             <div class="flex items-center gap-2">
@@ -865,7 +906,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </h3>
                             </div>
 
-                            <!-- Quick SOAP Template Selector & Save Action -->
                             <div class="relative flex items-center gap-2">
                                 <button
                                     type="button"
@@ -888,7 +928,6 @@ const formatDate = (dateStr?: string | null): string => {
                                     <span class="hidden sm:inline">Simpan Preset</span>
                                 </button>
 
-                                <!-- Dropdown Menu Template SOAP -->
                                 <div
                                     v-if="isSoapTemplateDropdownOpen"
                                     class="absolute right-0 top-10 z-50 w-72 sm:w-80 rounded-[10px] border border-[#333333]/20 bg-[#fffff3] p-2 shadow-xl space-y-1"
@@ -926,7 +965,6 @@ const formatDate = (dateStr?: string | null): string => {
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- S: Subjective -->
                             <div class="space-y-1.5">
                                 <div class="flex items-center justify-between">
                                     <label class="text-xs font-bold text-[#000000]">
@@ -947,7 +985,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </p>
                             </div>
 
-                            <!-- O: Objective / Physical Check -->
                             <div class="space-y-1.5">
                                 <div class="flex items-center justify-between">
                                     <label class="text-xs font-bold text-[#000000]">
@@ -963,7 +1000,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 ></textarea>
                             </div>
 
-                            <!-- A: Assessment dengan ICD-10 Autocomplete -->
                             <div class="space-y-1.5 relative">
                                 <div class="flex items-center justify-between">
                                     <label class="text-xs font-bold text-[#000000]">
@@ -982,7 +1018,6 @@ const formatDate = (dateStr?: string | null): string => {
                                         :class="{ 'border-rose-500': validationErrors.assessment }"
                                     ></textarea>
 
-                                    <!-- ICD-10 Autocomplete Overlay Dropdown -->
                                     <div
                                         v-if="showIcd10Dropdown && icd10Suggestions.length > 0"
                                         class="absolute left-0 right-0 top-full z-50 mt-1 max-h-56 overflow-y-auto rounded-[8px] border border-[#333333]/20 bg-[#ffffff] p-1.5 shadow-xl space-y-1"
@@ -1023,7 +1058,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </p>
                             </div>
 
-                            <!-- P: Plan -->
                             <div class="space-y-1.5">
                                 <div class="flex items-center justify-between">
                                     <label class="text-xs font-bold text-[#000000]">
@@ -1046,7 +1080,6 @@ const formatDate = (dateStr?: string | null): string => {
                         </div>
                     </div>
 
-                    <!-- SECTION 3: DYNAMIC E-PRESCRIPTION BUILDER (RESEP ELEKTRONIK) -->
                     <div class="rounded-[10px] bg-[#ffffff] border border-[#333333]/15 p-4 sm:p-5 shadow-xs space-y-4">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#333333]/10 pb-3">
                             <div class="flex items-center gap-2">
@@ -1074,7 +1107,6 @@ const formatDate = (dateStr?: string | null): string => {
                             </div>
                         </div>
 
-                        <!-- CLINICAL SAFETY INTERCEPTOR WARNING BANNER (ALLERGIES & DRUG INTERACTIONS) -->
                         <div
                             v-if="safetyEvaluation.has_warnings"
                             class="rounded-[8px] p-3.5 space-y-2 border transition-all duration-200"
@@ -1086,7 +1118,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 <span>Peringatan Keselamatan Peresepan Klinis (Clinical Safety Interceptor):</span>
                             </div>
 
-                            <!-- Peringatan Alergi Pasien -->
                             <div v-if="safetyEvaluation.allergy_alerts.length > 0" class="space-y-1 pl-6">
                                 <div
                                     v-for="(allAlert, aIdx) in safetyEvaluation.allergy_alerts"
@@ -1098,7 +1129,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </div>
                             </div>
 
-                            <!-- Peringatan Interaksi Antar Obat -->
                             <div v-if="safetyEvaluation.interaction_alerts.length > 0" class="space-y-1.5 pl-6">
                                 <div
                                     v-for="(intAlert, iIdx) in safetyEvaluation.interaction_alerts"
@@ -1122,7 +1152,6 @@ const formatDate = (dateStr?: string | null): string => {
                             </div>
                         </div>
 
-                        <!-- Daftar Item Resep Obat Dinamis -->
                         <div v-if="prescriptionRows.length > 0" class="space-y-3">
                             <div
                                 v-for="(row, idx) in prescriptionRows"
@@ -1148,7 +1177,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </div>
 
                                 <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-                                    <!-- Pilih Obat dari Master -->
                                     <div class="md:col-span-4 space-y-1">
                                         <label class="text-[11px] font-semibold text-[#333333]">Nama Obat & Sediaan</label>
                                         <select
@@ -1167,14 +1195,12 @@ const formatDate = (dateStr?: string | null): string => {
                                             </option>
                                         </select>
 
-                                        <!-- Stock Info Badge -->
                                         <div v-if="row.selectedMedicine" class="flex items-center justify-between text-[10px] text-[#333333] pt-0.5">
                                             <span>Stok: <strong>{{ row.selectedMedicine.stock }} {{ row.selectedMedicine.unit }}</strong></span>
                                             <span>Rp {{ Number(row.selectedMedicine.price).toLocaleString('id-ID') }} / {{ row.selectedMedicine.unit }}</span>
                                         </div>
                                     </div>
 
-                                    <!-- Kuantitas Jumlah -->
                                     <div class="md:col-span-2 space-y-1">
                                         <label class="text-[11px] font-semibold text-[#333333]">Jumlah</label>
                                         <input
@@ -1186,7 +1212,6 @@ const formatDate = (dateStr?: string | null): string => {
                                         />
                                     </div>
 
-                                    <!-- Dosis / Aturan Pakai -->
                                     <div class="md:col-span-3 space-y-1">
                                         <label class="text-[11px] font-semibold text-[#333333]">Dosis & Frekuensi</label>
                                         <input
@@ -1197,7 +1222,6 @@ const formatDate = (dateStr?: string | null): string => {
                                         />
                                     </div>
 
-                                    <!-- Petunjuk Pemakaian (Signa) -->
                                     <div class="md:col-span-3 space-y-1">
                                         <label class="text-[11px] font-semibold text-[#333333]">Petunjuk Minum</label>
                                         <input
@@ -1209,14 +1233,12 @@ const formatDate = (dateStr?: string | null): string => {
                                     </div>
                                 </div>
 
-                                <!-- Error Warning per Row -->
                                 <p v-if="validationErrors[`prescription_${idx}_stock`]" class="text-xs text-rose-600 flex items-center gap-1">
                                     <AlertCircle class="size-3 shrink-0" />
                                     {{ validationErrors[`prescription_${idx}_stock`] }}
                                 </p>
                             </div>
 
-                            <!-- Datalists for Autocomplete -->
                             <datalist id="dosage-options">
                                 <option v-for="d in dosagePresets" :key="d" :value="d" />
                             </datalist>
@@ -1225,14 +1247,12 @@ const formatDate = (dateStr?: string | null): string => {
                             </datalist>
                         </div>
 
-                        <!-- Empty State Resep -->
                         <div v-else class="text-center py-6 border border-dashed border-[#333333]/20 rounded-[8px] bg-[#edede2]/20">
                             <Pill class="size-6 mx-auto text-[#333333]/40" />
                             <p class="text-xs text-[#333333] font-medium mt-1">Belum ada item obat yang diresepkan.</p>
                             <p class="text-[11px] text-[#333333]/60">Klik tombol "+ Tambah Baris Obat" di atas untuk menambahkan resep apotek.</p>
                         </div>
 
-                        <!-- Catatan Resep Tambahan & Estimasi Total -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
                             <div class="space-y-1">
                                 <label class="text-[11px] font-semibold text-[#333333]">Catatan Khusus untuk Bagian Farmasi / Pasien</label>
@@ -1254,7 +1274,6 @@ const formatDate = (dateStr?: string | null): string => {
                     </div>
                 </div>
 
-                <!-- TAB 2: PATIENT MEDICAL HISTORY TIMELINE (RIWAYAT KLINIS PASIEN) -->
                 <div v-else class="space-y-4">
                     <div class="flex items-center justify-between border-b border-[#333333]/10 pb-3">
                         <div class="flex items-center gap-2">
@@ -1274,29 +1293,24 @@ const formatDate = (dateStr?: string | null): string => {
                         </button>
                     </div>
 
-                    <!-- Loading State -->
                     <div v-if="isLoadingHistory" class="py-12 text-center space-y-2">
                         <Loader2 class="size-7 mx-auto animate-spin text-[#000000]" />
                         <p class="text-xs text-[#333333]">Memuat riwayat rekam medis pasien dari database...</p>
                     </div>
 
-                    <!-- Error State -->
                     <div v-else-if="historyError" class="p-4 rounded-[8px] bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
                         <AlertCircle class="size-4 shrink-0" />
                         <span>{{ historyError }}</span>
                     </div>
 
-                    <!-- History Timeline Cards -->
                     <div v-else-if="patientHistory.length > 0" class="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#333333]/20">
                         <div
                             v-for="(rec, rIdx) in patientHistory"
                             :key="rec.medical_record_id || rIdx"
                             class="relative rounded-[10px] border border-[#333333]/15 bg-[#ffffff] p-4 sm:p-5 shadow-xs space-y-3"
                         >
-                            <!-- Timeline Dot Indicator -->
                             <span class="absolute -left-6 top-5 flex h-4 w-4 rounded-full bg-[#000000] border-2 border-[#fffff3]"></span>
 
-                            <!-- Header Kunjungan Terdahulu -->
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#333333]/10 pb-3">
                                 <div>
                                     <div class="flex items-center gap-2">
@@ -1316,7 +1330,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </span>
                             </div>
 
-                            <!-- Tanda Vital Kunjungan Ini -->
                             <div v-if="rec.objective" class="rounded-[7px] bg-[#edede2]/60 p-2.5 flex flex-wrap gap-3 text-xs text-[#333333]">
                                 <span v-if="(rec.objective as any).systolic && (rec.objective as any).diastolic">
                                     <strong>TD:</strong> {{ (rec.objective as any).systolic }}/{{ (rec.objective as any).diastolic }} mmHg
@@ -1335,7 +1348,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </span>
                             </div>
 
-                            <!-- Rincian SOAP Kunjungan Terdahulu -->
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                                 <div class="space-y-1">
                                     <span class="font-semibold text-[#000000] block">[S] Keluhan:</span>
@@ -1359,7 +1371,6 @@ const formatDate = (dateStr?: string | null): string => {
                                 </div>
                             </div>
 
-                            <!-- Resep Obat yang Diberikan pada Kunjungan Ini -->
                             <div v-if="rec.prescription?.items && rec.prescription.items.length > 0" class="pt-2 border-t border-[#333333]/10 space-y-1.5">
                                 <span class="text-xs font-semibold text-[#000000] flex items-center gap-1">
                                     <Pill class="size-3 text-[#000000]" />
@@ -1383,7 +1394,6 @@ const formatDate = (dateStr?: string | null): string => {
                         </div>
                     </div>
 
-                    <!-- Empty State Riwayat Pasien -->
                     <div v-else class="text-center py-12 border border-dashed border-[#333333]/20 rounded-[10px] bg-[#ffffff]">
                         <CheckCircle2 class="size-8 mx-auto text-[#333333]/40" />
                         <p class="text-sm font-semibold text-[#000000] mt-2">Belum ada riwayat rekam medis sebelumnya.</p>
@@ -1391,7 +1401,6 @@ const formatDate = (dateStr?: string | null): string => {
                     </div>
                 </div>
 
-                <!-- Global Validation Error Alert -->
                 <div v-if="validationErrors.general || Object.keys(validationErrors).length > 0" class="rounded-[8px] bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 space-y-1">
                     <div class="flex items-center gap-1.5 font-bold">
                         <AlertCircle class="size-4" />
@@ -1404,14 +1413,12 @@ const formatDate = (dateStr?: string | null): string => {
                     </ul>
                 </div>
 
-                <!-- Success Alert -->
                 <div v-if="submitSuccessMessage" class="rounded-[8px] bg-emerald-50 border border-emerald-200 p-3 text-xs text-emerald-800 flex items-center gap-2">
                     <CheckCircle2 class="size-4 text-emerald-600" />
                     <span class="font-semibold">{{ submitSuccessMessage }}</span>
                 </div>
             </div>
 
-            <!-- Footer Action Controls -->
             <footer class="bg-[#edede2] border-t border-[#333333]/15 px-5 py-3.5 flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 shrink-0">
                 <div class="text-xs text-[#333333]">
                     <span>Dokter Pemeriksa: <strong>{{ appointment?.doctorSchedule?.doctor?.name || 'Dokter Terdaftar' }}</strong></span>
@@ -1444,7 +1451,6 @@ const formatDate = (dateStr?: string | null): string => {
             </footer>
         </motion.div>
 
-        <!-- MODAL DIALOG: SIMPAN TEMPLATE SOAP DOKTER -->
         <div
             v-if="isSaveTemplateModalOpen"
             class="fixed inset-0 z-60 flex items-center justify-center p-4 bg-[#000000]/60 backdrop-blur-xs"

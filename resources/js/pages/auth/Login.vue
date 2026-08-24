@@ -126,6 +126,7 @@ const handleLoginSuccess = (response: any) => {
     // Jika response mengandung redirect_to dari API
     if (response.data?.redirect_to) {
         router.visit(response.data.redirect_to)
+
         return
     }
 

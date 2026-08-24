@@ -185,9 +185,11 @@ const adminNavGroups = computed(() => [
 
 const isRouteActive = (pattern: string): boolean => {
     const currentPath = page.url.split('?')[0]
+
     if (pattern === '/admin/dashboard') {
         return currentPath === '/admin/dashboard' || currentPath === '/admin'
     }
+
     return currentPath.startsWith(pattern)
 }
 

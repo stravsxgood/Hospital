@@ -109,7 +109,10 @@ const formatRupiah = (val: number) => {
 
 // Cari nilai tertinggi pendapatan bulanan untuk bar chart scale
 const maxMonthlyRevenue = computed(() => {
-    if (!props.financial.monthly_trend.length) return 1
+    if (!props.financial.monthly_trend.length) {
+return 1
+}
+
     return Math.max(...props.financial.monthly_trend.map((m) => m.revenue), 1)
 })
 </script>

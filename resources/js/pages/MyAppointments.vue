@@ -76,11 +76,16 @@ const selectedDeleteItem = ref<AppointmentItem | null>(null)
 const isDeleting = ref(false)
 
 const formatDoctorName = (name?: string | null): string => {
-    if (!name) return 'Dokter Spesialis'
+    if (!name) {
+return 'Dokter Spesialis'
+}
+
     const trimmed = name.trim()
+
     if (/^(dr\.|drg\.|dr\s|drg\s|prof\.|prof\s)/i.test(trimmed)) {
         return trimmed
     }
+
     return `dr. ${trimmed}`
 }
 

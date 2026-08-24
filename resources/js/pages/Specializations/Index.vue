@@ -87,6 +87,7 @@ const page = usePage()
 const currentUser = computed(() => page.props.auth?.user)
 const isStaffUser = computed(() => {
     const role = currentUser.value?.role
+
     return ['doctor', 'nurse', 'admin'].includes(role || '') || Boolean(currentUser.value?.is_doctor)
 })
 
@@ -156,6 +157,7 @@ const filteredSchedules = computed(() => {
     if (selectedDayFilter.value !== 'Semua') {
         list = list.filter((sch) => {
             const day = sch.day || sch.day_of_week || ''
+
             return day.toLowerCase() === selectedDayFilter.value.toLowerCase()
         })
     }
@@ -172,6 +174,7 @@ const filteredSchedules = computed(() => {
                     : sch.doctor?.specialization?.name_specialization?.toLowerCase() ||
                       sch.doctor?.specialization?.name?.toLowerCase() ||
                       ''
+
             return docName.includes(query) || poliName.includes(query) || specName.includes(query)
         })
     }
@@ -201,6 +204,7 @@ const scrollToSection = (sectionId: string) => {
     isMegaMenuOpen.value = false
     setTimeout(() => {
         const element = document.getElementById(sectionId)
+
         if (element) {
             const headerOffset = 90
             const elementPosition = element.getBoundingClientRect().top
@@ -220,6 +224,7 @@ const handleBookSchedule = (sch: DoctorSchedule) => {
     if (!currentUser.value) {
         // Redirect guest to login with message
         router.visit('/login')
+
         return
     }
 
@@ -277,6 +282,7 @@ const jumpToPoliTeam = (poli: string) => {
  */
 const jumpToDoctorSearch = (poli?: string) => {
     isMegaMenuOpen.value = false
+
     if (poli) {
         router.visit('/schedule-guest?poli=' + encodeURIComponent(poli))
     } else {

@@ -7,7 +7,6 @@
  * serta aksi cepat (Lihat Jadwal Dokter, Petunjuk Arah Google Maps, dan Kontak WhatsApp).
  */
 import { Head, Link, router, usePage } from '@inertiajs/vue3'
-import { motion } from 'motion-v'
 import {
     Activity,
     Ambulance,
@@ -47,6 +46,7 @@ import {
     UserPlus,
     X
 } from '@lucide/vue'
+import { motion } from 'motion-v'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import AppLogoIcon from '@/components/AppLogoIcon.vue'
 import type { ClinicBranchItem, ClinicLocationProps } from '@/types/hospital'
@@ -59,6 +59,7 @@ const page = usePage()
 const currentUser = computed(() => page.props.auth?.user)
 const isStaffUser = computed(() => {
     const role = currentUser.value?.role
+
     return ['doctor', 'nurse', 'admin'].includes(role || '') || Boolean(currentUser.value?.is_doctor)
 })
 
@@ -125,6 +126,7 @@ const jumpToPoliTeam = (poliName: string) => {
  */
 const jumpToDoctorSearch = (poliOrKeyword?: string) => {
     isMegaMenuOpen.value = false
+
     if (poliOrKeyword) {
         router.visit('/schedule-guest?poli=' + encodeURIComponent(poliOrKeyword))
     } else {
@@ -170,6 +172,7 @@ const filteredClinics = computed(() => {
 
         // Facility type filter
         let matchType = true
+
         if (selectedType.value === 'IGD 24 Jam') {
             matchType = clinic.emergency_24h === true
         } else if (selectedType.value !== 'Semua') {

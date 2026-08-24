@@ -74,20 +74,27 @@ let audioCtx: AudioContext | null = null
 
 // Audio Context Unlock
 const getAudioContext = (): AudioContext | null => {
-    if (typeof window === 'undefined') return null
+    if (typeof window === 'undefined') {
+return null
+}
+
     try {
         if (!audioCtx) {
             const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+
             if (AudioContextClass) {
                 audioCtx = new AudioContextClass()
             }
         }
+
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume()
         }
+
         return audioCtx
     } catch (e) {
         console.warn('Audio Context initialization error:', e)
+
         return null
     }
 }
@@ -96,7 +103,10 @@ const getAudioContext = (): AudioContext | null => {
 const playHospitalChime = () => {
     try {
         const ctx = getAudioContext()
-        if (!ctx) return
+
+        if (!ctx) {
+return
+}
 
         const playTone = (freq: number, start: number, duration: number, gainValue = 0.25) => {
             const osc = ctx.createOscillator()
@@ -142,6 +152,7 @@ const speakVoiceText = (text: string) => {
 
             const voices = window.speechSynthesis.getVoices()
             const idVoice = voices.find((v) => v.lang.includes('id') || v.lang.includes('ID'))
+
             if (idVoice) {
                 utterance.voice = idVoice
             }
@@ -167,6 +178,7 @@ const speakVoiceText = (text: string) => {
 // Toggle Audio Enable
 const toggleAudio = () => {
     isAudioEnabled.value = !isAudioEnabled.value
+
     if (isAudioEnabled.value) {
         getAudioContext()
         playHospitalChime()
@@ -203,6 +215,7 @@ const handleIncomingCall = (payload: CallingPayload) => {
 
     // Update clinic list active calling if matches
     const targetClinic = clinics.value.find((c) => c.poli_name === payload.poli_name || c.room_name === payload.room_name)
+
     if (targetClinic) {
         targetClinic.current_calling = payload.queue_number
         targetClinic.patient_name = payload.patient_name
@@ -234,10 +247,14 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-    if (clockTimer) clearInterval(clockTimer)
+    if (clockTimer) {
+clearInterval(clockTimer)
+}
+
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel()
     }
+
     try {
         echo.leaveChannel('queue-display')
     } catch (e) {}

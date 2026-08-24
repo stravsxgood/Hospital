@@ -66,30 +66,42 @@ let audioCtx: AudioContext | null = null
 let currentAudio: HTMLAudioElement | null = null
 
 const formatDoctorName = (name?: string | null): string => {
-    if (!name) return 'Dokter Spesialis'
+    if (!name) {
+return 'Dokter Spesialis'
+}
+
     const trimmed = name.trim()
+
     if (/^(dr\.|drg\.|dr\s|drg\s|prof\.|prof\s)/i.test(trimmed)) {
         return trimmed
     }
+
     return `dr. ${trimmed}`
 }
 
 // Inisialisasi AudioContext & Unlock Audio Browser
 const getAudioContext = (): AudioContext | null => {
-    if (typeof window === 'undefined') return null
+    if (typeof window === 'undefined') {
+return null
+}
+
     try {
         if (!audioCtx) {
             const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext
+
             if (AudioContextClass) {
                 audioCtx = new AudioContextClass()
             }
         }
+
         if (audioCtx && audioCtx.state === 'suspended') {
             audioCtx.resume()
         }
+
         return audioCtx
     } catch (e) {
         console.warn('Audio Context initialization error:', e)
+
         return null
     }
 }
@@ -108,7 +120,10 @@ const updateClock = () => {
 const playHospitalChime = () => {
     try {
         const ctx = getAudioContext()
-        if (!ctx) return
+
+        if (!ctx) {
+return
+}
 
         const playTone = (freq: number, start: number, duration: number, gainValue = 0.25) => {
             const osc = ctx.createOscillator()
@@ -209,7 +224,10 @@ const announceQueue = async (item: LatestCalled, repeatCount = 1) => {
 const fetchLiveData = async () => {
     try {
         const res = await fetch('/display/live-data')
-        if (!res.ok) return
+
+        if (!res.ok) {
+return
+}
 
         const data: DisplayPayload = await res.json()
         displayData.value = data
@@ -219,6 +237,7 @@ const fetchLiveData = async () => {
 
             if (currentKey !== lastAnnouncedKey.value) {
                 lastAnnouncedKey.value = currentKey
+
                 if (isAudioEnabled.value) {
                     announceQueue(data.latestCalled, 1)
                 }
@@ -248,10 +267,12 @@ const toggleAudio = () => {
     } else {
         isAudioEnabled.value = false
         localStorage.setItem('display_audio_enabled', 'false')
+
         if (repeatTimeoutTimer) {
             clearTimeout(repeatTimeoutTimer)
             repeatTimeoutTimer = null
         }
+
         if (currentAudio) {
             currentAudio.pause()
             currentAudio = null
@@ -289,6 +310,7 @@ const toggleFullscreen = () => {
         if (document.exitFullscreen) {
             document.exitFullscreen()
         }
+
         isFullscreen.value = false
     }
 }
@@ -297,11 +319,13 @@ onMounted(() => {
     updateClock()
 
     const savedAudio = localStorage.getItem('display_audio_enabled')
+
     if (savedAudio === 'true') {
         isAudioEnabled.value = true
     }
 
     const savedAutoRepeat = localStorage.getItem('display_auto_repeat')
+
     if (savedAutoRepeat !== null) {
         isAutoRepeat.value = savedAutoRepeat === 'true'
     }
@@ -355,16 +379,27 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-    if (clockTimer) clearInterval(clockTimer)
-    if (pollingTimer) clearInterval(pollingTimer)
-    if (repeatTimeoutTimer) clearTimeout(repeatTimeoutTimer)
+    if (clockTimer) {
+clearInterval(clockTimer)
+}
+
+    if (pollingTimer) {
+clearInterval(pollingTimer)
+}
+
+    if (repeatTimeoutTimer) {
+clearTimeout(repeatTimeoutTimer)
+}
+
     if (currentAudio) {
         currentAudio.pause()
         currentAudio = null
     }
+
     if (audioCtx) {
         audioCtx.close().catch(() => {})
     }
+
     try {
         import('@/echo').then(({ echo }) => {
             echo.leaveChannel('queue-display')

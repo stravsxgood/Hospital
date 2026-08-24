@@ -140,7 +140,10 @@ const closeReviewModal = () => {
 }
 
 const submitReview = async () => {
-    if (!selectedLogbook.value) return
+    if (!selectedLogbook.value) {
+return
+}
+
     reviewErrors.value = {}
     isSubmitting.value = true
 

@@ -48,6 +48,7 @@ const props = defineProps<Props>()
 // Format Rupiah Helper
 const formatRupiah = (val: number | string | null | undefined): string => {
     const num = typeof val === 'string' ? parseFloat(val) : (val || 0)
+
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -94,7 +95,10 @@ const cashChange = computed(() => Math.max(0, cashReceived.value - totalBill.val
 // Render QR Code onto Canvas
 const renderQrCode = async (rawQr: string) => {
     await nextTick()
-    if (!qrCanvasRef.value) return
+
+    if (!qrCanvasRef.value) {
+return
+}
 
     try {
         await QRCode.toCanvas(qrCanvasRef.value, rawQr, {
@@ -118,6 +122,7 @@ const handleGenerateQris = async () => {
 
     try {
         const response = await axios.post(`/staff/billing/${props.billing.billing_id}/pay-qris`)
+
         if (response.data.status && response.data.qr_string) {
             qrString.value = response.data.qr_string
             await renderQrCode(response.data.qr_string)
@@ -135,12 +140,16 @@ const handleGenerateQris = async () => {
 // Background Polling Function (every 2.5s)
 const startPolling = () => {
     stopPolling()
-    if (props.billing.status === 'paid') return
+
+    if (props.billing.status === 'paid') {
+return
+}
 
     isPolling.value = true
     pollingTimer = setInterval(async () => {
         try {
             const res = await axios.get(`/staff/billing/${props.billing.billing_id}/status`)
+
             if (res.data && res.data.is_paid) {
                 stopPolling()
                 isPaidSuccess.value = true
@@ -157,6 +166,7 @@ const stopPolling = () => {
         clearInterval(pollingTimer)
         pollingTimer = null
     }
+
     isPolling.value = false
 }
 
@@ -164,6 +174,7 @@ const stopPolling = () => {
 const handleCashSubmit = async () => {
     if (cashReceived.value < totalBill.value) {
         errorMessage.value = 'Uang yang diterima kurang dari total tagihan.'
+
         return
     }
 
@@ -192,6 +203,7 @@ const handleCashSubmit = async () => {
 const handleEdcSubmit = async () => {
     if (!edcForm.value.approval_code.trim()) {
         errorMessage.value = 'Nomor Approval Code / Trace No. Mesin EDC wajib diisi.'
+
         return
     }
 
@@ -221,6 +233,7 @@ const handleGenerateXenditInvoice = async () => {
 
     try {
         const response = await axios.post(`/staff/billing/${props.billing.billing_id}/pay-xendit`)
+
         if (response.data.status && response.data.xendit_payment_url) {
             xenditInvoiceUrl.value = response.data.xendit_payment_url
             startPolling()

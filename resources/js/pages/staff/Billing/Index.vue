@@ -88,6 +88,7 @@ const openThermalModal = (bill: any) => {
 // Format Rupiah Helper
 const formatRupiah = (val: number | string | null | undefined): string => {
     const num = typeof val === 'string' ? parseFloat(val) : (val || 0)
+
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -99,7 +100,10 @@ const formatRupiah = (val: number | string | null | undefined): string => {
 // Search debounce
 let timeout: ReturnType<typeof setTimeout> | null = null
 const handleFilterChange = () => {
-    if (timeout) clearTimeout(timeout)
+    if (timeout) {
+clearTimeout(timeout)
+}
+
     timeout = setTimeout(() => {
         router.get(
             '/staff/billing',
@@ -142,7 +146,10 @@ const closeCreateBillingModal = () => {
 }
 
 const confirmCreateBilling = () => {
-    if (!selectedUnbilledForBilling.value) return
+    if (!selectedUnbilledForBilling.value) {
+return
+}
+
     isProcessing.value = true
     const reservationId = selectedUnbilledForBilling.value.appointment_id ?? selectedUnbilledForBilling.value.reservation_id
     router.post(

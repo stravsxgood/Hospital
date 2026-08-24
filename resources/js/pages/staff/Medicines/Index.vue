@@ -94,6 +94,7 @@ const selectedStockStatus = ref(props.filters.stock_status || 'all')
 // Format Rupiah
 const formatRupiah = (val: number | string | null | undefined): string => {
     const num = typeof val === 'string' ? parseFloat(val) : (val || 0)
+
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -105,7 +106,10 @@ const formatRupiah = (val: number | string | null | undefined): string => {
 // Debounced Search/Filter
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const applyFilters = () => {
-    if (searchTimeout) clearTimeout(searchTimeout)
+    if (searchTimeout) {
+clearTimeout(searchTimeout)
+}
+
     searchTimeout = setTimeout(() => {
         router.get(
             '/staff/medicines',
@@ -213,18 +217,32 @@ const closeStockModal = () => {
 }
 
 const previewResultStock = computed(() => {
-    if (!adjustingMedicine.value) return 0
+    if (!adjustingMedicine.value) {
+return 0
+}
+
     const curr = Number(adjustingMedicine.value.stock) || 0
     const amt = Number(stockForm.amount) || 0
 
-    if (stockForm.type === 'add') return curr + amt
-    if (stockForm.type === 'subtract') return Math.max(0, curr - amt)
-    if (stockForm.type === 'set') return Math.max(0, amt)
+    if (stockForm.type === 'add') {
+return curr + amt
+}
+
+    if (stockForm.type === 'subtract') {
+return Math.max(0, curr - amt)
+}
+
+    if (stockForm.type === 'set') {
+return Math.max(0, amt)
+}
+
     return curr
 })
 
 const submitStockAdjustment = () => {
-    if (!adjustingMedicine.value) return
+    if (!adjustingMedicine.value) {
+return
+}
 
     stockForm.post(`/staff/medicines/${adjustingMedicine.value.medicine_id}/adjust-stock`, {
         onSuccess: () => closeStockModal(),
@@ -247,7 +265,10 @@ const closeDeleteModal = () => {
 }
 
 const confirmDeleteMedicine = () => {
-    if (!deletingMedicine.value) return
+    if (!deletingMedicine.value) {
+return
+}
+
     isDeleting.value = true
     router.delete(`/staff/medicines/${deletingMedicine.value.medicine_id}`, {
         preserveScroll: true,

@@ -8,7 +8,8 @@
  *   - Patient: Public Services (Jadwal Dokter + Antrean Saya)
  */
 import { Link, usePage } from '@inertiajs/vue3';
-import { Activity, BookOpen, Building2, Calendar, GraduationCap, Home, LayoutGrid, Pill, Receipt, Shield, ShieldCheck, Ticket, TrendingUp, Tv, Users } from '@lucide/vue';
+import type { Calendar} from '@lucide/vue';
+import { Activity, BookOpen, Building2, GraduationCap, Home, LayoutGrid, Pill, Receipt, Shield, ShieldCheck, Ticket, TrendingUp, Tv, Users } from '@lucide/vue';
 import { motion } from 'motion-v';
 import { computed } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
@@ -102,6 +103,7 @@ const isRouteActive = (pattern: string, fallbackUrl: string, exact: boolean = fa
                    !route().current('staff.medicines.*') &&
                    !route().current('staff.audit-logs.*');
         }
+
         return route().current(pattern);
     }
 

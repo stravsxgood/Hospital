@@ -41,7 +41,10 @@ const emit = defineEmits<{
  * Split full content into clean paragraphs
  */
 const paragraphs = computed(() => {
-    if (!props.story?.full_content) return []
+    if (!props.story?.full_content) {
+return []
+}
+
     return props.story.full_content
         .split('\n\n')
         .map((p) => p.trim())
@@ -52,7 +55,10 @@ const paragraphs = computed(() => {
  * Generate direct link to doctor practice schedule based on polyclinic name
  */
 const scheduleUrl = computed(() => {
-    if (!props.story?.poli_name) return '/schedule-guest'
+    if (!props.story?.poli_name) {
+return '/schedule-guest'
+}
+
     return `/schedule-guest?poli=${encodeURIComponent(props.story.poli_name)}`
 })
 </script>

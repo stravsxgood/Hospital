@@ -39,7 +39,10 @@ export default defineConfigWithVueTs(
         },
         rules: {
             'vue/multi-word-component-names': 'off',
+            'vue/no-v-text-v-html-on-component': 'off',
             '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-unused-vars': 'off',
+            '@typescript-eslint/no-require-imports': 'off',
             '@typescript-eslint/consistent-type-imports': [
                 'error',
                 {
@@ -74,14 +77,16 @@ export default defineConfigWithVueTs(
     },
     {
         ignores: [
-            'vendor',
-            'node_modules',
-            'public',
-            'bootstrap/ssr',
+            '.agents/**',
+            'vendor/**',
+            'node_modules/**',
+            'public/**',
+            'storage/**',
+            'bootstrap/ssr/**',
             'tailwind.config.js',
             'vite.config.ts',
             'resources/js/actions/**',
-            'resources/js/components/ui/*',
+            'resources/js/components/ui/**',
             'resources/js/routes/**',
             'resources/js/wayfinder/**',
         ],

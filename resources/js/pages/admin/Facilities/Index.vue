@@ -136,6 +136,7 @@ const handleSavePoli = async () => {
         } else {
             await axios.post('/admin/polis', poliForm.value)
         }
+
         isPoliModalOpen.value = false
         router.reload()
     } catch (err: any) {
@@ -152,7 +153,9 @@ const handleSavePoli = async () => {
 }
 
 const handleDeletePoli = async (poli: PoliItem) => {
-    if (!confirm(`Hapus Poliklinik "${poli.name_poli}"? Tindakan ini aman jika tidak ada jadwal aktif.`)) return
+    if (!confirm(`Hapus Poliklinik "${poli.name_poli}"? Tindakan ini aman jika tidak ada jadwal aktif.`)) {
+return
+}
 
     try {
         await axios.delete(`/admin/polis/${poli.poli_id}`)
@@ -222,6 +225,7 @@ const handleSaveSchedule = async () => {
         } else {
             await axios.post('/admin/schedules', scheduleForm.value)
         }
+
         isScheduleModalOpen.value = false
         router.reload()
     } catch (err: any) {
@@ -238,7 +242,9 @@ const handleSaveSchedule = async () => {
 }
 
 const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
-    if (!confirm(`Hapus jadwal praktik ${s.doctor?.name} (${s.day})?`)) return
+    if (!confirm(`Hapus jadwal praktik ${s.doctor?.name} (${s.day})?`)) {
+return
+}
 
     try {
         await axios.delete(`/admin/schedules/${s.doctor_schedule_id}`)

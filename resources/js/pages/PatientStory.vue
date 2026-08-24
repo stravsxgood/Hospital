@@ -86,6 +86,7 @@ const page = usePage()
 const currentUser = computed(() => page.props.auth?.user)
 const isStaffUser = computed(() => {
     const role = currentUser.value?.role
+
     return ['doctor', 'nurse', 'admin'].includes(role || '') || Boolean(currentUser.value?.is_doctor)
 })
 
@@ -198,6 +199,7 @@ const jumpToPoliTeam = (poliName: string) => {
  */
 const jumpToDoctorSearch = (poliOrKeyword?: string) => {
     isMegaMenuOpen.value = false
+
     if (poliOrKeyword) {
         router.visit('/schedule-guest?poli=' + encodeURIComponent(poliOrKeyword))
     } else {

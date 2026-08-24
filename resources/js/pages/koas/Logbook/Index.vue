@@ -148,7 +148,10 @@ const openCreateModal = () => {
 }
 
 const openEditModal = (item: ClinicalLogbookItem) => {
-    if (item.status === 'approved' || item.status === 'submitted') return
+    if (item.status === 'approved' || item.status === 'submitted') {
+return
+}
+
     editingLogbook.value = item
     formErrors.value = {}
     form.value = {
@@ -180,6 +183,7 @@ const handleSaveLogbook = async (submitToDpjp: boolean) => {
         } else {
             await axios.post('/koas/logbook', form.value)
         }
+
         closeModal()
         router.reload()
     } catch (err: any) {
@@ -203,7 +207,10 @@ const openFeedbackModal = (item: ClinicalLogbookItem) => {
 
 // Submit Direct to DPJP from Table
 const handleSubmitDirect = async (item: ClinicalLogbookItem) => {
-    if (!confirm(`Ajukan logbook "${item.case_title}" ke DPJP sekarang?`)) return
+    if (!confirm(`Ajukan logbook "${item.case_title}" ke DPJP sekarang?`)) {
+return
+}
+
     try {
         await axios.post(`/koas/logbook/${item.clinical_logbook_id}/submit`)
         router.reload()

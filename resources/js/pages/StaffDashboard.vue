@@ -231,11 +231,13 @@ const authUser = computed(() => page.props.auth?.user)
 
 const isDoctor = computed(() => {
     const role = authUser.value?.role
+
     return role === 'doctor' || Boolean(authUser.value?.is_doctor) || Boolean(authUser.value?.doctor)
 })
 
 const isNurse = computed(() => {
     const role = authUser.value?.role
+
     return role === 'nurse' || Boolean(authUser.value?.nurse)
 })
 
@@ -252,22 +254,33 @@ const isAdmin = computed(() => authUser.value?.role === 'admin')
 // Informasi Dokter Login
 const doctorProfile = computed(() => authUser.value?.doctor as { doctor_id?: number; name?: string; sip_number?: string; specialization_name?: string } | null | undefined)
 const doctorName = computed<string>(() => {
-    if (doctorProfile.value?.name) return doctorProfile.value.name
-    if (isDoctor.value && authUser.value?.name) return authUser.value.name
+    if (doctorProfile.value?.name) {
+return doctorProfile.value.name
+}
+
+    if (isDoctor.value && authUser.value?.name) {
+return authUser.value.name
+}
+
     return 'Dokter Spesialis'
 })
 
 // Jadwal Praktik Aktif Khusus Dokter yang Sedang Login
 const doctorActiveClinic = computed(() => {
-    if (!isDoctor.value || !props.clinicMatrix) return null
+    if (!isDoctor.value || !props.clinicMatrix) {
+return null
+}
+
     return (
         props.clinicMatrix.find((c) => {
             if (doctorProfile.value?.name) {
                 return c.doctor_name.toLowerCase().includes(doctorProfile.value.name.toLowerCase())
             }
+
             if (authUser.value?.name) {
                 return c.doctor_name.toLowerCase().includes(authUser.value.name.toLowerCase())
             }
+
             return false
         }) ?? null
     )
@@ -276,6 +289,7 @@ const doctorActiveClinic = computed(() => {
 // Format Rupiah
 const formatRupiah = (val: number | string | null | undefined): string => {
     const num = typeof val === 'string' ? parseFloat(val) : (val || 0)
+
     return new Intl.NumberFormat('id-ID', {
         style: 'currency',
         currency: 'IDR',
@@ -324,6 +338,7 @@ const filteredAppointments = computed(() => {
         // 3. Filter Poli
         if (selectedPoliFilter.value !== 'all') {
             const poliName = item.doctor_schedule?.poli?.name_poli || item.doctor_schedule?.poli?.name
+
             if (poliName !== selectedPoliFilter.value) {
                 return false
             }
@@ -350,8 +365,12 @@ const availablePolis = computed(() => {
     const polis = new Set<string>()
     list.forEach((item) => {
         const name = item.doctor_schedule?.poli?.name_poli || item.doctor_schedule?.poli?.name
-        if (name) polis.add(name)
+
+        if (name) {
+polis.add(name)
+}
     })
+
     return Array.from(polis)
 })
 

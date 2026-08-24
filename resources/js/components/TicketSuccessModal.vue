@@ -39,11 +39,16 @@ const handlePrint = () => {
 }
 
 const formatDoctorName = (name?: string | null): string => {
-    if (!name) return '-'
+    if (!name) {
+return '-'
+}
+
     const trimmed = name.trim()
+
     if (/^(dr\.|drg\.|dr\s|drg\s|prof\.|prof\s)/i.test(trimmed)) {
         return trimmed
     }
+
     return `dr. ${trimmed}`
 }
 </script>

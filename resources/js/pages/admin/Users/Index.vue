@@ -195,9 +195,11 @@ const handleCreateDoctor = async () => {
     try {
         const res = await axios.post('/admin/users/doctors', doctorForm.value)
         isDoctorModalOpen.value = false
+
         if (res.data?.temp_password) {
             showResetSuccessModal(doctorForm.value.name, doctorForm.value.email, res.data.temp_password)
         }
+
         router.reload()
     } catch (err: any) {
         if (err.response?.status === 422 && err.response?.data?.errors) {
@@ -253,9 +255,11 @@ const handleCreateNurse = async () => {
     try {
         const res = await axios.post('/admin/users/nurses', nurseForm.value)
         isNurseModalOpen.value = false
+
         if (res.data?.temp_password) {
             showResetSuccessModal(nurseForm.value.name, nurseForm.value.email, res.data.temp_password)
         }
+
         router.reload()
     } catch (err: any) {
         if (err.response?.status === 422 && err.response?.data?.errors) {
@@ -281,7 +285,10 @@ const openToggleStatusModal = (user: UserItem) => {
 }
 
 const confirmToggleStatus = async () => {
-    if (!statusTargetUser.value) return
+    if (!statusTargetUser.value) {
+return
+}
+
     isTogglingStatus.value = true
 
     try {
@@ -305,7 +312,9 @@ const showResetSuccessModal = (name: string, email: string, pass: string) => {
 }
 
 const handleResetPassword = async (user: UserItem) => {
-    if (!confirm(`Reset password untuk pengguna "${user.name}" (${user.email})?`)) return
+    if (!confirm(`Reset password untuk pengguna "${user.name}" (${user.email})?`)) {
+return
+}
 
     try {
         const res = await axios.post(`/admin/users/${user.id}/reset-password`)
@@ -316,7 +325,10 @@ const handleResetPassword = async (user: UserItem) => {
 }
 
 const copyToClipboard = () => {
-    if (!resetResultModal.value) return
+    if (!resetResultModal.value) {
+return
+}
+
     navigator.clipboard.writeText(resetResultModal.value.pass)
     copied.value = true
     setTimeout(() => {

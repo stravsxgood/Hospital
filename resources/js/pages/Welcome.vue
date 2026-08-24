@@ -83,6 +83,7 @@ const page = usePage()
 const currentUser = computed(() => page.props.auth?.user)
 const isStaffUser = computed(() => {
     const role = currentUser.value?.role
+
     return ['doctor', 'nurse', 'admin'].includes(role || '') || Boolean(currentUser.value?.is_doctor)
 })
 
@@ -165,6 +166,7 @@ const scrollToSection = (sectionId: string) => {
     closeMobileMenu()
     setTimeout(() => {
         const element = document.getElementById(sectionId)
+
         if (element) {
             const headerOffset = 90
             const elementPosition = element.getBoundingClientRect().top

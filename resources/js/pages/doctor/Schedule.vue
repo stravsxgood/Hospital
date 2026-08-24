@@ -6,7 +6,6 @@
  * Accessible for both guests (/schedule-guest) and authenticated patients.
  */
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
-import { motion } from 'motion-v';
 import {
     Activity,
     Ambulance,
@@ -57,11 +56,13 @@ import {
     globalFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
-    tableFeatures,
-    type ColumnFiltersState,
-    type SortingState,
+    tableFeatures
+    
+    
 } from '@tanstack/table-core';
+import type {ColumnFiltersState, SortingState} from '@tanstack/table-core';
 import { createTableHook } from '@tanstack/vue-table';
+import { motion } from 'motion-v';
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import BookingModal from '@/components/BookingModal.vue';
@@ -79,6 +80,7 @@ const page = usePage();
 const currentUser = computed(() => page.props.auth?.user);
 const isStaffUser = computed(() => {
     const role = currentUser.value?.role
+
     return ['doctor', 'nurse', 'admin'].includes(role || '') || Boolean(currentUser.value?.is_doctor)
 });
 
@@ -238,8 +240,12 @@ const availablePolis = computed(() => {
     const list = new Set<string>();
     (props.schedules || []).forEach((s) => {
         const pName = s.poli?.name_poli || s.poli?.name;
-        if (pName) list.add(pName);
+
+        if (pName) {
+list.add(pName);
+}
     });
+
     return ['Semua', ...Array.from(list)];
 });
 
@@ -253,7 +259,10 @@ onMounted(() => {
         const p = urlParams.get('poli');
         const d = urlParams.get('day');
 
-        if (q) searchQuery.value = q;
+        if (q) {
+searchQuery.value = q;
+}
+
         if (p) {
             const matched = availablePolis.value.find(
                 (item) =>
@@ -263,6 +272,7 @@ onMounted(() => {
             );
             selectedPoli.value = matched || p;
         }
+
         if (d && daysList.includes(d)) {
             selectedDay.value = d;
         }
@@ -286,11 +296,16 @@ const getSpecializationName = (schedule: DoctorSchedule): string => {
  * Helper to ensure doctor name does not have duplicated 'dr.' or 'drg.'
  */
 const formatDoctorName = (name?: string | null): string => {
-    if (!name) return 'Dokter Spesialis';
+    if (!name) {
+return 'Dokter Spesialis';
+}
+
     const trimmed = name.trim();
+
     if (/^(dr\.|drg\.|dr\s|drg\s|prof\.|prof\s)/i.test(trimmed)) {
         return trimmed;
     }
+
     return `dr. ${trimmed}`;
 };
 
@@ -316,12 +331,16 @@ const { useAppTable, createAppColumnHelper } = createTableHook({
  * Custom global filter function matching doctor name, spec, poli, or room
  */
 const globalFilterFn = (row: any, columnId: string, filterValue: any): boolean => {
-    if (!filterValue) return true;
+    if (!filterValue) {
+return true;
+}
+
     const search = String(filterValue).toLowerCase().trim();
     const docName = String(row.original?.doctor?.name || '').toLowerCase();
     const specName = String(getSpecializationName(row.original)).toLowerCase();
     const poliName = String(row.original?.poli?.name_poli || row.original?.poli?.name || '').toLowerCase();
     const roomName = String(row.original?.room?.name_room || row.original?.room?.name || '').toLowerCase();
+
     return (
         docName.includes(search) ||
         specName.includes(search) ||
@@ -334,8 +353,12 @@ const globalFilterFn = (row: any, columnId: string, filterValue: any): boolean =
  * Custom column filter for polyclinic
  */
 const poliFilterFn = (row: any, columnId: string, filterValue: any): boolean => {
-    if (!filterValue || filterValue === 'Semua') return true;
+    if (!filterValue || filterValue === 'Semua') {
+return true;
+}
+
     const poliName = String(row.original?.poli?.name_poli || row.original?.poli?.name || '').toLowerCase();
+
     return poliName === String(filterValue).toLowerCase();
 };
 
@@ -343,8 +366,12 @@ const poliFilterFn = (row: any, columnId: string, filterValue: any): boolean => 
  * Custom column filter for day
  */
 const dayFilterFn = (row: any, columnId: string, filterValue: any): boolean => {
-    if (!filterValue || filterValue === 'Semua') return true;
+    if (!filterValue || filterValue === 'Semua') {
+return true;
+}
+
     const itemDay = String(row.original?.day || row.original?.day_of_week || '').toLowerCase();
+
     return itemDay === String(filterValue).toLowerCase();
 };
 
@@ -387,12 +414,15 @@ const pagination = ref({
 
 const columnFilters = computed<ColumnFiltersState>(() => {
     const filters: ColumnFiltersState = [];
+
     if (selectedPoli.value && selectedPoli.value !== 'Semua') {
         filters.push({ id: 'poli', value: selectedPoli.value });
     }
+
     if (selectedDay.value && selectedDay.value !== 'Semua') {
         filters.push({ id: 'day', value: selectedDay.value });
     }
+
     return filters;
 });
 
@@ -450,6 +480,7 @@ watch(selectedSort, (newVal) => {
     } else {
         sorting.value = [];
     }
+
     pagination.value.pageIndex = 0;
 });
 
@@ -521,6 +552,7 @@ const resetFilters = () => {
 const handleBookClick = (schedule: DoctorSchedule) => {
     if (!currentUser.value) {
         router.visit('/login');
+
         return;
     }
 

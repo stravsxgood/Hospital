@@ -13,7 +13,6 @@
  * - Tipografi ivypresto-headline & Rubik
  * - Micro-animasi via motion-v
  */
-import axios from 'axios'
 import {
     AlertCircle,
     AlertTriangle,
@@ -34,6 +33,7 @@ import {
     User,
     X,
 } from '@lucide/vue'
+import axios from 'axios'
 import { motion } from 'motion-v'
 import { computed, onMounted, ref, watch } from 'vue'
 
@@ -93,14 +93,19 @@ const shiftOptions = [
 
 // Perhitungan Selisih Kas Real-Time (Discrepancy)
 const calculatedDiscrepancy = computed(() => {
-    if (!liveStats.value) return 0
+    if (!liveStats.value) {
+return 0
+}
+
     const actual = Number(closeForm.value.closing_cash_actual || 0)
     const expected = Number(liveStats.value.expected_cash || 0)
+
     return actual - expected
 })
 
 const discrepancyStatus = computed(() => {
     const diff = calculatedDiscrepancy.value
+
     if (diff === 0) {
         return {
             label: 'Kas Sesuai / Balance',
@@ -108,6 +113,7 @@ const discrepancyStatus = computed(() => {
             badge: 'Rp 0 (Cocok)',
         }
     }
+
     if (diff > 0) {
         return {
             label: 'Kelebihan Kas Fisik',
@@ -115,6 +121,7 @@ const discrepancyStatus = computed(() => {
             badge: `+ Rp ${diff.toLocaleString('id-ID')}`,
         }
     }
+
     return {
         label: 'Kekurangan Kas Fisik (Selisih Negatif)',
         color: 'bg-rose-100 text-rose-900 border-rose-300',
@@ -126,10 +133,13 @@ const discrepancyStatus = computed(() => {
 const fetchCurrentShift = async () => {
     isLoading.value = true
     errorMessage.value = null
+
     try {
         const response = await axios.get('/staff/cashier-shifts/current')
+
         if (response.data?.status) {
             hasActiveShift.value = response.data.has_shift
+
             if (response.data.has_shift && response.data.data) {
                 activeShift.value = response.data.data.shift
                 liveStats.value = response.data.data.live_stats
@@ -152,8 +162,10 @@ const submitOpenShift = async () => {
     isSubmitting.value = true
     errorMessage.value = null
     successMessage.value = null
+
     try {
         const response = await axios.post('/staff/cashier-shifts/open', openForm.value)
+
         if (response.data?.status) {
             successMessage.value = response.data.message
             emit('shift-changed')
@@ -171,11 +183,13 @@ const submitCloseShift = async () => {
     isSubmitting.value = true
     errorMessage.value = null
     successMessage.value = null
+
     try {
         const response = await axios.post('/staff/cashier-shifts/close', {
             closing_cash_actual: closeForm.value.closing_cash_actual,
             notes: closeForm.value.notes,
         })
+
         if (response.data?.status) {
             successMessage.value = response.data.message
             emit('shift-changed')
@@ -195,8 +209,12 @@ const formatCurrency = (val: number | string): string => {
 }
 
 const formatDate = (dateStr?: string | null): string => {
-    if (!dateStr) return '-'
+    if (!dateStr) {
+return '-'
+}
+
     const d = new Date(dateStr)
+
     return d.toLocaleString('id-ID', {
         day: '2-digit',
         month: 'short',

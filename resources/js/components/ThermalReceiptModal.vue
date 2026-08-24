@@ -80,6 +80,7 @@ const hospital = computed(() => ({
 const formattedDate = computed(() => {
     const raw = props.billing?.paid_at || props.billing?.created_at || new Date().toISOString()
     const d = new Date(raw)
+
     return d.toLocaleString('id-ID', {
         day: '2-digit',
         month: 'short',
@@ -105,7 +106,10 @@ const printReceipt = () => {
 }
 
 const copyRawText = () => {
-    if (!props.billing) return
+    if (!props.billing) {
+return
+}
+
     const divider = paperSize.value === '58mm' ? '--------------------------------' : '------------------------------------------------'
     let text = `${hospital.value.name}\n${hospital.value.address}\nTelp: ${hospital.value.phone}\n${hospital.value.unit}\n`
     text += `${divider}\n`

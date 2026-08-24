@@ -126,6 +126,7 @@ const handleDateSelect = (dateStr: string) => {
 
 const handleCustomDateChange = (event: Event) => {
     const target = event.target as HTMLInputElement
+
     if (target.value) {
         handleDateSelect(target.value)
     }
@@ -177,21 +178,31 @@ const toggleAutoNext = () => {
 }
 
 const formatDateLabel = (dateStr: string): string => {
-    if (!dateStr) return '-'
+    if (!dateStr) {
+return '-'
+}
+
     const clean = dateStr.includes('T') ? dateStr.split('T')[0] : dateStr
     const parts = clean.split('-')
+
     if (parts.length === 3) {
         return `${parts[2]}/${parts[1]}/${parts[0]}`
     }
+
     return dateStr
 }
 
 const formatDoctorName = (name?: string | null): string => {
-    if (!name) return 'Dokter Spesialis'
+    if (!name) {
+return 'Dokter Spesialis'
+}
+
     const trimmed = name.trim()
+
     if (/^(dr\.|drg\.|dr\s|drg\s|prof\.|prof\s)/i.test(trimmed)) {
         return trimmed
     }
+
     return `dr. ${trimmed}`
 }
 
@@ -199,6 +210,7 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
     // F2: Panggil antrean berikutnya / panggil ulang antrean aktif
     if (e.key === 'F2') {
         e.preventDefault()
+
         if (currentCalling.value) {
             handleCall(currentCalling.value.appointment_id)
         } else if (waitingList.value.length > 0) {
@@ -210,6 +222,7 @@ const handleGlobalKeydown = (e: KeyboardEvent) => {
 onMounted(() => {
     window.addEventListener('keydown', handleGlobalKeydown)
     const savedAutoNext = localStorage.getItem('doctor_auto_next')
+
     if (savedAutoNext === 'true') {
         isAutoNext.value = true
     }
