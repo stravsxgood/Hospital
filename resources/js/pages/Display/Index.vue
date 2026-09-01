@@ -121,16 +121,21 @@ const currentVideo = computed(() => {
     if (activeVideos.value.length === 0) {
         return null;
     }
+
     const index = Math.min(currentVideoIndex.value, activeVideos.value.length - 1);
+
     return activeVideos.value[index] || null;
 });
 
 // Penanganan inisialisasi YouTube Iframe Player API
 const loadYouTubeIframeApi = () => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+return;
+}
 
     if ((window as any).YT && (window as any).YT.Player) {
         initYouTubePlayer();
+
         return;
     }
 
@@ -144,7 +149,10 @@ const loadYouTubeIframeApi = () => {
 
     const previousOnReady = (window as any).onYouTubeIframeAPIReady;
     (window as any).onYouTubeIframeAPIReady = () => {
-        if (typeof previousOnReady === 'function') previousOnReady();
+        if (typeof previousOnReady === 'function') {
+previousOnReady();
+}
+
         initYouTubePlayer();
     };
 };
@@ -159,12 +167,16 @@ const initYouTubePlayer = () => {
     }
 
     const container = document.getElementById('yt-player-target');
-    if (!container) return;
+
+    if (!container) {
+return;
+}
 
     if (ytPlayer && typeof ytPlayer.destroy === 'function') {
         try {
             ytPlayer.destroy();
         } catch {}
+
         ytPlayer = null;
     }
 
@@ -193,6 +205,7 @@ const initYouTubePlayer = () => {
                             event.target.unMute();
                             event.target.setVolume(isSpeaking.value ? 10 : 100);
                         }
+
                         event.target.playVideo();
                     } catch {}
                 },
@@ -214,7 +227,9 @@ const initYouTubePlayer = () => {
 
 // Penanganan transisi ke video berikutnya saat durasi video selesai (Auto-Cycle)
 const handleVideoEnded = () => {
-    if (activeVideos.value.length === 0) return;
+    if (activeVideos.value.length === 0) {
+return;
+}
 
     if (activeVideos.value.length === 1) {
         // Jika hanya ada 1 video, ulangi putar kembali dari detik awal
@@ -227,6 +242,7 @@ const handleVideoEnded = () => {
             videoPlayerRef.value.currentTime = 0;
             videoPlayerRef.value.play().catch(() => {});
         }
+
         return;
     }
 
@@ -242,12 +258,14 @@ const playCurrentVideo = () => {
             if (ytPlayer && typeof ytPlayer.loadVideoById === 'function') {
                 try {
                     ytPlayer.loadVideoById(currentVideo.value.youtube_id);
+
                     if (isVideoMuted.value) {
                         ytPlayer.mute();
                     } else {
                         ytPlayer.unMute();
                         ytPlayer.setVolume(isSpeaking.value ? 10 : 100);
                     }
+
                     ytPlayer.playVideo();
                 } catch {
                     initYouTubePlayer();
@@ -267,6 +285,7 @@ const handleWindowMessage = (event: MessageEvent) => {
     try {
         if (typeof event.data === 'string') {
             const data = JSON.parse(event.data);
+
             if (data.event === 'onStateChange' && data.info === 0) {
                 handleVideoEnded();
             }
@@ -284,6 +303,7 @@ const duckVideoAudio = () => {
     if (videoPlayerRef.value && !isVideoMuted.value) {
         videoPlayerRef.value.volume = 0.1;
     }
+
     // 2. Duck YouTube API Player ke volume 10%
     if (ytPlayer && typeof ytPlayer.setVolume === 'function' && !isVideoMuted.value) {
         try {
@@ -297,6 +317,7 @@ const restoreVideoAudio = () => {
     if (videoPlayerRef.value && !isVideoMuted.value) {
         videoPlayerRef.value.volume = 1.0;
     }
+
     // 2. Pulihkan volume YouTube API Player ke 100%
     if (ytPlayer && typeof ytPlayer.setVolume === 'function' && !isVideoMuted.value) {
         try {
@@ -308,10 +329,12 @@ const restoreVideoAudio = () => {
 // Toggle audio video mandiri untuk petugas klinik
 const toggleVideoSound = () => {
     isVideoMuted.value = !isVideoMuted.value;
+
     if (videoPlayerRef.value) {
         videoPlayerRef.value.muted = isVideoMuted.value;
         videoPlayerRef.value.volume = isSpeaking.value ? 0.1 : 1.0;
     }
+
     if (ytPlayer) {
         try {
             if (isVideoMuted.value) {
@@ -326,6 +349,7 @@ const toggleVideoSound = () => {
 
 const handleVideoError = () => {
     videoHasError.value = true;
+
     // Coba lompat ke video berikutnya jika terjadi corrupt/error load agar layar TV tidak macet
     if (activeVideos.value.length > 1) {
         setTimeout(() => {
@@ -353,6 +377,7 @@ const getAudioContext = (): AudioContext | null => {
         if (!audioCtx) {
             const AudioContextClass =
                 window.AudioContext || (window as any).webkitAudioContext;
+
             if (AudioContextClass) {
                 audioCtx = new AudioContextClass();
             }
@@ -370,7 +395,10 @@ const getAudioContext = (): AudioContext | null => {
 
 const playChime = async () => {
     const ctx = getAudioContext();
-    if (!ctx) return;
+
+    if (!ctx) {
+return;
+}
 
     const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
     let startTime = ctx.currentTime;
@@ -434,7 +462,10 @@ const speakAnnouncement = (text: string) => {
 const fetchLiveData = async () => {
     try {
         const res = await fetch('/display/live-data');
-        if (!res.ok) return;
+
+        if (!res.ok) {
+return;
+}
 
         const data: DisplayPayload = await res.json();
 
@@ -444,6 +475,7 @@ const fetchLiveData = async () => {
             data.latestCalled.queue_number !== displayData.value.latestCalled?.queue_number
         ) {
             displayData.value = data;
+
             if (isAudioEnabled.value) {
                 // Kecilkan volume video seketika saat nada panggilan berbunyi
                 duckVideoAudio();
@@ -465,6 +497,7 @@ const fetchLiveData = async () => {
 const toggleAudio = () => {
     getAudioContext();
     isAudioEnabled.value = !isAudioEnabled.value;
+
     if (isAudioEnabled.value) {
         playChime();
     }
@@ -510,15 +543,24 @@ onMounted(() => {
 });
 
 onBeforeUnmount(() => {
-    if (clockTimer) clearInterval(clockTimer);
-    if (pollingTimer) clearInterval(pollingTimer);
+    if (clockTimer) {
+clearInterval(clockTimer);
+}
+
+    if (pollingTimer) {
+clearInterval(pollingTimer);
+}
+
     window.removeEventListener('message', handleWindowMessage);
+
     if (ytPlayer && typeof ytPlayer.destroy === 'function') {
         try {
             ytPlayer.destroy();
         } catch {}
+
         ytPlayer = null;
     }
+
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
     }

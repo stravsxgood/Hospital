@@ -179,7 +179,10 @@ const fileSizeError = ref<string | null>(null);
 
 const extractedYoutubeId = computed(() => {
     const val = videoUploadForm.youtube_url.trim();
-    if (!val) return null;
+
+    if (!val) {
+return null;
+}
 
     const iframeMatch = val.match(/src=["']([^"']+)["']/i);
     const target = iframeMatch ? iframeMatch[1] : val;
@@ -187,8 +190,15 @@ const extractedYoutubeId = computed(() => {
     const match = target.match(
         /(?:youtube(?:-nocookie)?\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i,
     );
-    if (match) return match[1];
-    if (/^[a-zA-Z0-9_-]{11}$/.test(target)) return target;
+
+    if (match) {
+return match[1];
+}
+
+    if (/^[a-zA-Z0-9_-]{11}$/.test(target)) {
+return target;
+}
+
     return null;
 });
 
@@ -196,6 +206,7 @@ const livePreviewEmbedUrl = computed(() => {
     if (extractedYoutubeId.value) {
         return `https://www.youtube.com/embed/${extractedYoutubeId.value}`;
     }
+
     return null;
 });
 
@@ -203,24 +214,30 @@ const formatBytes = (bytes: number): string => {
     if (bytes >= 1048576) {
         return (bytes / 1048576).toFixed(2) + ' MB';
     }
+
     return (bytes / 1024).toFixed(1) + ' KB';
 };
 
 const handleFileSelected = (file: File | null) => {
     fileSizeError.value = null;
+
     if (!file) {
         localVideoFile.value = null;
         videoUploadForm.video_file = null;
+
         if (localVideoPreviewUrl.value) {
             URL.revokeObjectURL(localVideoPreviewUrl.value);
             localVideoPreviewUrl.value = null;
         }
+
         return;
     }
 
     const maxSize = 800 * 1024 * 1024; // 800 MB
+
     if (file.size > maxSize) {
         fileSizeError.value = `Ukuran file (${(file.size / (1024 * 1024)).toFixed(1)} MB) melebihi batas maksimal 800 MB.`;
+
         return;
     }
 
@@ -236,11 +253,13 @@ const handleFileSelected = (file: File | null) => {
     if (localVideoPreviewUrl.value) {
         URL.revokeObjectURL(localVideoPreviewUrl.value);
     }
+
     localVideoPreviewUrl.value = URL.createObjectURL(file);
 };
 
 const onFileInputChange = (event: Event) => {
     const target = event.target as HTMLInputElement;
+
     if (target.files && target.files.length > 0) {
         handleFileSelected(target.files[0]);
     }
@@ -248,8 +267,10 @@ const onFileInputChange = (event: Event) => {
 
 const onFileDrop = (event: DragEvent) => {
     isDraggingFile.value = false;
+
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
         const file = event.dataTransfer.files[0];
+
         if (file.type.startsWith('video/') || /\.(mp4|webm|ogg|mov|m4v)$/i.test(file.name)) {
             handleFileSelected(file);
         } else {
@@ -260,14 +281,20 @@ const onFileDrop = (event: DragEvent) => {
 
 const removeSelectedFile = () => {
     handleFileSelected(null);
+
     if (fileInputRef.value) {
         fileInputRef.value.value = '';
     }
 };
 
 const isSubmitDisabled = computed(() => {
-    if (videoUploadForm.processing) return true;
-    if (!videoUploadForm.title.trim()) return true;
+    if (videoUploadForm.processing) {
+return true;
+}
+
+    if (!videoUploadForm.title.trim()) {
+return true;
+}
 
     if (videoUploadForm.source_type === 'youtube') {
         return !videoUploadForm.youtube_url.trim() || !extractedYoutubeId.value;
@@ -307,7 +334,9 @@ const openDeleteVideoModal = (video: DisplayVideoItem) => {
 };
 
 const confirmDeleteVideo = () => {
-    if (!deleteTargetVideo.value) return;
+    if (!deleteTargetVideo.value) {
+return;
+}
 
     isDeletingVideo.value = true;
     router.delete(`/admin/display-videos/${deleteTargetVideo.value.id}`, {

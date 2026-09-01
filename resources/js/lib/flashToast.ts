@@ -5,7 +5,8 @@
  * di semua dashboard (Admin, Staff, Dokter, Pasien) serta mengekspor fungsi utilitas toast.
  */
 import { router } from '@inertiajs/vue3';
-import { toast, type ToastOptions, type ToastType } from 'vue3-toastify';
+import { toast   } from 'vue3-toastify';
+import type {ToastOptions, ToastType} from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
 export interface FlashPayload {
@@ -36,13 +37,19 @@ let lastShownTime = 0;
  * Mencegah pesan duplikat dalam jeda waktu yang sangat singkat (< 600ms)
  */
 function shouldShowToast(msg: string): boolean {
-    if (!msg || typeof msg !== 'string') return false;
+    if (!msg || typeof msg !== 'string') {
+return false;
+}
+
     const now = Date.now();
+
     if (lastShownMessage === msg && now - lastShownTime < 600) {
         return false;
     }
+
     lastShownMessage = msg;
     lastShownTime = now;
+
     return true;
 }
 
@@ -50,7 +57,9 @@ function shouldShowToast(msg: string): boolean {
  * Menampilkan pesan toast berdasarkan flash data
  */
 export function handleFlashMessage(flash?: FlashPayload): void {
-    if (!flash) return;
+    if (!flash) {
+return;
+}
 
     if (flash.success && typeof flash.success === 'string' && shouldShowToast(flash.success)) {
         toast.success(flash.success, defaultOptions);
@@ -82,8 +91,10 @@ export function initializeFlashToast(): void {
     // 2. Dengarkan jika terjadi error validasi / server error dari request Inertia
     router.on('error', (errors) => {
         const detail = (errors as any).detail?.errors;
+
         if (detail && typeof detail === 'object') {
             const firstError = Object.values(detail)[0];
+
             if (typeof firstError === 'string' && shouldShowToast(firstError)) {
                 toast.error(firstError, defaultOptions);
             }
