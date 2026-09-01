@@ -47,9 +47,18 @@ interface DisplayPayload {
     latestCalled: LatestCalled | null;
 }
 
+interface DisplayConfig {
+    hospital_name?: string;
+    scroll_speed?: number;
+    show_patient_name?: boolean;
+    theme?: string;
+    announcement_text?: string;
+}
+
 const props = defineProps<{
     initialData: DisplayPayload;
     currentDate: string;
+    displayConfig?: DisplayConfig;
 }>();
 
 const displayData = ref<DisplayPayload>(props.initialData);
@@ -497,7 +506,10 @@ onBeforeUnmount(() => {
                     <h1
                         class="font-['ivypresto-headline'] text-2xl leading-none font-bold tracking-tight text-[#000000] sm:text-3xl"
                     >
-                        Hospital Population
+                        {{
+                            displayConfig?.hospital_name ||
+                            'Hospital Population'
+                        }}
                     </h1>
                     <span
                         class="mt-1 block text-xs font-medium tracking-wide text-[#333333] sm:text-sm"

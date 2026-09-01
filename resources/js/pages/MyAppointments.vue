@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
 import {
-    AlertCircle,
     AlertTriangle,
-    ArrowLeft,
     Calendar,
     Clock,
     Loader2,
@@ -14,7 +12,6 @@ import {
 } from '@lucide/vue';
 import { motion } from 'motion-v';
 import { computed, ref } from 'vue';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import TicketSuccessModal from '@/components/TicketSuccessModal.vue';
 import type { TicketData } from '@/components/TicketSuccessModal.vue';
 import {
@@ -25,7 +22,21 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { home } from '@/routes';
+
+defineOptions({
+    layout: {
+        breadcrumbs: [
+            {
+                title: 'Layanan Pasien',
+                href: '/patient/dashboard',
+            },
+            {
+                title: 'Antrean Saya',
+                href: '/my-appointments',
+            },
+        ],
+    },
+});
 
 interface AppointmentItem {
     appointment_id: number;
@@ -212,50 +223,14 @@ const getStatusLabel = (status: string) => {
 </script>
 
 <template>
-    <Head title="Tiket Antrean Saya - Hospital Population" />
+    <Head title="My Appointments" />
 
     <div
         class="min-h-screen w-full space-y-6 bg-[#edede2] p-6 font-['Rubik'] text-[#000000] sm:p-8"
     >
-        <!-- Header -->
-        <motion.header
-            :initial="{ opacity: 0, y: -10 }"
-            :animate="{ opacity: 1, y: 0 }"
-            :transition="{ duration: 0.25, ease: 'easeOut' }"
-            class="sticky top-0 z-30 border-b border-[#333333]/10 bg-[#edede2]/80 backdrop-blur-md"
-        >
-            <div
-                class="mx-auto flex h-20 max-w-[1200px] items-center justify-between px-4 sm:px-6 lg:px-8"
-            >
-                <Link :href="home()" class="flex items-center gap-3">
-                    <motion.div
-                        :whileHover="{ scale: 1.05 }"
-                        :whileTap="{ scale: 0.95 }"
-                        class="flex h-11 w-11 items-center justify-center rounded-full bg-[#beedc0]"
-                    >
-                        <AppLogoIcon
-                            class="size-7 fill-current text-[#000000]"
-                        />
-                    </motion.div>
-                    <div>
-                        <span
-                            class="block font-['ivypresto-headline'] text-xl leading-tight font-bold tracking-tight text-[#000000]"
-                        >
-                            Hospital Population
-                        </span>
-                        <span
-                            class="block text-xs tracking-wide text-[#333333]"
-                        >
-                            Daftar Reservasi & Antrean Pasien
-                        </span>
-                    </div>
-                </Link>
-            </div>
-        </motion.header>
-
         <!-- Main Content -->
         <main
-            class="mx-auto max-w-[1000px] space-y-8 px-4 py-10 sm:px-6 md:py-14 lg:px-8"
+            class="mx-auto max-w-[1000px] space-y-8 px-4 py-6 sm:px-6 md:py-8 lg:px-8"
         >
             <motion.div
                 :initial="{ opacity: 0, y: 12 }"

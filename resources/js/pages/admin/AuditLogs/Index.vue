@@ -135,14 +135,14 @@ const formatDate = (iso: string) => {
             <motion.header
                 :initial="{ opacity: 0, y: -12 }"
                 :animate="{ opacity: 1, y: 0 }"
-                class="flex flex-col gap-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between sm:p-7"
+                class="flex flex-col gap-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none sm:flex-row sm:items-center sm:justify-between sm:p-7"
             >
                 <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                         <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-[#065f46] px-3 py-1 text-xs font-bold text-[#ffffff]"
+                            class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
                         >
-                            <ShieldCheck class="size-3.5" />
+                            <ShieldCheck class="size-3.5 text-[#000000]" />
                             <span>Kepatuhan UU PDP No. 27/2022</span>
                         </span>
                     </div>
@@ -151,7 +151,7 @@ const formatDate = (iso: string) => {
                     >
                         Audit Jejak Akses EMR Global
                     </h1>
-                    <p class="text-xs text-[#333333] sm:text-sm">
+                    <p class="text-xs text-[#333333] sm:text-sm font-['Rubik']">
                         Log audit otomatis tak-terubah (immutable) merekam
                         setiap inspeksi, pembuatan, modifikasi, dan ekspor data
                         klinis.
@@ -166,12 +166,12 @@ const formatDate = (iso: string) => {
                 <h2 id="audit-stats-overview-heading" class="sr-only">
                     Statistik Ringkas Log Audit
                 </h2>
-                <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+                <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 font-['Rubik']">
                     <div
-                        class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Total Event Akses
                         </div>
@@ -183,45 +183,45 @@ const formatDate = (iso: string) => {
                     </div>
 
                     <div
-                        class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Inspeksi Hari Ini
                         </div>
                         <div
-                            class="mt-1 font-mono text-2xl font-bold text-[#065f46]"
+                            class="mt-1 font-mono text-2xl font-bold text-[#000000]"
                         >
                             {{ stats.views_today }}
                         </div>
                     </div>
 
                     <div
-                        class="rounded-3xl border border-blue-200 bg-blue-50/60 p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-blue-900 uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             EMR Baru Hari Ini
                         </div>
                         <div
-                            class="mt-1 font-mono text-2xl font-bold text-blue-900"
+                            class="mt-1 font-mono text-2xl font-bold text-[#000000]"
                         >
                             {{ stats.creates_today }}
                         </div>
                     </div>
 
                     <div
-                        class="rounded-3xl border border-purple-200 bg-purple-50/60 p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-purple-900 uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Ekspor PDF Hari Ini
                         </div>
                         <div
-                            class="mt-1 font-mono text-2xl font-bold text-purple-900"
+                            class="mt-1 font-mono text-2xl font-bold text-[#000000]"
                         >
                             {{ stats.exports_today }}
                         </div>
@@ -239,7 +239,7 @@ const formatDate = (iso: string) => {
                 <!-- Filters Slot -->
                 <template #filters>
                     <div
-                        class="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-3 shadow-xs sm:flex-row sm:items-center sm:p-4"
+                        class="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-3 shadow-none sm:flex-row sm:items-center sm:p-4 font-['Rubik']"
                     >
                         <div class="relative flex-1">
                             <label for="audit-search-input" class="sr-only"
@@ -255,7 +255,7 @@ const formatDate = (iso: string) => {
                                 @keyup.enter="applyFilters"
                                 type="text"
                                 placeholder="Cari nama operator, pasien, NIK, atau IP address..."
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#edede2]/40 pr-4 pl-10 text-xs text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-sm"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] pr-4 pl-10 text-xs text-[#000000] placeholder-[#000000]/50 focus:border-[#000000] focus:outline-none sm:text-sm"
                             />
                         </div>
 
@@ -267,7 +267,7 @@ const formatDate = (iso: string) => {
                                 id="audit-action-filter"
                                 v-model="selectedAction"
                                 @change="applyFilters"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2 text-xs font-semibold text-[#000000] focus:border-[#065f46] focus:outline-none sm:w-auto"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2 text-xs font-medium text-[#000000] focus:border-[#000000] focus:outline-none sm:w-auto"
                             >
                                 <option value="">Semua Aktivitas</option>
                                 <option value="view">
@@ -291,7 +291,7 @@ const formatDate = (iso: string) => {
                                 type="button"
                                 @click="applyFilters"
                                 aria-label="Terapkan Filter Audit"
-                                class="min-h-[44px] shrink-0 rounded-xl bg-[#065f46] px-4 text-xs font-bold text-[#ffffff] hover:bg-[#054d38]"
+                                class="min-h-[44px] shrink-0 rounded-[40.5px] bg-[#000000] px-5 text-xs font-medium text-[#ffffff] hover:bg-[#1a1a1a]"
                             >
                                 Filter
                             </button>
@@ -319,7 +319,7 @@ const formatDate = (iso: string) => {
                 >
                     <!-- Waktu -->
                     <td
-                        class="px-4 py-3.5 font-mono text-xs text-[#000000]/80 sm:px-6"
+                        class="px-4 py-3.5 font-mono text-xs text-[#000000] sm:px-6"
                     >
                         {{ formatDate(log.created_at) }}
                     </td>
@@ -329,7 +329,7 @@ const formatDate = (iso: string) => {
                         <div class="font-bold text-[#000000]">
                             {{ log.user?.name || 'Sistem' }}
                         </div>
-                        <div class="text-[11px] text-[#000000]/70">
+                        <div class="text-[11px] text-[#333333]">
                             {{ log.user?.email || '-' }} ({{ log.user?.role }})
                         </div>
                     </td>
@@ -338,28 +338,28 @@ const formatDate = (iso: string) => {
                     <td class="px-4 py-3.5 text-center">
                         <span
                             v-if="log.action === 'view'"
-                            class="inline-flex items-center gap-1 rounded-full border border-blue-300 bg-blue-100 px-2.5 py-0.5 text-xs font-bold text-blue-900"
+                            class="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-100/70 px-3 py-0.5 text-xs font-bold text-blue-900"
                         >
                             <Eye class="size-3" />
                             <span>Lihat EMR</span>
                         </span>
                         <span
                             v-else-if="log.action === 'create'"
-                            class="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-900"
+                            class="inline-flex items-center gap-1 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3 py-0.5 text-xs font-bold text-[#000000]"
                         >
                             <FileCheck class="size-3" />
                             <span>Buat Rekam</span>
                         </span>
                         <span
                             v-else-if="log.action === 'export_pdf'"
-                            class="inline-flex items-center gap-1 rounded-full border border-purple-300 bg-purple-100 px-2.5 py-0.5 text-xs font-bold text-purple-900"
+                            class="inline-flex items-center gap-1 rounded-full border border-purple-200 bg-purple-100/70 px-3 py-0.5 text-xs font-bold text-purple-900"
                         >
                             <Download class="size-3" />
                             <span>Ekspor PDF</span>
                         </span>
                         <span
                             v-else
-                            class="inline-flex items-center gap-1 rounded-full border border-neutral-300 bg-neutral-100 px-2.5 py-0.5 text-xs font-bold text-neutral-800"
+                            class="inline-flex items-center gap-1 rounded-full border border-[#000000]/10 bg-[#edede2] px-3 py-0.5 text-xs font-medium text-[#333333]"
                         >
                             <span>{{ log.action }}</span>
                         </span>
@@ -371,22 +371,22 @@ const formatDate = (iso: string) => {
                             v-if="log.medical_record?.patient"
                             class="space-y-0.5"
                         >
-                            <div class="font-bold text-[#065f46]">
+                            <div class="font-bold text-[#000000]">
                                 {{ log.medical_record.patient.name }}
                             </div>
                             <div
-                                class="font-mono text-[11px] text-[#000000]/70"
+                                class="font-mono text-[11px] text-[#333333]"
                             >
                                 NIK: {{ log.medical_record.patient.resident_n }}
                             </div>
                         </div>
-                        <span v-else class="text-[#000000]/60"
+                        <span v-else class="text-[#333333]"
                             >EMR #{{ log.medical_record_id || '-' }}</span
                         >
                     </td>
 
                     <!-- IP Address -->
-                    <td class="px-4 py-3.5 font-mono text-xs text-[#000000]/80">
+                    <td class="px-4 py-3.5 font-mono text-xs text-[#000000]">
                         {{ log.ip_address }}
                     </td>
 
@@ -396,9 +396,9 @@ const formatDate = (iso: string) => {
                             type="button"
                             @click="inspectLog(log)"
                             :aria-label="`Inspeksi detail log audit #${log.audit_log_id}`"
-                            class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3 py-1.5 text-xs font-semibold text-[#000000] hover:bg-[#edede2]"
+                            class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-3.5 py-1.5 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
                         >
-                            <Eye class="size-3.5 text-[#065f46]" />
+                            <Eye class="size-3.5 text-[#000000]" />
                             <span>Detail</span>
                         </button>
                     </td>
@@ -408,7 +408,7 @@ const formatDate = (iso: string) => {
                 <template #pagination v-if="logs.total > 0">
                     <nav
                         aria-label="Navigasi Halaman Log Audit"
-                        class="flex flex-col items-center justify-between gap-3 text-xs text-[#000000]/70 sm:flex-row"
+                        class="flex flex-col items-center justify-between gap-3 text-xs text-[#333333] sm:flex-row"
                     >
                         <div>
                             Menampilkan halaman
@@ -431,10 +431,10 @@ const formatDate = (iso: string) => {
                                     :href="link.url"
                                     v-html="link.label"
                                     :aria-label="`Buka halaman ${link.label}`"
-                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 font-semibold transition-colors"
+                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 font-medium transition-colors"
                                     :class="
                                         link.active
-                                            ? 'bg-[#065f46] text-[#ffffff]'
+                                            ? 'bg-[#000000] text-[#ffffff]'
                                             : 'bg-[#edede2]/60 text-[#000000] hover:bg-[#edede2]'
                                     "
                                 />
@@ -468,7 +468,7 @@ const formatDate = (iso: string) => {
                 >
                     <h2
                         id="audit-inspect-title"
-                        class="font-serif text-base font-bold text-[#000000]"
+                        class="font-['ivypresto-headline'] text-base font-bold text-[#000000] sm:text-lg"
                     >
                         Metadata Log Audit #{{
                             selectedLogForInspect.audit_log_id
@@ -478,15 +478,15 @@ const formatDate = (iso: string) => {
                         type="button"
                         @click="selectedLogForInspect = null"
                         aria-label="Tutup Dialog Inspeksi Log"
-                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-[#000000]/70 hover:text-[#000000]"
+                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#000000]/70 hover:bg-[#edede2] hover:text-[#000000]"
                     >
                         <X class="size-5" />
                     </button>
                 </div>
 
-                <div class="flex-1 space-y-3 overflow-y-auto pr-1 text-xs">
+                <div class="flex-1 space-y-3 overflow-y-auto pr-1 text-xs font-['Rubik']">
                     <div
-                        class="space-y-1.5 rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-3.5"
+                        class="space-y-1.5 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-3.5"
                     >
                         <div>
                             <strong>Operator:</strong>
@@ -505,7 +505,7 @@ const formatDate = (iso: string) => {
                     </div>
 
                     <div>
-                        <div class="mb-1 font-bold text-[#000000]">
+                        <div class="mb-1 font-medium text-[#000000]">
                             Payload JSON Metadata:
                         </div>
                         <pre
@@ -526,7 +526,7 @@ const formatDate = (iso: string) => {
                     <button
                         type="button"
                         @click="selectedLogForInspect = null"
-                        class="min-h-[44px] rounded-xl bg-[#065f46] px-6 py-2 text-xs font-bold text-[#ffffff] hover:bg-[#054d38]"
+                        class="min-h-[44px] rounded-[40.5px] bg-[#000000] px-6 py-2 text-xs font-medium text-[#ffffff] hover:bg-[#1a1a1a]"
                     >
                         Tutup
                     </button>

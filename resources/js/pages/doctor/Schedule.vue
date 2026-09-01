@@ -645,14 +645,6 @@ const handleBookingSuccess = (ticket: TicketData | null) => {
                 <div
                     class="flex shrink-0 items-center gap-4 text-[11px] whitespace-nowrap text-white/80"
                 >
-                    <Link
-                        href="/display"
-                        class="inline-flex items-center gap-1 font-medium whitespace-nowrap transition-colors hover:text-[#beedc0]"
-                    >
-                        <Tv class="size-3 shrink-0 text-[#beedc0]" />
-                        <span class="whitespace-nowrap">Layar Antrean TV</span>
-                    </Link>
-                    <span class="text-[#333333]">|</span>
                     <span
                         class="inline-flex items-center gap-1 font-semibold whitespace-nowrap text-[#beedc0]"
                     >
@@ -919,22 +911,7 @@ const handleBookingSuccess = (ticket: TicketData | null) => {
                                         <div
                                             class="flex flex-col gap-2 border-t border-[#333333]/15 pt-3"
                                         >
-                                            <!-- Button Atas: Buka Monitor TV Antrean -->
-                                            <Link
-                                                href="/display"
-                                                @click="isMegaMenuOpen = false"
-                                                class="inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-[40.5px] bg-[#000000] px-3.5 py-2 text-[11px] font-semibold whitespace-nowrap text-white shadow-sm transition-colors hover:bg-[#333333]"
-                                            >
-                                                <Tv
-                                                    class="size-3.5 shrink-0 text-[#beedc0]"
-                                                />
-                                                <span class="whitespace-nowrap"
-                                                    >Buka Monitor TV
-                                                    Antrean</span
-                                                >
-                                            </Link>
-
-                                            <!-- Button Bawah: Panduan Pasien & BPJS -->
+                                            <!-- Button Panduan Pasien & BPJS -->
                                             <Link
                                                 href="/#faq"
                                                 @click="isMegaMenuOpen = false"
@@ -1255,24 +1232,7 @@ const handleBookingSuccess = (ticket: TicketData | null) => {
                                 />
                             </Link>
 
-                            <!-- Layar Antrean TV -->
-                            <Link
-                                href="/display"
-                                @click="closeMobileMenu"
-                                class="flex min-h-[44px] items-center justify-between rounded-xl px-3.5 py-2.5 text-xs font-bold text-[#000000] transition-colors hover:bg-[#edede2]"
-                            >
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="flex size-8 items-center justify-center rounded-lg bg-[#000000] text-[#beedc0]"
-                                    >
-                                        <Tv class="size-4" />
-                                    </div>
-                                    <span>Layar Antrean TV Monitor</span>
-                                </div>
-                                <ChevronRight
-                                    class="size-4 text-[#333333]/50"
-                                />
-                            </Link>
+
 
                             <!-- Lokasi Klinik -->
                             <Link

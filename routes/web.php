@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\AdminAuditLogController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminPoliController;
 use App\Http\Controllers\Admin\AdminScheduleController;
+use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\DisplayVideoController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\BillingController;
@@ -22,6 +24,7 @@ use App\Http\Controllers\MedicineController;
 use App\Http\Controllers\PatientDashboardController;
 use App\Http\Controllers\PatientStoryController;
 use App\Http\Controllers\PoliTeamController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicDisplayController;
 use App\Http\Controllers\SatuSehatController;
 use App\Http\Controllers\SpecializationController;
@@ -68,6 +71,12 @@ Route::get('/clinic-location', [ClinicLocationController::class, 'index'])->name
 // sehingga middleware EnsureTeamMembership men-trigger abort(403).
 // ────────────────────────────────────────────────────────────────────────────
 Route::middleware(['auth'])->group(function () {
+    // Manajemen Profil Pengguna
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     // Dashboard Khusus Pasien
     Route::get('/patient/dashboard', [PatientDashboardController::class, 'index'])->name('patient.dashboard');
 
@@ -165,7 +174,7 @@ Route::middleware(['auth'])->group(function () {
     // =========================================================================
     // SUPER ADMIN GOVERNANCE & OPERATIONAL MANAGEMENT
     // =========================================================================
-    Route::middleware(['role:super-admin,admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::middleware(['role:super-admin|admin|Super Admin|Admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
         // Manajemen Pengguna & Provisioning Tenaga Medis
@@ -181,6 +190,15 @@ Route::middleware(['auth'])->group(function () {
 
         // Global Regulatory Audit Logs
         Route::get('/audit-logs', [AdminAuditLogController::class, 'index'])->name('audit-logs.index');
+
+        // Pengaturan Sistem Dinamis (DisplayBoard, Operasional)
+        Route::get('/settings', [AdminSettingController::class, 'index'])->name('settings.index');
+        Route::put('/settings', [AdminSettingController::class, 'update'])->name('settings.update');
+
+        // Manajemen Playlist Video Display TV Antrean
+        Route::post('/display-videos', [DisplayVideoController::class, 'store'])->name('display-videos.store');
+        Route::patch('/display-videos/{displayVideo}/toggle', [DisplayVideoController::class, 'toggle'])->name('display-videos.toggle');
+        Route::delete('/display-videos/{displayVideo}', [DisplayVideoController::class, 'destroy'])->name('display-videos.destroy');
     });
 });
 

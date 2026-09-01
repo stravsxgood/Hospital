@@ -139,18 +139,6 @@ parameters:
 			path: app/Http/Controllers/Admin/AdminNurseController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Admin/AdminUserController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$status\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Admin/AdminUserController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Admin\\DoctorScheduleController\:\:destroy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -187,28 +175,10 @@ parameters:
 			path: app/Http/Controllers/Api/AuthController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
-			identifier: property.notFound
-			count: 4
-			path: app/Http/Controllers/Api/DoctorConsultationController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/Api/NurseQueueController.php
-
-		-
 			message: '#^Parameter \#1 \$string of function str_pad expects string, int\<1, max\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: app/Http/Controllers/Api/NurseQueueController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/Api/PatientRegistrationController.php
 
 		-
 			message: '#^Method App\\Http\\Controllers\\Api\\PaymentController\:\:createOnlinePayment\(\) has no return type specified\.$#'
@@ -237,23 +207,11 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 3
+			count: 2
 			path: app/Http/Controllers/AppointmentController.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_poli\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/AppointmentController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
-			identifier: property.notFound
-			count: 5
-			path: app/Http/Controllers/AppointmentController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$resident_n\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Http/Controllers/AppointmentController.php
@@ -295,12 +253,6 @@ parameters:
 			path: app/Http/Controllers/BillingController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/BillingController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$prescription\.$#'
 			identifier: property.notFound
 			count: 1
@@ -331,30 +283,6 @@ parameters:
 			path: app/Http/Controllers/BillingController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
-			identifier: property.notFound
-			count: 3
-			path: app/Http/Controllers/CashierShiftController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:currentOpenShift\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: app/Http/Controllers/CashierShiftController.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: app/Http/Controllers/CashierShiftController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Controllers/ClinicalAssistantController.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\Appointment\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Appointment\>\:\:\$doctorSchedule\.$#'
 			identifier: property.notFound
 			count: 1
@@ -380,12 +308,6 @@ parameters:
 
 		-
 			message: '#^Access to an undefined property App\\Models\\Medicine\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Medicine\>\:\:\$unit\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/DoctorConsultationController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Http/Controllers/DoctorConsultationController.php
@@ -429,13 +351,13 @@ parameters:
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: app/Http/Controllers/DoctorQueueController.php
 
 		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: app/Http/Controllers/DoctorQueueController.php
 
 		-
@@ -463,18 +385,6 @@ parameters:
 			path: app/Http/Controllers/DoctorQueueController.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
-			identifier: property.notFound
-			count: 7
-			path: app/Http/Controllers/DoctorSupervisionController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
-			identifier: property.notFound
-			count: 10
-			path: app/Http/Controllers/KoasLogbookController.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$medical_record_id\.$#'
 			identifier: property.notFound
 			count: 1
@@ -491,18 +401,6 @@ parameters:
 			identifier: encapsedStringPart.nonString
 			count: 2
 			path: app/Http/Controllers/MedicineController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/PatientDashboardController.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Controllers/PatientDashboardController.php
 
 		-
 			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
@@ -745,74 +643,8 @@ parameters:
 			path: app/Http/Middleware/EnsureUserHasRole.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$birthday_date\.$#'
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name_specialization\.$#'
 			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$gender\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
-			identifier: property.notFound
-			count: 2
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$nurse_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$registration_number\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$resident_n\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$sip_number\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$specialization\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$type\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isKoas\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Middleware/HandleInertiaRequests.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: app/Http/Middleware/HandleInertiaRequests.php
 
@@ -829,22 +661,10 @@ parameters:
 			path: app/Http/Requests/CheckClinicalSafetyRequest.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Requests/CloseCashierShiftRequest.php
-
-		-
 			message: '#^Method App\\Http\\Requests\\CloseCashierShiftRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Requests/CloseCashierShiftRequest.php
-
-		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Http/Requests/OpenCashierShiftRequest.php
 
 		-
 			message: '#^Method App\\Http\\Requests\\OpenCashierShiftRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
@@ -881,12 +701,6 @@ parameters:
 			identifier: missingType.iterableValue
 			count: 1
 			path: app/Http/Requests/StoreClinicalLogbookRequest.php
-
-		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: app/Http/Requests/StoreRegistrationRequest.php
 
 		-
 			message: '#^Cannot call method isoFormat\(\) on Carbon\\Carbon\|string\.$#'
@@ -2047,12 +1861,6 @@ parameters:
 			path: app/Models/User.php
 
 		-
-			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:isTetap\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: app/Providers/AppServiceProvider.php
-
-		-
 			message: '#^Method App\\Services\\AuditLogService\:\:logAccess\(\) has parameter \$payloadDiff with no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
 			count: 1
@@ -2299,13 +2107,7 @@ parameters:
 			path: routes/channels.php
 
 		-
-			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$doctor_id\.$#'
-			identifier: property.notFound
-			count: 1
-			path: routes/channels.php
-
-		-
 			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$patient_id\.$#'
 			identifier: property.notFound
-			count: 2
+			count: 1
 			path: routes/channels.php

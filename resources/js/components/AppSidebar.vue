@@ -50,27 +50,71 @@ declare const route: any;
 const page = usePage();
 const user = computed(() => page.props.auth?.user);
 
-const isNurse = computed(() => Boolean(user.value?.nurse));
+const isNurse = computed(
+    () =>
+        Boolean(user.value?.nurse) ||
+        [
+            'nurse',
+            'perawat',
+            'perawat-tetap',
+            'perawat-koas',
+            'koas',
+            'koas-intern',
+            'staff-pekerja',
+            'kasir',
+            'staff',
+        ].includes(
+            String(user.value?.role || '')
+                .toLowerCase()
+                .trim(),
+        ),
+);
 const isNurseTetap = computed(
     () =>
         isNurse.value &&
         (Boolean(user.value?.nurse?.is_tetap) ||
-            user.value?.nurse?.type === 'tetap'),
+            user.value?.nurse?.type === 'tetap' ||
+            ['perawat-tetap', 'staff-pekerja', 'kasir'].includes(
+                String(user.value?.role || '')
+                    .toLowerCase()
+                    .trim(),
+            )),
 );
 const isNurseKoas = computed(
     () =>
         isNurse.value &&
         (Boolean(user.value?.nurse?.is_koas) ||
-            user.value?.nurse?.type === 'koas'),
+            user.value?.nurse?.type === 'koas' ||
+            ['perawat-koas', 'koas', 'koas-intern'].includes(
+                String(user.value?.role || '')
+                    .toLowerCase()
+                    .trim(),
+            )),
 );
 const isDoctor = computed(
     () =>
-        user.value?.role === 'doctor' ||
+        ['doctor', 'dpjp-doctor', 'dokter', 'dokter dpjp'].includes(
+            String(user.value?.role || '')
+                .toLowerCase()
+                .trim(),
+        ) ||
         Boolean(user.value?.is_doctor) ||
         Boolean(user.value?.doctor),
 );
 const isAdmin = computed(
-    () => user.value?.role === 'admin' || user.value?.role === 'super-admin',
+    () =>
+        Boolean((user.value as any)?.is_admin) ||
+        [
+            'admin',
+            'super-admin',
+            'super admin',
+            'super_admin',
+            'administrator',
+        ].includes(
+            String(user.value?.role || '')
+                .toLowerCase()
+                .trim(),
+        ),
 );
 const isStaffOrDoctor = computed(
     () => isNurse.value || isDoctor.value || isAdmin.value,

@@ -92,16 +92,75 @@ const submit = async () => {
             }
 
             // 2. Arahkan rute berdasarkan respon redirect_to atau role
-            const userRole = response.data.data?.user?.role;
-            const isStaffOrDoctor =
-                ['doctor', 'nurse', 'admin'].includes(userRole) ||
-                Boolean(response.data.data?.user?.is_doctor) ||
+            const userObj =
+                response.data.data?.user || response.data?.user || {};
+            const userRole = String(userObj.role || '')
+                .toLowerCase()
+                .trim();
+            const rawRole = String(userObj.raw_role || '')
+                .toLowerCase()
+                .trim();
+            const rolesList: string[] = (userObj.roles || []).map((r: any) =>
+                typeof r === 'string'
+                    ? r.toLowerCase().trim()
+                    : String(r.name || '')
+                          .toLowerCase()
+                          .trim(),
+            );
+
+            const adminKeywords = [
+                'admin',
+                'super-admin',
+                'super admin',
+                'super_admin',
+                'administrator',
+            ];
+            const isAdmin =
+                Boolean(userObj.is_admin) ||
+                adminKeywords.includes(userRole) ||
+                adminKeywords.includes(rawRole) ||
+                rolesList.some((r) => adminKeywords.includes(r));
+
+            const isDoctor =
+                Boolean(userObj.is_doctor) ||
                 Boolean(response.data.data?.profile?.doctor_id) ||
-                Boolean(response.data.data?.profile?.nurse_id);
+                ['doctor', 'dpjp-doctor', 'dokter', 'dokter dpjp'].includes(
+                    userRole,
+                ) ||
+                rolesList.some((r) =>
+                    ['doctor', 'dpjp-doctor', 'dokter'].includes(r),
+                );
+
+            const isNurse =
+                Boolean(response.data.data?.profile?.nurse_id) ||
+                [
+                    'nurse',
+                    'perawat',
+                    'perawat-tetap',
+                    'perawat-koas',
+                    'koas',
+                    'koas-intern',
+                    'staff-pekerja',
+                    'kasir',
+                    'staff',
+                ].includes(userRole) ||
+                rolesList.some((r) =>
+                    [
+                        'nurse',
+                        'perawat',
+                        'kasir',
+                        'staff-pekerja',
+                        'koas-intern',
+                    ].includes(r),
+                );
 
             const targetUrl =
                 response.data.redirect_to ||
-                (isStaffOrDoctor ? '/staff' : '/patient/dashboard');
+                (isAdmin
+                    ? '/admin/dashboard'
+                    : isDoctor || isNurse
+                      ? '/staff'
+                      : '/patient/dashboard');
 
             router.visit(targetUrl);
         }
@@ -136,17 +195,67 @@ const handleLoginSuccess = (response: any) => {
         return;
     }
 
-    // Atau cek manual berdasarkan role
-    const userRole =
-        response.data?.data?.user?.role || response.data?.user?.role;
-    const isStaffOrDoctor =
-        ['doctor', 'nurse', 'admin'].includes(userRole) ||
-        Boolean(response.data?.data?.user?.is_doctor) ||
-        Boolean(response.data?.user?.is_doctor) ||
-        Boolean(response.data?.data?.profile?.doctor_id) ||
-        Boolean(response.data?.data?.profile?.nurse_id);
+    // Cek hierarki role pengguna
+    const userObj = response.data?.data?.user || response.data?.user || {};
+    const userRole = String(userObj.role || '')
+        .toLowerCase()
+        .trim();
+    const rawRole = String(userObj.raw_role || '')
+        .toLowerCase()
+        .trim();
+    const rolesList: string[] = (userObj.roles || []).map((r: any) =>
+        typeof r === 'string'
+            ? r.toLowerCase().trim()
+            : String(r.name || '')
+                  .toLowerCase()
+                  .trim(),
+    );
 
-    if (isStaffOrDoctor) {
+    const adminKeywords = [
+        'admin',
+        'super-admin',
+        'super admin',
+        'super_admin',
+        'administrator',
+    ];
+    const isAdmin =
+        Boolean(userObj.is_admin) ||
+        adminKeywords.includes(userRole) ||
+        adminKeywords.includes(rawRole) ||
+        rolesList.some((r) => adminKeywords.includes(r));
+
+    const isDoctor =
+        Boolean(userObj.is_doctor) ||
+        Boolean(response.data?.data?.profile?.doctor_id) ||
+        ['doctor', 'dpjp-doctor', 'dokter', 'dokter dpjp'].includes(userRole) ||
+        rolesList.some((r) => ['doctor', 'dpjp-doctor', 'dokter'].includes(r));
+
+    const isNurse =
+        Boolean(response.data?.data?.profile?.nurse_id) ||
+        [
+            'nurse',
+            'perawat',
+            'perawat-tetap',
+            'perawat-koas',
+            'koas',
+            'koas-intern',
+            'staff-pekerja',
+            'kasir',
+            'staff',
+        ].includes(userRole) ||
+        rolesList.some((r) =>
+            [
+                'nurse',
+                'perawat',
+                'kasir',
+                'staff-pekerja',
+                'koas-intern',
+            ].includes(r),
+        );
+
+    if (isAdmin) {
+        router.visit('/admin/dashboard');
+    } else if (isDoctor || isNurse) {
         router.visit('/staff');
     } else {
         router.visit('/patient/dashboard');

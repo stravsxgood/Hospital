@@ -537,23 +537,33 @@ onBeforeUnmount(() => {
         });
     } catch (e) {}
 });
+defineOptions({
+    layout: {
+        breadcrumbs: [
+            {
+                title: 'Panel Staf & Medis',
+                href: '/staff',
+            },
+        ],
+    },
+});
 </script>
 
 <template>
     <Head title="Pusat Komando Operasional Medis - Hospital Population" />
 
     <div
-        class="min-h-screen bg-[#edede2] px-4 py-6 font-['Rubik'] text-[#000000] sm:px-6 lg:px-8"
+        class="min-h-screen bg-[#edede2] p-4 font-['Rubik'] text-[#000000] sm:p-6 lg:p-8"
     >
         <div class="mx-auto max-w-7xl space-y-6">
             <!-- ═══════════════════════════════════════════════════════════════
                  1. Dynamic Hero Banner & Role Context
                  ═══════════════════════════════════════════════════════════════ -->
-            <motion.div
-                :initial="{ opacity: 0, y: -15 }"
+            <motion.header
+                :initial="{ opacity: 0, y: -12 }"
                 :animate="{ opacity: 1, y: 0 }"
                 :transition="{ duration: 0.28, ease: 'easeOut' }"
-                class="relative overflow-hidden rounded-[10px] border border-[#333333]/15 bg-[#fffff3] p-6 shadow-sm sm:p-8"
+                class="relative overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-6 shadow-none sm:p-8"
             >
                 <div
                     class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between"
@@ -564,27 +574,27 @@ onBeforeUnmount(() => {
                             <!-- Badge Role Aktif -->
                             <span
                                 v-if="isDoctor"
-                                class="inline-flex items-center gap-1.5 rounded-full bg-[#065f46] px-3 py-1 text-xs font-bold text-[#ffffff]"
+                                class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3.5 py-1 text-xs font-bold text-[#000000]"
                             >
-                                <Stethoscope class="size-3.5" />
+                                <Stethoscope class="size-3.5 text-[#000000]" />
                                 <span>Dokter Spesialis</span>
                             </span>
                             <span
                                 v-else-if="isNurseTetap"
-                                class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0] px-3 py-1 text-xs font-bold text-[#065f46]"
+                                class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3.5 py-1 text-xs font-bold text-[#000000]"
                             >
-                                <ShieldCheck class="size-3.5" />
+                                <ShieldCheck class="size-3.5 text-[#000000]" />
                                 <span>Staf & Perawat Tetap (Pekerja)</span>
                             </span>
                             <span
                                 v-else-if="isNurseKoas"
-                                class="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-800"
+                                class="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-100/80 px-3.5 py-1 text-xs font-bold text-amber-900"
                             >
-                                <HeartPulse class="size-3.5" />
+                                <HeartPulse class="size-3.5 text-amber-900" />
                                 <span>Dokter Muda / Koas</span>
                             </span>
 
-                            <span class="text-xs font-medium text-[#333333]/70">
+                            <span class="text-xs font-medium text-[#333333]">
                                 {{ currentDate }}
                             </span>
                         </div>
@@ -602,7 +612,7 @@ onBeforeUnmount(() => {
                         </h1>
 
                         <p
-                            class="max-w-2xl text-xs leading-relaxed text-[#333333]/80 sm:text-sm"
+                            class="max-w-2xl text-xs leading-relaxed text-[#333333] sm:text-sm"
                         >
                             <template v-if="isDoctor">
                                 Kelola konsultasi medis pasien, periksa riwayat
@@ -622,8 +632,8 @@ onBeforeUnmount(() => {
                         <!-- CTA Dokter: Masuk ke Ruang Pemeriksaan EMR -->
                         <motion.div
                             v-if="isDoctor"
-                            :whileHover="{ scale: 1.03, y: -2 }"
-                            :whileTap="{ scale: 0.97 }"
+                            :whileHover="{ scale: 1.02 }"
+                            :whileTap="{ scale: 0.98 }"
                             class="w-full sm:w-auto"
                         >
                             <Link
@@ -632,7 +642,7 @@ onBeforeUnmount(() => {
                                         ? `/doctor/queue?schedule_id=${doctorActiveClinic.schedule_id}`
                                         : '/doctor/queue'
                                 "
-                                class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-bold text-[#ffffff] shadow-md transition-all hover:bg-[#333333] sm:w-auto sm:text-sm"
+                                class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-all hover:bg-[#1a1a1a] sm:w-auto sm:text-sm"
                             >
                                 <Activity class="size-4 text-[#beedc0]" />
                                 <span>Papan Konsultasi Pasien</span>
@@ -643,13 +653,13 @@ onBeforeUnmount(() => {
                         <!-- CTA Staf: Inventori Obat Farmasi -->
                         <motion.div
                             v-if="isNurseTetap || isAdmin"
-                            :whileHover="{ scale: 1.03, y: -2 }"
-                            :whileTap="{ scale: 0.97 }"
+                            :whileHover="{ scale: 1.02 }"
+                            :whileTap="{ scale: 0.98 }"
                             class="w-full sm:w-auto"
                         >
                             <Link
                                 href="/staff/medicines"
-                                class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] bg-[#065f46] px-5 py-2.5 text-xs font-bold text-[#ffffff] shadow-sm transition-all hover:bg-[#054d38] sm:w-auto sm:text-sm"
+                                class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-5 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-all hover:bg-[#1a1a1a] sm:w-auto sm:text-sm"
                             >
                                 <Pill class="size-4 text-[#beedc0]" />
                                 <span>Inventori Obat</span>
@@ -660,15 +670,15 @@ onBeforeUnmount(() => {
                         <!-- CTA Staf: Kasir & Billing POS -->
                         <motion.div
                             v-if="isNurseTetap || isAdmin"
-                            :whileHover="{ scale: 1.03, y: -2 }"
-                            :whileTap="{ scale: 0.97 }"
+                            :whileHover="{ scale: 1.02 }"
+                            :whileTap="{ scale: 0.98 }"
                             class="w-full sm:w-auto"
                         >
                             <Link
                                 href="/staff/billing"
-                                class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] border border-[#333333]/20 bg-[#fffff3] px-5 py-2.5 text-xs font-bold text-[#000000] shadow-sm transition-all hover:bg-[#edede2] sm:w-auto sm:text-sm"
+                                class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-5 py-2.5 text-xs font-medium text-[#000000] shadow-none transition-all hover:bg-[#edede2] sm:w-auto sm:text-sm"
                             >
-                                <Receipt class="size-4 text-[#065f46]" />
+                                <Receipt class="size-4 text-[#000000]" />
                                 <span>Kasir & Billing (POS)</span>
                                 <ArrowUpRight class="size-3.5 text-[#000000]" />
                             </Link>
@@ -676,15 +686,15 @@ onBeforeUnmount(() => {
 
                         <!-- CTA Publik Layar TV -->
                         <motion.div
-                            :whileHover="{ scale: 1.03, y: -2 }"
-                            :whileTap="{ scale: 0.97 }"
+                            :whileHover="{ scale: 1.02 }"
+                            :whileTap="{ scale: 0.98 }"
                         >
                             <Link
                                 href="/display"
                                 target="_blank"
-                                class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] border border-[#333333]/15 bg-[#edede2]/60 px-4 py-2.5 text-xs font-bold text-[#333333] transition-all hover:bg-[#edede2] hover:text-[#000000]"
+                                class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-4 py-2.5 text-xs font-medium text-[#000000] shadow-none transition-all hover:bg-[#edede2]"
                             >
-                                <Tv class="size-4 text-[#065f46]" />
+                                <Tv class="size-4 text-[#000000]" />
                                 <span class="hidden sm:inline"
                                     >Layar TV Ruang Tunggu</span
                                 >
@@ -699,21 +709,21 @@ onBeforeUnmount(() => {
                             :whileTap="{ scale: 0.95 }"
                             @click="handleRefresh"
                             :disabled="isRefreshing"
-                            class="inline-flex size-11 min-h-[44px] items-center justify-center rounded-full border border-[#333333]/15 bg-[#fffff3] text-[#333333] transition-all hover:bg-[#edede2] hover:text-[#000000]"
+                            class="inline-flex size-11 min-h-[44px] items-center justify-center rounded-full border border-[#000000]/15 bg-[#fffff3] text-[#000000] shadow-none transition-all hover:bg-[#edede2]"
                             title="Segarkan Data Dashboard"
                         >
                             <RefreshCw
                                 class="size-4"
                                 :class="
                                     isRefreshing
-                                        ? 'animate-spin text-[#065f46]'
+                                        ? 'animate-spin text-[#000000]'
                                         : ''
                                 "
                             />
                         </motion.button>
                     </div>
                 </div>
-            </motion.div>
+            </motion.header>
 
             <!-- ═══════════════════════════════════════════════════════════════
                  2. Grid Metrik KPI Operasional & Farmasi
@@ -724,25 +734,25 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.22, delay: 0.05 }"
-                    class="rounded-[10px] border border-[#333333]/12 bg-[#fffff3] p-4 shadow-sm"
+                    class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none sm:p-5"
                 >
                     <div class="flex items-center justify-between">
                         <span
-                            class="text-[11px] font-semibold tracking-wider text-[#333333]/70 uppercase"
+                            class="text-[11px] font-semibold tracking-wider text-[#333333] uppercase"
                             >Pasien Hari Ini</span
                         >
                         <div
-                            class="flex size-7 items-center justify-center rounded-full bg-[#beedc0]/40 text-[#065f46]"
+                            class="flex size-8 items-center justify-center rounded-full bg-[#beedc0] text-[#000000]"
                         >
-                            <Users class="size-3.5" />
+                            <Users class="size-4" />
                         </div>
                     </div>
                     <div
-                        class="mt-2 font-['ivypresto-headline'] text-2xl font-bold text-[#000000]"
+                        class="mt-2 font-mono text-2xl font-bold text-[#000000]"
                     >
                         {{ stats.total }}
                     </div>
-                    <div class="mt-1 text-[11px] text-[#333333]/70">
+                    <div class="mt-1 text-[11px] text-[#333333]">
                         {{ stats.confirmed ?? 0 }} hadir / siap periksa
                     </div>
                 </motion.div>
@@ -752,11 +762,11 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.22, delay: 0.08 }"
-                    class="rounded-[10px] border p-4 shadow-sm transition-all"
+                    class="rounded-3xl border p-4 shadow-none transition-all sm:p-5"
                     :class="
                         (stats.waiting_confirmation ?? 0) > 0
-                            ? 'border-amber-300 bg-amber-50/60'
-                            : 'border-[#333333]/12 bg-[#fffff3]'
+                            ? 'border-amber-200 bg-amber-50/70'
+                            : 'border-[#000000]/10 bg-[#fffff3]'
                     "
                 >
                     <div class="flex items-center justify-between">
@@ -765,27 +775,27 @@ onBeforeUnmount(() => {
                             :class="
                                 (stats.waiting_confirmation ?? 0) > 0
                                     ? 'text-amber-900'
-                                    : 'text-[#333333]/70'
+                                    : 'text-[#333333]'
                             "
                         >
                             Perlu Check-in
                         </span>
                         <div
-                            class="flex size-7 items-center justify-center rounded-full"
+                            class="flex size-8 items-center justify-center rounded-full"
                             :class="
                                 (stats.waiting_confirmation ?? 0) > 0
-                                    ? 'bg-amber-100 text-amber-800'
-                                    : 'bg-[#beedc0]/40 text-[#065f46]'
+                                    ? 'bg-amber-200 text-amber-900'
+                                    : 'bg-[#beedc0] text-[#000000]'
                             "
                         >
-                            <UserCheck class="size-3.5" />
+                            <UserCheck class="size-4" />
                         </div>
                     </div>
                     <div
-                        class="mt-2 font-['ivypresto-headline'] text-2xl font-bold"
+                        class="mt-2 font-mono text-2xl font-bold"
                         :class="
                             (stats.waiting_confirmation ?? 0) > 0
-                                ? 'text-amber-800'
+                                ? 'text-amber-900'
                                 : 'text-[#000000]'
                         "
                     >
@@ -795,8 +805,8 @@ onBeforeUnmount(() => {
                         class="mt-1 text-[11px]"
                         :class="
                             (stats.waiting_confirmation ?? 0) > 0
-                                ? 'font-medium text-amber-800'
-                                : 'text-[#333333]/70'
+                                ? 'font-medium text-amber-900'
+                                : 'text-[#333333]'
                         "
                     >
                         Belum verifikasi meja depan
@@ -808,11 +818,11 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.22, delay: 0.11 }"
-                    class="rounded-[10px] border p-4 shadow-sm transition-all"
+                    class="rounded-3xl border p-4 shadow-none transition-all sm:p-5"
                     :class="
                         (stats.pending_prescriptions ?? 0) > 0
-                            ? 'border-blue-300 bg-blue-50/60'
-                            : 'border-[#333333]/12 bg-[#fffff3]'
+                            ? 'border-blue-200 bg-blue-50/70'
+                            : 'border-[#000000]/10 bg-[#fffff3]'
                     "
                 >
                     <div class="flex items-center justify-between">
@@ -821,27 +831,27 @@ onBeforeUnmount(() => {
                             :class="
                                 (stats.pending_prescriptions ?? 0) > 0
                                     ? 'text-blue-900'
-                                    : 'text-[#333333]/70'
+                                    : 'text-[#333333]'
                             "
                         >
                             Resep Farmasi
                         </span>
                         <div
-                            class="flex size-7 items-center justify-center rounded-full"
+                            class="flex size-8 items-center justify-center rounded-full"
                             :class="
                                 (stats.pending_prescriptions ?? 0) > 0
-                                    ? 'bg-blue-100 text-blue-800'
-                                    : 'bg-[#beedc0]/40 text-[#065f46]'
+                                    ? 'bg-blue-200 text-blue-900'
+                                    : 'bg-[#beedc0] text-[#000000]'
                             "
                         >
-                            <Pill class="size-3.5" />
+                            <Pill class="size-4" />
                         </div>
                     </div>
                     <div
-                        class="mt-2 font-['ivypresto-headline'] text-2xl font-bold"
+                        class="mt-2 font-mono text-2xl font-bold"
                         :class="
                             (stats.pending_prescriptions ?? 0) > 0
-                                ? 'text-blue-800'
+                                ? 'text-blue-900'
                                 : 'text-[#000000]'
                         "
                     >
@@ -851,8 +861,8 @@ onBeforeUnmount(() => {
                         class="mt-1 text-[11px]"
                         :class="
                             (stats.pending_prescriptions ?? 0) > 0
-                                ? 'font-medium text-blue-800'
-                                : 'text-[#333333]/70'
+                                ? 'font-medium text-blue-900'
+                                : 'text-[#333333]'
                         "
                     >
                         Resep menunggu diracik
@@ -864,13 +874,13 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.22, delay: 0.14 }"
-                    class="rounded-[10px] border p-4 shadow-sm transition-all"
+                    class="rounded-3xl border p-4 shadow-none transition-all sm:p-5"
                     :class="
                         (stats.out_of_stock_medicines ?? 0) +
                             (stats.low_stock_medicines ?? 0) >
                         0
-                            ? 'border-rose-300 bg-rose-50/60'
-                            : 'border-[#333333]/12 bg-[#fffff3]'
+                            ? 'border-rose-200 bg-rose-50/70'
+                            : 'border-[#000000]/10 bg-[#fffff3]'
                     "
                 >
                     <div class="flex items-center justify-between">
@@ -881,31 +891,31 @@ onBeforeUnmount(() => {
                                     (stats.low_stock_medicines ?? 0) >
                                 0
                                     ? 'text-rose-900'
-                                    : 'text-[#333333]/70'
+                                    : 'text-[#333333]'
                             "
                         >
                             Obat Kritis
                         </span>
                         <div
-                            class="flex size-7 items-center justify-center rounded-full"
+                            class="flex size-8 items-center justify-center rounded-full"
                             :class="
                                 (stats.out_of_stock_medicines ?? 0) +
                                     (stats.low_stock_medicines ?? 0) >
                                 0
-                                    ? 'bg-rose-100 text-rose-700'
-                                    : 'bg-[#beedc0]/40 text-[#065f46]'
+                                    ? 'bg-rose-200 text-rose-900'
+                                    : 'bg-[#beedc0] text-[#000000]'
                             "
                         >
-                            <ShieldAlert class="size-3.5" />
+                            <ShieldAlert class="size-4" />
                         </div>
                     </div>
                     <div
-                        class="mt-2 font-['ivypresto-headline'] text-2xl font-bold"
+                        class="mt-2 font-mono text-2xl font-bold"
                         :class="
                             (stats.out_of_stock_medicines ?? 0) +
                                 (stats.low_stock_medicines ?? 0) >
                             0
-                                ? 'text-rose-700'
+                                ? 'text-rose-900'
                                 : 'text-[#000000]'
                         "
                     >
@@ -920,8 +930,8 @@ onBeforeUnmount(() => {
                             (stats.out_of_stock_medicines ?? 0) +
                                 (stats.low_stock_medicines ?? 0) >
                             0
-                                ? 'font-medium text-rose-700'
-                                : 'text-[#333333]/70'
+                                ? 'font-medium text-rose-900'
+                                : 'text-[#333333]'
                         "
                     >
                         {{ stats.out_of_stock_medicines ?? 0 }} kosong ·
@@ -934,25 +944,25 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.22, delay: 0.17 }"
-                    class="rounded-[10px] border border-[#333333]/12 bg-[#fffff3] p-4 shadow-sm"
+                    class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none sm:p-5"
                 >
                     <div class="flex items-center justify-between">
                         <span
-                            class="text-[11px] font-semibold tracking-wider text-[#333333]/70 uppercase"
+                            class="text-[11px] font-semibold tracking-wider text-[#333333] uppercase"
                             >Tagihan Unpaid</span
                         >
                         <div
-                            class="flex size-7 items-center justify-center rounded-full bg-[#beedc0]/40 text-[#065f46]"
+                            class="flex size-8 items-center justify-center rounded-full bg-[#beedc0] text-[#000000]"
                         >
-                            <Receipt class="size-3.5" />
+                            <Receipt class="size-4" />
                         </div>
                     </div>
                     <div
-                        class="mt-2 font-['ivypresto-headline'] text-2xl font-bold text-[#000000]"
+                        class="mt-2 font-mono text-2xl font-bold text-[#000000]"
                     >
                         {{ stats.unpaid_billings ?? 0 }}
                     </div>
-                    <div class="mt-1 text-[11px] text-[#333333]/70">
+                    <div class="mt-1 text-[11px] text-[#333333]">
                         Menunggu kasir / POS
                     </div>
                 </motion.div>
@@ -962,25 +972,25 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.22, delay: 0.2 }"
-                    class="rounded-[10px] border border-[#333333]/12 bg-[#fffff3] p-4 shadow-sm"
+                    class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none sm:p-5"
                 >
                     <div class="flex items-center justify-between">
                         <span
-                            class="text-[11px] font-semibold tracking-wider text-[#333333]/70 uppercase"
+                            class="text-[11px] font-semibold tracking-wider text-[#333333] uppercase"
                             >Kasir Lunas</span
                         >
                         <div
-                            class="flex size-7 items-center justify-center rounded-full bg-[#beedc0]/40 text-[#065f46]"
+                            class="flex size-8 items-center justify-center rounded-full bg-[#beedc0] text-[#000000]"
                         >
-                            <DollarSign class="size-3.5" />
+                            <DollarSign class="size-4" />
                         </div>
                     </div>
                     <div
-                        class="mt-2 truncate font-['ivypresto-headline'] text-lg font-bold text-[#065f46]"
+                        class="mt-2 truncate font-mono text-lg font-bold text-[#000000]"
                     >
                         {{ formatRupiah(stats.today_revenue ?? 0) }}
                     </div>
-                    <div class="mt-1 text-[11px] text-[#333333]/70">
+                    <div class="mt-1 text-[11px] text-[#333333]">
                         Penerimaan hari ini
                     </div>
                 </motion.div>
@@ -995,24 +1005,24 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.25, delay: 0.22 }"
-                    class="space-y-4 rounded-[10px] border border-[#333333]/12 bg-[#fffff3] p-5 shadow-sm lg:col-span-2"
+                    class="space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-6 shadow-none lg:col-span-2"
                 >
                     <div
-                        class="flex flex-col gap-2 border-b border-[#333333]/10 pb-3 sm:flex-row sm:items-center sm:justify-between"
+                        class="flex flex-col gap-2 border-b border-[#000000]/10 pb-3 sm:flex-row sm:items-center sm:justify-between"
                     >
                         <div class="flex items-center gap-2.5">
                             <div
-                                class="flex size-8 items-center justify-center rounded-full bg-[#beedc0] text-[#065f46]"
+                                class="flex size-8 items-center justify-center rounded-full bg-[#beedc0] text-[#000000]"
                             >
                                 <Pill class="size-4" />
                             </div>
                             <div>
                                 <h3
-                                    class="font-['ivypresto-headline'] text-base font-bold text-[#000000]"
+                                    class="font-['ivypresto-headline'] text-lg font-bold text-[#000000]"
                                 >
                                     Antrean Resep Farmasi & Apotek
                                 </h3>
-                                <p class="text-xs text-[#333333]/70">
+                                <p class="text-xs text-[#333333]">
                                     Resep elektronik yang diterbitkan dokter
                                     untuk disiapkan dan diserahkan ke pasien
                                 </p>
@@ -1022,10 +1032,10 @@ onBeforeUnmount(() => {
                         <Link
                             v-if="isNurseTetap || isAdmin"
                             href="/staff/medicines"
-                            class="inline-flex min-h-[36px] items-center gap-1.5 rounded-[40.5px] border border-[#333333]/15 bg-[#edede2]/60 px-3.5 py-1.5 text-xs font-semibold text-[#000000] transition-all hover:bg-[#edede2]"
+                            class="inline-flex min-h-[38px] items-center gap-1.5 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-4 py-1.5 text-xs font-medium text-[#000000] shadow-none transition-all hover:bg-[#edede2]"
                         >
                             <span>Buka Inventori</span>
-                            <ArrowUpRight class="size-3.5 text-[#065f46]" />
+                            <ArrowUpRight class="size-3.5 text-[#000000]" />
                         </Link>
                     </div>
 
@@ -1040,7 +1050,7 @@ onBeforeUnmount(() => {
                         <div
                             v-for="rx in pendingPrescriptions"
                             :key="rx.prescription_id"
-                            class="rounded-[10px] border border-[#333333]/12 bg-[#edede2]/40 p-4 transition-all hover:border-[#333333]/30"
+                            class="rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 transition-all hover:border-[#000000]/25"
                         >
                             <div
                                 class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
@@ -1053,11 +1063,11 @@ onBeforeUnmount(() => {
                                             #{{ rx.prescription_number }}
                                         </span>
                                         <span
-                                            class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold"
+                                            class="inline-flex items-center rounded-full px-3 py-0.5 text-[11px] font-bold"
                                             :class="
                                                 rx.status === 'diproses'
-                                                    ? 'bg-blue-100 text-blue-800'
-                                                    : 'bg-amber-100 text-amber-800'
+                                                    ? 'border border-blue-200 bg-blue-100 text-blue-900'
+                                                    : 'border border-amber-200 bg-amber-100 text-amber-900'
                                             "
                                         >
                                             {{
@@ -1076,7 +1086,7 @@ onBeforeUnmount(() => {
                                             'Pasien Rawat Jalan'
                                         }}
                                         <span
-                                            class="text-xs font-normal text-[#333333]/70"
+                                            class="text-xs font-normal text-[#333333]"
                                         >
                                             (Poli:
                                             {{
@@ -1101,18 +1111,18 @@ onBeforeUnmount(() => {
                                         <span
                                             v-for="item in rx.items"
                                             :key="item.prescription_item_id"
-                                            class="inline-flex items-center gap-1 rounded-[6px] border border-[#333333]/10 bg-[#fffff3] px-2 py-1 text-xs text-[#000000]"
+                                            class="inline-flex items-center gap-1 rounded-xl border border-[#000000]/10 bg-[#fffff3] px-2.5 py-1 text-xs text-[#000000]"
                                         >
-                                            <strong class="font-semibold">{{
+                                            <strong class="font-bold">{{
                                                 item.medicine?.name_medicine ??
                                                 'Obat'
                                             }}</strong>
                                             <span
-                                                class="font-bold text-[#065f46]"
+                                                class="font-mono font-bold text-[#000000]"
                                                 >x{{ item.quantity }}</span
                                             >
                                             <span
-                                                class="text-[10px] text-[#333333]/70"
+                                                class="text-[10px] text-[#333333]"
                                                 >({{ item.dosage }})</span
                                             >
                                         </span>
@@ -1120,7 +1130,7 @@ onBeforeUnmount(() => {
 
                                     <p
                                         v-if="rx.notes"
-                                        class="text-xs text-[#333333]/80 italic"
+                                        class="text-xs text-[#333333] italic"
                                     >
                                         Catatan: "{{ rx.notes }}"
                                     </p>
@@ -1134,14 +1144,14 @@ onBeforeUnmount(() => {
                                     <motion.button
                                         v-if="rx.status === 'menunggu'"
                                         type="button"
-                                        :whileHover="{ scale: 1.03 }"
-                                        :whileTap="{ scale: 0.97 }"
+                                        :whileHover="{ scale: 1.02 }"
+                                        :whileTap="{ scale: 0.98 }"
                                         @click="processPrescription(rx)"
                                         :disabled="
                                             prescriptionLoadingId ===
                                             rx.prescription_id
                                         "
-                                        class="inline-flex min-h-[40px] items-center gap-1.5 rounded-[40.5px] border border-blue-300 bg-blue-50 px-4 py-2 text-xs font-bold text-blue-800 hover:bg-blue-100 disabled:opacity-50"
+                                        class="inline-flex min-h-[40px] items-center gap-1.5 rounded-[40.5px] border border-blue-200 bg-blue-50 px-4 py-2 text-xs font-medium text-blue-900 hover:bg-blue-100 disabled:opacity-50"
                                     >
                                         <Clock class="size-3.5" />
                                         <span>{{
@@ -1154,14 +1164,14 @@ onBeforeUnmount(() => {
 
                                     <motion.button
                                         type="button"
-                                        :whileHover="{ scale: 1.03 }"
-                                        :whileTap="{ scale: 0.97 }"
+                                        :whileHover="{ scale: 1.02 }"
+                                        :whileTap="{ scale: 0.98 }"
                                         @click="completePrescription(rx)"
                                         :disabled="
                                             prescriptionLoadingId ===
                                             rx.prescription_id
                                         "
-                                        class="inline-flex min-h-[40px] items-center gap-1.5 rounded-[40.5px] bg-[#000000] px-4 py-2 text-xs font-bold text-[#ffffff] shadow-sm hover:bg-[#333333] disabled:opacity-50"
+                                        class="inline-flex min-h-[40px] items-center gap-1.5 rounded-[40.5px] bg-[#000000] px-4 py-2 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] disabled:opacity-50"
                                     >
                                         <PackageCheck
                                             class="size-3.5 text-[#beedc0]"
@@ -1181,10 +1191,10 @@ onBeforeUnmount(() => {
                     <!-- Resep Kosong -->
                     <div
                         v-else
-                        class="rounded-[10px] bg-[#edede2]/30 p-8 text-center text-xs text-[#333333]/60"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#edede2]/30 p-8 text-center text-xs text-[#333333]"
                     >
                         <PackageCheck
-                            class="mx-auto size-7 text-[#065f46]/60"
+                            class="mx-auto size-7 text-[#000000]/50"
                         />
                         <div class="mt-2 font-medium">
                             Semua resep dokter hari ini telah selesai diproses
@@ -1198,10 +1208,10 @@ onBeforeUnmount(() => {
                     :initial="{ opacity: 0, y: 12 }"
                     :animate="{ opacity: 1, y: 0 }"
                     :transition="{ duration: 0.25, delay: 0.25 }"
-                    class="space-y-4 rounded-[10px] border border-[#333333]/12 bg-[#fffff3] p-5 shadow-sm"
+                    class="space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-6 shadow-none"
                 >
                     <div
-                        class="flex items-center justify-between border-b border-[#333333]/10 pb-3"
+                        class="flex items-center justify-between border-b border-[#000000]/10 pb-3"
                     >
                         <div class="flex items-center gap-2">
                             <ShieldAlert class="size-4 text-rose-600" />
@@ -1211,7 +1221,7 @@ onBeforeUnmount(() => {
                                 Peringatan Stok Obat
                             </h3>
                         </div>
-                        <span class="text-[11px] font-semibold text-rose-700">
+                        <span class="rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold text-rose-800">
                             Stok ≤ 10
                         </span>
                     </div>
@@ -1223,11 +1233,11 @@ onBeforeUnmount(() => {
                         <div
                             v-for="med in criticalMedicines"
                             :key="med.medicine_id"
-                            class="flex items-center justify-between rounded-[8px] border p-2.5 text-xs transition-colors"
+                            class="flex items-center justify-between rounded-2xl border p-3 text-xs transition-colors"
                             :class="
                                 med.stock <= 0
-                                    ? 'border-rose-300 bg-rose-50/60'
-                                    : 'border-amber-200 bg-amber-50/50'
+                                    ? 'border-rose-200 bg-rose-50/70'
+                                    : 'border-amber-200 bg-amber-50/60'
                             "
                         >
                             <div class="space-y-0.5">
@@ -1235,7 +1245,7 @@ onBeforeUnmount(() => {
                                     {{ med.name_medicine }}
                                 </div>
                                 <div
-                                    class="font-mono text-[10px] text-[#333333]/70"
+                                    class="font-mono text-[10px] text-[#333333]"
                                 >
                                     {{ med.code_medicine }} · {{ med.type }}
                                 </div>
@@ -1243,11 +1253,11 @@ onBeforeUnmount(() => {
 
                             <div class="flex items-center gap-2">
                                 <span
-                                    class="inline-flex min-w-[40px] items-center justify-center rounded-full px-2 py-0.5 font-bold"
+                                    class="inline-flex min-w-[40px] items-center justify-center rounded-full px-2.5 py-0.5 font-bold"
                                     :class="
                                         med.stock <= 0
-                                            ? 'bg-rose-200 text-rose-800'
-                                            : 'bg-amber-200 text-amber-900'
+                                            ? 'border border-rose-200 bg-rose-200 text-rose-900'
+                                            : 'border border-amber-200 bg-amber-200 text-amber-900'
                                     "
                                 >
                                     {{ med.stock }} {{ med.unit }}
@@ -1258,7 +1268,7 @@ onBeforeUnmount(() => {
                         <Link
                             v-if="isNurseTetap || isAdmin"
                             href="/staff/medicines"
-                            class="mt-2 inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 rounded-[40.5px] bg-[#000000] px-4 py-2 text-xs font-bold text-[#ffffff] transition-all hover:bg-[#333333]"
+                            class="mt-2 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-4 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-all hover:bg-[#1a1a1a]"
                         >
                             <PackagePlus class="size-3.5 text-[#beedc0]" />
                             <span>Buka Restok Inventori</span>
@@ -1267,9 +1277,9 @@ onBeforeUnmount(() => {
 
                     <div
                         v-else
-                        class="rounded-[10px] bg-[#edede2]/30 p-6 text-center text-xs text-[#333333]/60"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#edede2]/30 p-6 text-center text-xs text-[#333333]"
                     >
-                        <CheckCircle2 class="mx-auto size-6 text-[#065f46]" />
+                        <CheckCircle2 class="mx-auto size-6 text-[#000000]" />
                         <div class="mt-2 font-medium">
                             Semua stok obat farmasi dalam jumlah aman.
                         </div>
@@ -1280,14 +1290,14 @@ onBeforeUnmount(() => {
             <!-- ═══════════════════════════════════════════════════════════════
                  4. MEJA DEPAN (FRONT-OFFICE): Verifikasi & Check-in Pasien
                  ═══════════════════════════════════════════════════════════════ -->
-            <motion.div
+            <motion.section
                 :initial="{ opacity: 0, y: 15 }"
                 :animate="{ opacity: 1, y: 0 }"
                 :transition="{ duration: 0.28, delay: 0.28 }"
-                class="space-y-4 overflow-hidden rounded-[10px] border border-[#333333]/15 bg-[#fffff3] p-5 shadow-sm sm:p-6"
+                class="space-y-4 overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none sm:p-7"
             >
                 <div
-                    class="flex flex-col gap-4 border-b border-[#333333]/10 pb-4 sm:flex-row sm:items-center sm:justify-between"
+                    class="flex flex-col gap-4 border-b border-[#000000]/10 pb-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                     <div>
                         <h2
@@ -1295,7 +1305,7 @@ onBeforeUnmount(() => {
                         >
                             Meja Depan & Verifikasi Kedatangan Pasien
                         </h2>
-                        <p class="text-xs text-[#333333]/70">
+                        <p class="text-xs text-[#333333]">
                             Konfirmasi kedatangan pasien yang telah mendaftar
                             online / kiosk agar dokter dapat memanggil pasien di
                             ruang periksa
@@ -1310,11 +1320,11 @@ onBeforeUnmount(() => {
                             @click="
                                 onlyMyClinicPatients = !onlyMyClinicPatients
                             "
-                            class="inline-flex min-h-[40px] items-center gap-1.5 rounded-[40.5px] border px-3 py-1.5 text-xs font-semibold transition-all"
+                            class="inline-flex min-h-[40px] items-center gap-1.5 rounded-full border px-4 py-1.5 text-xs font-medium transition-all"
                             :class="
                                 onlyMyClinicPatients
-                                    ? 'border-[#065f46] bg-[#beedc0] text-[#065f46]'
-                                    : 'border-[#333333]/20 bg-[#ffffff] text-[#333333] hover:bg-[#edede2]'
+                                    ? 'border-[#000000] bg-[#000000] text-[#ffffff]'
+                                    : 'border-[#000000]/15 bg-[#fffff3] text-[#000000] hover:bg-[#edede2]'
                             "
                         >
                             <Stethoscope class="size-3.5" />
@@ -1334,19 +1344,19 @@ onBeforeUnmount(() => {
                     <!-- Search Input -->
                     <div class="relative flex-1">
                         <Search
-                            class="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#333333]/50"
+                            class="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-[#000000]/60"
                         />
                         <input
                             v-model="searchQuery"
                             type="text"
                             placeholder="Cari berdasarkan nama pasien, NIK, nomor antrean, atau dokter..."
-                            class="min-h-[44px] w-full rounded-[40.5px] border border-[#333333]/20 bg-[#edede2]/60 pr-4 pl-10 text-xs text-[#000000] placeholder:text-[#333333]/40 focus:border-[#000000] focus:bg-[#ffffff] focus:ring-1 focus:ring-[#000000] focus:outline-none sm:text-sm"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] pr-4 pl-10 text-xs text-[#000000] placeholder:text-[#000000]/40 focus:border-[#000000] focus:outline-none sm:text-sm"
                         />
                         <button
                             v-if="searchQuery"
                             type="button"
                             @click="searchQuery = ''"
-                            class="absolute top-1/2 right-3.5 -translate-y-1/2 text-[#333333]/40 hover:text-[#000000]"
+                            class="absolute top-1/2 right-3.5 -translate-y-1/2 text-[#000000]/40 hover:text-[#000000]"
                         >
                             <X class="size-4" />
                         </button>
@@ -1361,7 +1371,7 @@ onBeforeUnmount(() => {
                         >
                             <select
                                 v-model="selectedPoliFilter"
-                                class="min-h-[44px] w-full appearance-none rounded-[40.5px] border border-[#333333]/20 bg-[#edede2]/60 px-4 py-2 text-xs font-medium text-[#000000] focus:border-[#000000] focus:bg-[#ffffff] focus:ring-1 focus:ring-[#000000] focus:outline-none"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-4 py-2 text-xs font-medium text-[#000000] focus:border-[#000000] focus:outline-none"
                             >
                                 <option value="all">Semua Poliklinik</option>
                                 <option
@@ -1376,16 +1386,16 @@ onBeforeUnmount(() => {
 
                         <!-- Status Filter Pills -->
                         <div
-                            class="flex items-center rounded-[40.5px] border border-[#333333]/15 bg-[#edede2]/70 p-1 text-xs"
+                            class="flex items-center rounded-full border border-[#000000]/10 bg-[#edede2]/70 p-1 text-xs"
                         >
                             <button
                                 type="button"
                                 @click="selectedStatusFilter = 'all'"
-                                class="rounded-[40.5px] px-3 py-1.5 font-medium transition-all"
+                                class="rounded-full px-3.5 py-1.5 font-medium transition-all"
                                 :class="
                                     selectedStatusFilter === 'all'
-                                        ? 'bg-[#000000] text-[#ffffff] shadow-sm'
-                                        : 'text-[#333333] hover:text-[#000000]'
+                                        ? 'bg-[#000000] text-[#ffffff] shadow-none'
+                                        : 'text-[#000000] hover:bg-[#fffff3]'
                                 "
                             >
                                 Semua
@@ -1393,11 +1403,11 @@ onBeforeUnmount(() => {
                             <button
                                 type="button"
                                 @click="selectedStatusFilter = 'pending'"
-                                class="rounded-[40.5px] px-3 py-1.5 font-medium transition-all"
+                                class="rounded-full px-3.5 py-1.5 font-medium transition-all"
                                 :class="
                                     selectedStatusFilter === 'pending'
-                                        ? 'bg-amber-600 text-[#ffffff] shadow-sm'
-                                        : 'text-[#333333] hover:text-amber-700'
+                                        ? 'bg-amber-600 text-[#ffffff] shadow-none'
+                                        : 'text-[#000000] hover:text-amber-800'
                                 "
                             >
                                 Perlu Check-in
@@ -1405,11 +1415,11 @@ onBeforeUnmount(() => {
                             <button
                                 type="button"
                                 @click="selectedStatusFilter = 'confirmed'"
-                                class="rounded-[40.5px] px-3 py-1.5 font-medium transition-all"
+                                class="rounded-full px-3.5 py-1.5 font-medium transition-all"
                                 :class="
                                     selectedStatusFilter === 'confirmed'
-                                        ? 'bg-blue-600 text-[#ffffff] shadow-sm'
-                                        : 'text-[#333333] hover:text-blue-700'
+                                        ? 'bg-blue-600 text-[#ffffff] shadow-none'
+                                        : 'text-[#000000] hover:text-blue-800'
                                 "
                             >
                                 Hadir
@@ -1417,11 +1427,11 @@ onBeforeUnmount(() => {
                             <button
                                 type="button"
                                 @click="selectedStatusFilter = 'in_progress'"
-                                class="rounded-[40.5px] px-3 py-1.5 font-medium transition-all"
+                                class="rounded-full px-3.5 py-1.5 font-medium transition-all"
                                 :class="
                                     selectedStatusFilter === 'in_progress'
-                                        ? 'bg-[#065f46] text-[#ffffff] shadow-sm'
-                                        : 'text-[#333333] hover:text-[#065f46]'
+                                        ? 'bg-[#000000] text-[#ffffff] shadow-none'
+                                        : 'text-[#000000] hover:text-[#000000]'
                                 "
                             >
                                 Diperiksa
@@ -1429,11 +1439,11 @@ onBeforeUnmount(() => {
                             <button
                                 type="button"
                                 @click="selectedStatusFilter = 'completed'"
-                                class="rounded-[40.5px] px-3 py-1.5 font-medium transition-all"
+                                class="rounded-full px-3.5 py-1.5 font-medium transition-all"
                                 :class="
                                     selectedStatusFilter === 'completed'
-                                        ? 'bg-[#333333] text-[#ffffff] shadow-sm'
-                                        : 'text-[#333333] hover:text-[#000000]'
+                                        ? 'bg-[#000000] text-[#ffffff] shadow-none'
+                                        : 'text-[#000000] hover:bg-[#fffff3]'
                                 "
                             >
                                 Selesai
@@ -1444,206 +1454,208 @@ onBeforeUnmount(() => {
 
                 <!-- Tabel Antrean Pasien Hari Ini -->
                 <div
-                    class="overflow-x-auto rounded-[8px] border border-[#333333]/10"
+                    class="overflow-hidden rounded-2xl border border-[#000000]/10"
                 >
-                    <table class="w-full border-collapse text-left text-sm">
-                        <thead>
-                            <tr
-                                class="border-b border-[#333333]/10 bg-[#edede2]/60 text-[11px] font-bold tracking-wider text-[#333333]/80 uppercase"
-                            >
-                                <th class="px-4 py-3.5 text-center">
-                                    No. Antrean
-                                </th>
-                                <th class="px-4 py-3.5">Nama Pasien & NIK</th>
-                                <th class="px-4 py-3.5">
-                                    Poli & Dokter Tujuan
-                                </th>
-                                <th class="px-4 py-3.5">Keluhan Pasien</th>
-                                <th class="px-4 py-3.5 text-center">
-                                    Status Kehadiran
-                                </th>
-                                <th class="px-4 py-3.5 text-center">
-                                    Aksi Operasional
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-[#333333]/8">
-                            <tr
-                                v-for="apt in filteredAppointments"
-                                :key="apt.appointment_id"
-                                class="transition-colors hover:bg-[#edede2]/40"
-                            >
-                                <!-- No Antrean -->
-                                <td class="px-4 py-4 text-center">
-                                    <span
-                                        class="inline-flex min-w-[50px] items-center justify-center rounded-full bg-[#000000] px-3 py-1 font-mono text-xs font-bold text-[#ffffff] shadow-sm"
-                                    >
-                                        {{ apt.queue_number }}
-                                    </span>
-                                </td>
-
-                                <!-- Pasien -->
-                                <td class="px-4 py-4">
-                                    <div class="font-bold text-[#000000]">
-                                        {{ apt.patient?.name ?? 'Nama Pasien' }}
-                                    </div>
-                                    <div
-                                        class="font-mono text-xs text-[#333333]/70"
-                                    >
-                                        NIK:
-                                        {{ apt.patient?.resident_n ?? '-' }} ·
-                                        {{ apt.patient?.gender ?? '-' }}
-                                    </div>
-                                </td>
-
-                                <!-- Poli & Dokter -->
-                                <td class="px-4 py-4">
-                                    <div class="font-semibold text-[#000000]">
-                                        {{
-                                            apt.doctor_schedule?.poli
-                                                ?.name_poli ??
-                                            apt.doctor_schedule?.poli?.name ??
-                                            'Poliklinik'
-                                        }}
-                                    </div>
-                                    <div class="text-xs text-[#333333]/70">
-                                        {{
-                                            apt.doctor_schedule?.doctor?.name ??
-                                            'Dokter'
-                                        }}
-                                        <span class="text-[10px] text-[#065f46]"
-                                            >({{
-                                                apt.doctor_schedule?.room
-                                                    ?.name_room ?? 'R. Periksa'
-                                            }})</span
-                                        >
-                                    </div>
-                                </td>
-
-                                <!-- Keluhan -->
-                                <td
-                                    class="max-w-[200px] truncate px-4 py-4 text-xs text-[#333333]/80"
+                    <div class="scrollbar-thin overflow-x-auto">
+                        <table class="w-full text-left text-xs sm:text-sm">
+                            <thead>
+                                <tr
+                                    class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold uppercase tracking-wider text-[#000000]"
                                 >
-                                    {{
-                                        apt.complaint ||
-                                        'Pemeriksaan rawat jalan rutin'
-                                    }}
-                                </td>
-
-                                <!-- Status -->
-                                <td class="px-4 py-4 text-center">
-                                    <span
-                                        class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold"
-                                        :class="
-                                            getStatusBadge(apt.status).classes
-                                        "
-                                    >
+                                    <th class="px-4 py-3.5 text-center">
+                                        No. Antrean
+                                    </th>
+                                    <th class="px-4 py-3.5">Nama Pasien & NIK</th>
+                                    <th class="px-4 py-3.5">
+                                        Poli & Dokter Tujuan
+                                    </th>
+                                    <th class="px-4 py-3.5">Keluhan Pasien</th>
+                                    <th class="px-4 py-3.5 text-center">
+                                        Status Kehadiran
+                                    </th>
+                                    <th class="px-4 py-3.5 text-center">
+                                        Aksi Operasional
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#000000]/5 font-medium text-[#000000]">
+                                <tr
+                                    v-for="apt in filteredAppointments"
+                                    :key="apt.appointment_id"
+                                    class="transition-colors hover:bg-[#edede2]/30"
+                                >
+                                    <!-- No Antrean -->
+                                    <td class="px-4 py-4 text-center">
                                         <span
-                                            class="size-1.5 rounded-full"
-                                            :class="
-                                                getStatusBadge(apt.status).dot
-                                            "
-                                        />
-                                        <span>{{
-                                            getStatusBadge(apt.status).label
-                                        }}</span>
-                                    </span>
-                                </td>
-
-                                <!-- Aksi -->
-                                <td class="px-4 py-4 text-center">
-                                    <div
-                                        class="flex items-center justify-center gap-2"
-                                    >
-                                        <!-- Tombol Konfirmasi Check-in (Untuk Status Pending) -->
-                                        <motion.button
-                                            v-if="apt.status === 'pending'"
-                                            type="button"
-                                            :whileHover="{ scale: 1.05 }"
-                                            :whileTap="{ scale: 0.95 }"
-                                            @click="confirmArrival(apt)"
-                                            :disabled="
-                                                actionLoadingId ===
-                                                apt.appointment_id
-                                            "
-                                            class="inline-flex min-h-[38px] items-center gap-1.5 rounded-[40.5px] bg-[#000000] px-4 py-1.5 text-xs font-bold text-[#ffffff] shadow-sm hover:bg-[#333333] disabled:opacity-50"
+                                            class="inline-flex min-w-[50px] items-center justify-center rounded-full bg-[#000000] px-3 py-1 font-mono text-xs font-bold text-[#ffffff] shadow-none"
                                         >
-                                            <UserCheck
-                                                class="size-3.5 text-[#beedc0]"
+                                            {{ apt.queue_number }}
+                                        </span>
+                                    </td>
+
+                                    <!-- Pasien -->
+                                    <td class="px-4 py-4">
+                                        <div class="font-bold text-[#000000]">
+                                            {{ apt.patient?.name ?? 'Nama Pasien' }}
+                                        </div>
+                                        <div
+                                            class="font-mono text-xs text-[#333333]"
+                                        >
+                                            NIK:
+                                            {{ apt.patient?.resident_n ?? '-' }} ·
+                                            {{ apt.patient?.gender ?? '-' }}
+                                        </div>
+                                    </td>
+
+                                    <!-- Poli & Dokter -->
+                                    <td class="px-4 py-4">
+                                        <div class="font-bold text-[#000000]">
+                                            {{
+                                                apt.doctor_schedule?.poli
+                                                    ?.name_poli ??
+                                                apt.doctor_schedule?.poli?.name ??
+                                                'Poliklinik'
+                                            }}
+                                        </div>
+                                        <div class="text-xs text-[#333333]">
+                                            {{
+                                                apt.doctor_schedule?.doctor?.name ??
+                                                'Dokter'
+                                            }}
+                                            <span class="text-[10px] text-[#333333]"
+                                                >({{
+                                                    apt.doctor_schedule?.room
+                                                        ?.name_room ?? 'R. Periksa'
+                                                }})</span
+                                            >
+                                        </div>
+                                    </td>
+
+                                    <!-- Keluhan -->
+                                    <td
+                                        class="max-w-[200px] truncate px-4 py-4 text-xs text-[#333333]"
+                                    >
+                                        {{
+                                            apt.complaint ||
+                                            'Pemeriksaan rawat jalan rutin'
+                                        }}
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="px-4 py-4 text-center">
+                                        <span
+                                            class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold"
+                                            :class="
+                                                getStatusBadge(apt.status).classes
+                                            "
+                                        >
+                                            <span
+                                                class="size-1.5 rounded-full"
+                                                :class="
+                                                    getStatusBadge(apt.status).dot
+                                                "
                                             />
                                             <span>{{
-                                                actionLoadingId ===
-                                                apt.appointment_id
-                                                    ? 'Memproses...'
-                                                    : 'Konfirmasi Check-in'
+                                                getStatusBadge(apt.status).label
                                             }}</span>
-                                        </motion.button>
-
-                                        <!-- Status Sudah Hadir -->
-                                        <span
-                                            v-else-if="
-                                                apt.status === 'confirmed'
-                                            "
-                                            class="inline-flex items-center gap-1 text-xs font-semibold text-blue-700"
-                                        >
-                                            <CheckCircle2 class="size-4" />
-                                            <span>Siap Diperiksa</span>
                                         </span>
+                                    </td>
 
-                                        <!-- Selesai Diperiksa & Billing -->
-                                        <template
-                                            v-else-if="
-                                                apt.status === 'completed'
-                                            "
+                                    <!-- Aksi -->
+                                    <td class="px-4 py-4 text-center">
+                                        <div
+                                            class="flex items-center justify-center gap-2"
                                         >
-                                            <Link
-                                                v-if="apt.billing"
-                                                :href="`/staff/billing/${apt.billing.billing_id}`"
-                                                class="inline-flex min-h-[36px] items-center gap-1 rounded-[40.5px] border border-[#065f46]/30 bg-[#beedc0]/40 px-3 py-1 text-xs font-bold text-[#065f46] hover:bg-[#beedc0]"
+                                            <!-- Tombol Konfirmasi Check-in (Untuk Status Pending) -->
+                                            <motion.button
+                                                v-if="apt.status === 'pending'"
+                                                type="button"
+                                                :whileHover="{ scale: 1.02 }"
+                                                :whileTap="{ scale: 0.98 }"
+                                                @click="confirmArrival(apt)"
+                                                :disabled="
+                                                    actionLoadingId ===
+                                                    apt.appointment_id
+                                                "
+                                                class="inline-flex min-h-[38px] items-center gap-1.5 rounded-[40.5px] bg-[#000000] px-4 py-1.5 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] disabled:opacity-50"
                                             >
-                                                <Receipt class="size-3.5" />
+                                                <UserCheck
+                                                    class="size-3.5 text-[#beedc0]"
+                                                />
                                                 <span>{{
-                                                    apt.billing.status ===
-                                                    'paid'
-                                                        ? 'Invoice Lunas'
-                                                        : 'Bayar Kasir'
+                                                    actionLoadingId ===
+                                                    apt.appointment_id
+                                                        ? 'Memproses...'
+                                                        : 'Konfirmasi Check-in'
                                                 }}</span>
-                                            </Link>
+                                            </motion.button>
+
+                                            <!-- Status Sudah Hadir -->
+                                            <span
+                                                v-else-if="
+                                                    apt.status === 'confirmed'
+                                                "
+                                                class="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800"
+                                            >
+                                                <CheckCircle2 class="size-3.5" />
+                                                <span>Siap Diperiksa</span>
+                                            </span>
+
+                                            <!-- Selesai Diperiksa & Billing -->
+                                            <template
+                                                v-else-if="
+                                                    apt.status === 'completed'
+                                                "
+                                            >
+                                                <Link
+                                                    v-if="apt.billing"
+                                                    :href="`/staff/billing/${apt.billing.billing_id}`"
+                                                    class="inline-flex min-h-[36px] items-center gap-1 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-3.5 py-1 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
+                                                >
+                                                    <Receipt class="size-3.5" />
+                                                    <span>{{
+                                                        apt.billing.status ===
+                                                        'paid'
+                                                            ? 'Invoice Lunas'
+                                                            : 'Bayar Kasir'
+                                                    }}</span>
+                                                </Link>
+                                                <span
+                                                    v-else
+                                                    class="text-xs text-[#333333]"
+                                                    >Selesai</span
+                                                >
+                                            </template>
+
                                             <span
                                                 v-else
-                                                class="text-xs text-[#333333]/60"
-                                                >Selesai</span
+                                                class="text-xs text-[#333333]"
+                                                >-</span
                                             >
-                                        </template>
+                                        </div>
+                                    </td>
+                                </tr>
 
-                                        <span
-                                            v-else
-                                            class="text-xs text-[#333333]/60"
-                                            >-</span
-                                        >
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Empty Filter State -->
-                            <tr v-if="filteredAppointments.length === 0">
-                                <td
-                                    colspan="6"
-                                    class="px-6 py-12 text-center text-sm text-[#333333]/60"
-                                >
-                                    <UserCheck
-                                        class="mx-auto size-8 text-[#333333]/30"
-                                    />
-                                    <div class="mt-2 font-medium">
-                                        Tidak ada pasien yang sesuai dengan
-                                        filter pencarian.
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                                <!-- Empty Filter State -->
+                                <tr v-if="filteredAppointments.length === 0">
+                                    <td
+                                        colspan="6"
+                                        class="px-6 py-12 text-center text-sm text-[#333333]"
+                                    >
+                                        <UserCheck
+                                            class="mx-auto size-8 text-[#000000]/30"
+                                        />
+                                        <div class="mt-2 font-medium">
+                                            Tidak ada pasien yang sesuai dengan
+                                            filter pencarian.
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </motion.div>
+            </motion.section>
 
             <!-- ═══════════════════════════════════════════════════════════════
                  5. Matriks Poliklinik & Beban Ruangan Dokter
@@ -1658,7 +1670,7 @@ onBeforeUnmount(() => {
                     >
                         Status Matriks Poliklinik Hari Ini
                     </h3>
-                    <span class="text-xs text-[#333333]/70">
+                    <span class="text-xs text-[#333333]">
                         {{ clinicMatrix.length }} Ruang Praktik Aktif
                     </span>
                 </div>
@@ -1672,12 +1684,12 @@ onBeforeUnmount(() => {
                         :initial="{ opacity: 0, scale: 0.98 }"
                         :animate="{ opacity: 1, scale: 1 }"
                         :transition="{ duration: 0.2 }"
-                        class="space-y-3 rounded-[10px] border border-[#333333]/12 bg-[#fffff3] p-4 shadow-sm"
+                        class="space-y-3 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none"
                     >
                         <div class="flex items-start justify-between">
                             <div>
                                 <span
-                                    class="inline-flex items-center rounded-full bg-[#beedc0]/50 px-2.5 py-0.5 text-[11px] font-bold text-[#065f46]"
+                                    class="inline-flex items-center rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3 py-0.5 text-[11px] font-bold text-[#000000]"
                                 >
                                     {{ clinic.poli_name }}
                                 </span>
@@ -1686,43 +1698,43 @@ onBeforeUnmount(() => {
                                 >
                                     {{ clinic.doctor_name }}
                                 </h4>
-                                <p class="text-xs text-[#333333]/70">
+                                <p class="text-xs text-[#333333]">
                                     {{ clinic.specialization }} ·
                                     {{ clinic.room_name }}
                                 </p>
                             </div>
                             <span
-                                class="font-mono text-xs font-semibold text-[#333333]/70"
+                                class="font-mono text-xs font-semibold text-[#333333]"
                             >
                                 {{ clinic.start_time }} - {{ clinic.end_time }}
                             </span>
                         </div>
 
                         <div
-                            class="grid grid-cols-3 gap-2 border-t border-[#333333]/10 pt-3 text-center text-xs"
+                            class="grid grid-cols-3 gap-2 border-t border-[#000000]/10 pt-3 text-center text-xs"
                         >
-                            <div class="rounded-[6px] bg-[#edede2]/60 p-2">
-                                <div class="text-[10px] text-[#333333]/70">
+                            <div class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5">
+                                <div class="text-[10px] text-[#333333] uppercase">
                                     Dipanggil
                                 </div>
                                 <div
-                                    class="mt-0.5 font-mono text-sm font-bold text-[#065f46]"
+                                    class="mt-0.5 font-mono text-sm font-bold text-[#000000]"
                                 >
                                     {{ clinic.current_calling || '-' }}
                                 </div>
                             </div>
-                            <div class="rounded-[6px] bg-[#edede2]/60 p-2">
-                                <div class="text-[10px] text-[#333333]/70">
+                            <div class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5">
+                                <div class="text-[10px] text-[#333333] uppercase">
                                     Menunggu
                                 </div>
                                 <div
-                                    class="mt-0.5 font-mono text-sm font-bold text-amber-700"
+                                    class="mt-0.5 font-mono text-sm font-bold text-amber-800"
                                 >
                                     {{ clinic.waiting_count }}
                                 </div>
                             </div>
-                            <div class="rounded-[6px] bg-[#edede2]/60 p-2">
-                                <div class="text-[10px] text-[#333333]/70">
+                            <div class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5">
+                                <div class="text-[10px] text-[#333333] uppercase">
                                     Selesai
                                 </div>
                                 <div

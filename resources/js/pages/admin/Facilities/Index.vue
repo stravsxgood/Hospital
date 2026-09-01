@@ -295,14 +295,14 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
             <motion.header
                 :initial="{ opacity: 0, y: -12 }"
                 :animate="{ opacity: 1, y: 0 }"
-                class="flex flex-col gap-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between sm:p-7"
+                class="flex flex-col gap-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none sm:flex-row sm:items-center sm:justify-between sm:p-7"
             >
                 <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                         <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-[#065f46] px-3 py-1 text-xs font-bold text-[#ffffff]"
+                            class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
                         >
-                            <Building2 class="size-3.5" />
+                            <Building2 class="size-3.5 text-[#000000]" />
                             <span>Master Fasilitas & Operasional</span>
                         </span>
                     </div>
@@ -311,7 +311,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     >
                         Tata Kelola Poliklinik & Jadwal DPJP
                     </h1>
-                    <p class="text-xs text-[#333333] sm:text-sm">
+                    <p class="text-xs text-[#333333] sm:text-sm font-['Rubik']">
                         Konfigurasi unit layanan poliklinik, pemetaan ruangan
                         periksa, dan alokasi kuota antrean praktik dokter.
                     </p>
@@ -324,7 +324,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         v-if="activeTab === 'polis'"
                         type="button"
                         @click="openCreatePoliModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#065f46] px-5 py-2.5 text-xs font-bold text-[#ffffff] shadow-xs hover:bg-[#054d38] sm:text-sm"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] sm:text-sm font-['Rubik']"
                     >
                         <Plus class="size-4 text-[#beedc0]" />
                         <span>Tambah Poliklinik</span>
@@ -334,7 +334,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         v-else-if="activeTab === 'schedules'"
                         type="button"
                         @click="openCreateScheduleModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#065f46] px-5 py-2.5 text-xs font-bold text-[#ffffff] shadow-xs hover:bg-[#054d38] sm:text-sm"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] sm:text-sm font-['Rubik']"
                     >
                         <Plus class="size-4 text-[#beedc0]" />
                         <span>Tambah Jadwal DPJP</span>
@@ -346,7 +346,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                  2. Navigation Tabs (Horizontal Scrollable)
                  ═══════════════════════════════════════════════════════════════ -->
             <div
-                class="flex scrollbar-none items-center gap-2 overflow-x-auto border-b border-[#000000]/10 pb-2"
+                class="flex scrollbar-none items-center gap-2 overflow-x-auto border-b border-[#000000]/10 pb-2 font-['Rubik']"
                 role="tablist"
                 aria-label="Navigasi Kategori Fasilitas"
             >
@@ -355,11 +355,11 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     role="tab"
                     :aria-selected="activeTab === 'polis'"
                     @click="activeTab = 'polis'"
-                    class="flex min-h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-xl px-5 py-2 text-xs font-bold transition-all"
+                    class="flex min-h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-xs font-medium transition-all"
                     :class="
                         activeTab === 'polis'
-                            ? 'bg-[#065f46] text-[#ffffff] shadow-xs'
-                            : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/75 hover:bg-[#edede2]'
+                            ? 'bg-[#000000] text-[#ffffff] shadow-none'
+                            : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/80 hover:bg-[#edede2]'
                     "
                 >
                     <Building2 class="size-4" />
@@ -371,11 +371,11 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     role="tab"
                     :aria-selected="activeTab === 'schedules'"
                     @click="activeTab = 'schedules'"
-                    class="flex min-h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-xl px-5 py-2 text-xs font-bold transition-all"
+                    class="flex min-h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-xs font-medium transition-all"
                     :class="
                         activeTab === 'schedules'
-                            ? 'bg-[#065f46] text-[#ffffff] shadow-xs'
-                            : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/75 hover:bg-[#edede2]'
+                            ? 'bg-[#000000] text-[#ffffff] shadow-none'
+                            : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/80 hover:bg-[#edede2]'
                     "
                 >
                     <Calendar class="size-4" />
@@ -387,11 +387,11 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     role="tab"
                     :aria-selected="activeTab === 'rooms'"
                     @click="activeTab = 'rooms'"
-                    class="flex min-h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-xl px-5 py-2 text-xs font-bold transition-all"
+                    class="flex min-h-[42px] shrink-0 cursor-pointer items-center gap-2 rounded-full px-5 py-2 text-xs font-medium transition-all"
                     :class="
                         activeTab === 'rooms'
-                            ? 'bg-[#065f46] text-[#ffffff] shadow-xs'
-                            : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/75 hover:bg-[#edede2]'
+                            ? 'bg-[#000000] text-[#ffffff] shadow-none'
+                            : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/80 hover:bg-[#edede2]'
                     "
                 >
                     <DoorClosed class="size-4" />
@@ -405,7 +405,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
             <section
                 v-if="activeTab === 'polis'"
                 aria-labelledby="polis-table-heading"
-                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-xs"
+                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-none font-['Rubik']"
             >
                 <h2 id="polis-table-heading" class="sr-only">
                     Tabel Data Unit Poliklinik
@@ -413,7 +413,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 <div class="scrollbar-thin overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm">
                         <thead
-                            class="border-b border-[#000000]/10 bg-[#edede2]/70 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
+                            class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
                         >
                             <tr>
                                 <th class="px-4 py-3.5 sm:px-6">
@@ -444,23 +444,23 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                         {{ poli.name_poli }}
                                     </div>
                                     <div
-                                        class="font-mono text-xs text-[#065f46]"
+                                        class="font-mono text-xs text-[#333333]"
                                     >
                                         {{ poli.kode_poli }}
                                     </div>
                                 </td>
                                 <td
-                                    class="px-4 py-3.5 text-xs text-[#000000]/80"
+                                    class="px-4 py-3.5 text-xs text-[#333333]"
                                 >
                                     <div class="flex items-center gap-1.5">
                                         <MapPin
-                                            class="size-3.5 shrink-0 text-[#065f46]"
+                                            class="size-3.5 shrink-0 text-[#000000]"
                                         />
                                         <span>{{ poli.location }}</span>
                                     </div>
                                 </td>
                                 <td
-                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold"
+                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold text-[#000000]"
                                 >
                                     {{ poli.schedules_count ?? 0 }} Jadwal
                                 </td>
@@ -468,10 +468,10 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                     <span
                                         :class="
                                             poli.status === 'Aktif'
-                                                ? 'border border-emerald-300 bg-emerald-100 text-emerald-900'
-                                                : 'border border-neutral-300 bg-neutral-100 text-neutral-800'
+                                                ? 'border border-[#beedc0] bg-[#beedc0]/40 text-[#000000]'
+                                                : 'border border-[#000000]/10 bg-[#edede2] text-[#333333]'
                                         "
-                                        class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold"
+                                        class="inline-flex items-center rounded-full px-3 py-0.5 text-xs font-bold"
                                     >
                                         {{ poli.status }}
                                     </span>
@@ -485,10 +485,10 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                             @click="openEditPoliModal(poli)"
                                             :aria-label="`Edit Poliklinik ${poli.name_poli}`"
                                             :title="`Edit ${poli.name_poli}`"
-                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-xl border border-[#000000]/10 bg-[#fffff3] text-[#000000] hover:bg-[#edede2]"
+                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] text-[#000000] hover:bg-[#edede2]"
                                         >
                                             <Edit3
-                                                class="size-4 text-[#065f46]"
+                                                class="size-4 text-[#000000]"
                                             />
                                         </button>
                                         <button
@@ -496,7 +496,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                             @click="handleDeletePoli(poli)"
                                             :aria-label="`Hapus Poliklinik ${poli.name_poli}`"
                                             :title="`Hapus ${poli.name_poli}`"
-                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-xl border border-rose-300 bg-rose-50 text-rose-900 hover:bg-rose-100"
+                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-[40.5px] border border-rose-200 bg-rose-50 text-rose-900 hover:bg-rose-100"
                                         >
                                             <Trash2 class="size-4" />
                                         </button>
@@ -514,7 +514,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
             <section
                 v-else-if="activeTab === 'schedules'"
                 aria-labelledby="schedules-table-heading"
-                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-xs"
+                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-none font-['Rubik']"
             >
                 <h2 id="schedules-table-heading" class="sr-only">
                     Tabel Data Jadwal Praktik Dokter DPJP
@@ -522,7 +522,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 <div class="scrollbar-thin overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm">
                         <thead
-                            class="border-b border-[#000000]/10 bg-[#edede2]/70 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
+                            class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
                         >
                             <tr>
                                 <th class="px-4 py-3.5 sm:px-6">Dokter DPJP</th>
@@ -550,7 +550,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                         {{ s.doctor?.name || '-' }}
                                     </div>
                                     <div
-                                        class="text-xs font-semibold text-[#065f46]"
+                                        class="text-xs font-semibold text-[#333333]"
                                     >
                                         {{
                                             s.doctor?.specialization
@@ -563,7 +563,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                     <div class="font-bold text-[#000000]">
                                         {{ s.poli?.name_poli || '-' }}
                                     </div>
-                                    <div class="text-[#000000]/70">
+                                    <div class="text-[#333333]">
                                         {{ s.room?.name_room || '-' }}
                                     </div>
                                 </td>
@@ -571,13 +571,13 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                     <div class="font-bold text-[#000000]">
                                         {{ s.day }}
                                     </div>
-                                    <div class="font-mono text-[#000000]/70">
+                                    <div class="font-mono text-[#333333]">
                                         {{ s.start_time.substring(0, 5) }} -
                                         {{ s.end_time.substring(0, 5) }} WIB
                                     </div>
                                 </td>
                                 <td
-                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold text-[#065f46]"
+                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold text-[#000000]"
                                 >
                                     {{ s.quota_day }} Pasien
                                 </td>
@@ -585,10 +585,10 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                     <span
                                         :class="
                                             s.status === 'Aktif'
-                                                ? 'border border-emerald-300 bg-emerald-100 text-emerald-900'
-                                                : 'border border-rose-300 bg-rose-100 text-rose-900'
+                                                ? 'border border-[#beedc0] bg-[#beedc0]/40 text-[#000000]'
+                                                : 'border border-rose-200 bg-rose-100/70 text-rose-900'
                                         "
-                                        class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold"
+                                        class="inline-flex items-center rounded-full px-3 py-0.5 text-xs font-bold"
                                     >
                                         {{ s.status }}
                                     </span>
@@ -602,10 +602,10 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                             @click="openEditScheduleModal(s)"
                                             :aria-label="`Edit Jadwal Praktik ${s.doctor?.name} hari ${s.day}`"
                                             :title="`Edit Jadwal ${s.doctor?.name}`"
-                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-xl border border-[#000000]/10 bg-[#fffff3] text-[#000000] hover:bg-[#edede2]"
+                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] text-[#000000] hover:bg-[#edede2]"
                                         >
                                             <Edit3
-                                                class="size-4 text-[#065f46]"
+                                                class="size-4 text-[#000000]"
                                             />
                                         </button>
                                         <button
@@ -613,7 +613,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                             @click="handleDeleteSchedule(s)"
                                             :aria-label="`Hapus Jadwal Praktik ${s.doctor?.name} hari ${s.day}`"
                                             :title="`Hapus Jadwal ${s.doctor?.name}`"
-                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-xl border border-rose-300 bg-rose-50 text-rose-900 hover:bg-rose-100"
+                                            class="flex min-h-[38px] min-w-[38px] cursor-pointer items-center justify-center rounded-[40.5px] border border-rose-200 bg-rose-50 text-rose-900 hover:bg-rose-100"
                                         >
                                             <Trash2 class="size-4" />
                                         </button>
@@ -629,7 +629,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                             >
                                 <td
                                     colspan="6"
-                                    class="py-10 text-center font-medium text-[#000000]/70"
+                                    class="py-10 text-center font-medium text-[#333333]"
                                 >
                                     Belum ada jadwal praktik dokter yang
                                     terdaftar.
@@ -646,7 +646,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
             <section
                 v-else-if="activeTab === 'rooms'"
                 aria-labelledby="rooms-table-heading"
-                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-xs"
+                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-none font-['Rubik']"
             >
                 <h2 id="rooms-table-heading" class="sr-only">
                     Tabel Data Ruangan Periksa
@@ -654,7 +654,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 <div class="scrollbar-thin overflow-x-auto">
                     <table class="w-full text-left text-xs sm:text-sm">
                         <thead
-                            class="border-b border-[#000000]/10 bg-[#edede2]/70 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
+                            class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
                         >
                             <tr>
                                 <th class="px-4 py-3.5 sm:px-6">
@@ -682,23 +682,23 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                         {{ r.name_room }}
                                     </div>
                                     <div
-                                        class="font-mono text-xs text-[#065f46]"
+                                        class="font-mono text-xs text-[#333333]"
                                     >
                                         {{ r.code_room }}
                                     </div>
                                 </td>
                                 <td
-                                    class="px-4 py-3.5 text-xs font-semibold text-[#000000]/80"
+                                    class="px-4 py-3.5 text-xs font-medium text-[#333333]"
                                 >
                                     {{ r.type_room }}
                                 </td>
                                 <td
-                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold"
+                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold text-[#000000]"
                                 >
                                     Lantai {{ r.floor }}
                                 </td>
                                 <td
-                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold text-[#065f46]"
+                                    class="px-4 py-3.5 text-center font-mono text-xs font-bold text-[#000000]"
                                 >
                                     {{ r.schedules_count ?? 0 }} Jadwal
                                 </td>
@@ -729,7 +729,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 >
                     <h2
                         id="poli-modal-title"
-                        class="font-serif text-base font-bold text-[#000000]"
+                        class="font-['ivypresto-headline'] text-base font-bold text-[#000000] sm:text-lg"
                     >
                         {{
                             editingPoliId
@@ -741,19 +741,19 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         type="button"
                         @click="isPoliModalOpen = false"
                         aria-label="Tutup Dialog Poliklinik"
-                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-[#000000]/70 hover:text-[#000000]"
+                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#000000]/70 hover:bg-[#edede2] hover:text-[#000000]"
                     >
                         <X class="size-5" />
                     </button>
                 </div>
 
                 <div
-                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 text-xs sm:text-sm"
+                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
                 >
                     <div>
                         <label
                             for="poli-form-code"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Kode Poliklinik *</label
                         >
                         <input
@@ -761,7 +761,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                             v-model="poliForm.kode_poli"
                             type="text"
                             placeholder="Contoh: POL-GIGI"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         />
                         <p
                             v-if="poliErrors.kode_poli"
@@ -774,7 +774,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     <div>
                         <label
                             for="poli-form-name"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Nama Poliklinik *</label
                         >
                         <input
@@ -782,7 +782,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                             v-model="poliForm.name_poli"
                             type="text"
                             placeholder="Contoh: Poli Gigi & Mulut"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         />
                         <p
                             v-if="poliErrors.name_poli"
@@ -795,7 +795,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     <div>
                         <label
                             for="poli-form-location"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Lokasi Gedung / Lantai *</label
                         >
                         <input
@@ -803,7 +803,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                             v-model="poliForm.location"
                             type="text"
                             placeholder="Contoh: Lantai 2 Gedung B"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         />
                         <p
                             v-if="poliErrors.location"
@@ -816,13 +816,13 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     <div>
                         <label
                             for="poli-form-status"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Status Operasional *</label
                         >
                         <select
                             id="poli-form-status"
                             v-model="poliForm.status"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         >
                             <option value="Aktif">Aktif</option>
                             <option value="Nonaktif">Nonaktif</option>
@@ -836,7 +836,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     <button
                         type="button"
                         @click="isPoliModalOpen = false"
-                        class="min-h-[44px] rounded-xl border px-5 py-2 text-xs font-semibold text-[#000000]/75 hover:bg-[#edede2]"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
                     >
                         Batal
                     </button>
@@ -844,7 +844,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         type="button"
                         @click="handleSavePoli"
                         :disabled="isPoliSubmitting"
-                        class="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#065f46] px-6 py-2 text-xs font-bold text-[#ffffff] hover:bg-[#054d38]"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2 text-xs font-medium text-[#ffffff] hover:bg-[#1a1a1a]"
                     >
                         <Loader2
                             v-if="isPoliSubmitting"
@@ -876,7 +876,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 >
                     <h2
                         id="schedule-modal-title"
-                        class="font-serif text-base font-bold text-[#000000]"
+                        class="font-['ivypresto-headline'] text-base font-bold text-[#000000] sm:text-lg"
                     >
                         {{
                             editingScheduleId
@@ -888,25 +888,25 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         type="button"
                         @click="isScheduleModalOpen = false"
                         aria-label="Tutup Dialog Jadwal"
-                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-[#000000]/70 hover:text-[#000000]"
+                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#000000]/70 hover:bg-[#edede2] hover:text-[#000000]"
                     >
                         <X class="size-5" />
                     </button>
                 </div>
 
                 <div
-                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 text-xs sm:text-sm"
+                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
                 >
                     <div>
                         <label
                             for="schedule-form-doctor"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Dokter DPJP *</label
                         >
                         <select
                             id="schedule-form-doctor"
                             v-model="scheduleForm.doctor_id"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
                         >
                             <option
                                 v-for="doc in doctors"
@@ -928,13 +928,13 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         <div>
                             <label
                                 for="schedule-form-poli"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Poliklinik *</label
                             >
                             <select
                                 id="schedule-form-poli"
                                 v-model="scheduleForm.poli_id"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
                             >
                                 <option
                                     v-for="p in polis"
@@ -948,13 +948,13 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         <div>
                             <label
                                 for="schedule-form-room"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Ruangan *</label
                             >
                             <select
                                 id="schedule-form-room"
                                 v-model="scheduleForm.room_id"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
                             >
                                 <option
                                     v-for="r in rooms"
@@ -971,13 +971,13 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         <div>
                             <label
                                 for="schedule-form-day"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Hari *</label
                             >
                             <select
                                 id="schedule-form-day"
                                 v-model="scheduleForm.day"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
                             >
                                 <option
                                     v-for="d in [
@@ -999,27 +999,27 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         <div>
                             <label
                                 for="schedule-form-start-time"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Mulai *</label
                             >
                             <input
                                 id="schedule-form-start-time"
                                 v-model="scheduleForm.start_time"
                                 type="time"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] p-2 text-base text-[#000000] sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] p-2 text-base text-[#000000] sm:text-xs"
                             />
                         </div>
                         <div>
                             <label
                                 for="schedule-form-end-time"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Selesai *</label
                             >
                             <input
                                 id="schedule-form-end-time"
                                 v-model="scheduleForm.end_time"
                                 type="time"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] p-2 text-base text-[#000000] sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] p-2 text-base text-[#000000] sm:text-xs"
                             />
                         </div>
                     </div>
@@ -1028,7 +1028,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         <div>
                             <label
                                 for="schedule-form-quota"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Kuota Pasien / Hari *</label
                             >
                             <input
@@ -1037,19 +1037,19 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                 type="number"
                                 min="1"
                                 max="100"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
                             />
                         </div>
                         <div>
                             <label
                                 for="schedule-form-status"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Status Praktik *</label
                             >
                             <select
                                 id="schedule-form-status"
                                 v-model="scheduleForm.status"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] sm:text-xs"
                             >
                                 <option value="Aktif">Aktif</option>
                                 <option value="Libur">Libur</option>
@@ -1064,7 +1064,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     <button
                         type="button"
                         @click="isScheduleModalOpen = false"
-                        class="min-h-[44px] rounded-xl border px-5 py-2 text-xs font-semibold text-[#000000]/75 hover:bg-[#edede2]"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
                     >
                         Batal
                     </button>
@@ -1072,7 +1072,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         type="button"
                         @click="handleSaveSchedule"
                         :disabled="isScheduleSubmitting"
-                        class="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#065f46] px-6 py-2 text-xs font-bold text-[#ffffff] shadow-xs hover:bg-[#054d38]"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a]"
                     >
                         <Loader2
                             v-if="isScheduleSubmitting"

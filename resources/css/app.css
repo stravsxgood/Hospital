@@ -170,3 +170,54 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Vue3-Toastify Evergreen Custom Theme Styling
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+    --toastify-color-light: #ffffff;
+    --toastify-color-dark: #000000;
+    --toastify-color-info: #000000;
+    --toastify-color-success: #065f46;
+    --toastify-color-warning: #d97706;
+    --toastify-color-error: #e11d48;
+    --toastify-color-progress-light: linear-gradient(to right, #beedc0, #065f46);
+    --toastify-color-progress-success: #beedc0;
+    --toastify-toast-min-height: 52px;
+    --toastify-toast-max-height: 800px;
+    --toastify-z-index: 99999;
+}
+
+.Toastify__toast {
+    border-radius: 16px !important;
+    font-family: 'Rubik', sans-serif !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+    padding: 12px 16px !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--success {
+    background-color: #065f46 !important;
+    color: #ffffff !important;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--error {
+    background-color: #991b1b !important;
+    color: #ffffff !important;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--warning {
+    background-color: #b45309 !important;
+    color: #ffffff !important;
+}
+
+.Toastify__toast-theme--colored.Toastify__toast--info {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.Toastify__progress-bar {
+    height: 3px !important;
+}

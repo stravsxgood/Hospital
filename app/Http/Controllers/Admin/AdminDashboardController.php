@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Appointment;
 use App\Models\Billing;
+use App\Models\DisplayVideo;
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
 use App\Models\MedicalRecord;
@@ -145,6 +146,12 @@ class AdminDashboardController extends Controller
             'nurses_koas' => Nurse::where('type', 'koas')->count(),
             'total_patients' => Patient::count(),
             'total_polis' => Poli::count(),
+            'total_inactive' => User::where('is_active', false)->count(),
+            'users_never_logged_in' => User::whereNull('last_login_at')
+                ->where('created_at', '<', Carbon::now()->subDays(7))
+                ->count(),
+            'users_last_7_days' => User::where('last_login_at', '>=', Carbon::now()->subDays(7))
+                ->count(),
         ];
 
         $payload = [
@@ -166,6 +173,7 @@ class AdminDashboardController extends Controller
                 'clinic_matrix' => $clinicMatrix,
             ],
             'staff_stats' => $staffStats,
+            'display_videos' => DisplayVideo::orderBy('order', 'asc')->latest()->get(),
         ];
 
         if ($request->wantsJson()) {

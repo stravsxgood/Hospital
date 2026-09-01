@@ -53,7 +53,9 @@ class HandleInertiaRequests extends Middleware
                     'birthday_date' => $user->patient?->birthday_date,
                     'current_team_id' => $user->current_team_id,
                     'role' => $user->role,
+                    'is_admin' => (bool) $user->is_admin,
                     'is_doctor' => $user->is_doctor,
+                    'roles' => $user->roles->pluck('name')->all(),
                     'doctor' => $user->doctor ? [
                         'doctor_id' => $user->doctor->doctor_id,
                         'name' => $user->doctor->name,

@@ -7,6 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $patient_id
+ * @property int $user_id
+ * @property string $resident_n
+ * @property string $name
+ * @property string $gender
+ * @property string $birthday_date
+ * @property string|null $address
+ * @property string|null $number_phone
+ * @property string|null $disease
+ * @property string $registration_date
+ * @property string $status
+ */
 class Patient extends Model
 {
     use HasFactory;

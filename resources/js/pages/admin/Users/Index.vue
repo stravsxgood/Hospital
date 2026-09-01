@@ -149,6 +149,7 @@ const setRoleTab = (tab: string) => {
 const isDoctorModalOpen = ref(false);
 const isDoctorSubmitting = ref(false);
 const doctorErrors = ref<Record<string, string>>({});
+const doctorGeneralError = ref<string | null>(null);
 const doctorForm = ref({
     name: '',
     email: '',
@@ -170,6 +171,7 @@ const doctorForm = ref({
 
 const openDoctorModal = () => {
     doctorErrors.value = {};
+    doctorGeneralError.value = null;
     doctorForm.value = {
         name: '',
         email: '',
@@ -195,6 +197,7 @@ const openDoctorModal = () => {
 
 const handleCreateDoctor = async () => {
     doctorErrors.value = {};
+    doctorGeneralError.value = null;
     isDoctorSubmitting.value = true;
 
     try {
@@ -219,7 +222,8 @@ const handleCreateDoctor = async () => {
                 ]),
             );
         } else {
-            alert(err.response?.data?.message || 'Gagal mendaftarkan dokter.');
+            doctorGeneralError.value =
+                err.response?.data?.message || 'Gagal mendaftarkan dokter.';
         }
     } finally {
         isDoctorSubmitting.value = false;
@@ -232,6 +236,7 @@ const handleCreateDoctor = async () => {
 const isNurseModalOpen = ref(false);
 const isNurseSubmitting = ref(false);
 const nurseErrors = ref<Record<string, string>>({});
+const nurseGeneralError = ref<string | null>(null);
 const nurseForm = ref({
     name: '',
     email: '',
@@ -246,6 +251,7 @@ const nurseForm = ref({
 
 const openNurseModal = () => {
     nurseErrors.value = {};
+    nurseGeneralError.value = null;
     nurseForm.value = {
         name: '',
         email: '',
@@ -262,6 +268,7 @@ const openNurseModal = () => {
 
 const handleCreateNurse = async () => {
     nurseErrors.value = {};
+    nurseGeneralError.value = null;
     isNurseSubmitting.value = true;
 
     try {
@@ -286,10 +293,9 @@ const handleCreateNurse = async () => {
                 ]),
             );
         } else {
-            alert(
+            nurseGeneralError.value =
                 err.response?.data?.message ||
-                    'Gagal mendaftarkan perawat/staf.',
-            );
+                'Gagal mendaftarkan perawat/staf.';
         }
     } finally {
         isNurseSubmitting.value = false;
@@ -301,9 +307,11 @@ const handleCreateNurse = async () => {
 // ═══════════════════════════════════════════════════════════════
 const statusTargetUser = ref<UserItem | null>(null);
 const isTogglingStatus = ref(false);
+const statusErrorMessage = ref<string | null>(null);
 
 const openToggleStatusModal = (user: UserItem) => {
     statusTargetUser.value = user;
+    statusErrorMessage.value = null;
 };
 
 const confirmToggleStatus = async () => {
@@ -312,6 +320,7 @@ const confirmToggleStatus = async () => {
     }
 
     isTogglingStatus.value = true;
+    statusErrorMessage.value = null;
 
     try {
         await axios.patch(
@@ -320,13 +329,23 @@ const confirmToggleStatus = async () => {
         statusTargetUser.value = null;
         router.reload();
     } catch (err: any) {
-        alert(err.response?.data?.message || 'Gagal mengubah status akun.');
+        statusErrorMessage.value =
+            err.response?.data?.message || 'Gagal mengubah status akun.';
     } finally {
         isTogglingStatus.value = false;
     }
 };
 
-// Password Reset Success Modal
+// Password Reset Confirmation & Success Modal
+const resetTargetUser = ref<UserItem | null>(null);
+const isResettingPassword = ref(false);
+const resetErrorMessage = ref<string | null>(null);
+
+const openResetPasswordModal = (user: UserItem) => {
+    resetTargetUser.value = user;
+    resetErrorMessage.value = null;
+};
+
 const resetResultModal = ref<{
     name: string;
     email: string;
@@ -339,24 +358,26 @@ const showResetSuccessModal = (name: string, email: string, pass: string) => {
     copied.value = false;
 };
 
-const handleResetPassword = async (user: UserItem) => {
-    if (
-        !confirm(
-            `Reset password untuk pengguna "${user.name}" (${user.email})?`,
-        )
-    ) {
+const confirmResetPassword = async () => {
+    if (!resetTargetUser.value) {
         return;
     }
 
+    isResettingPassword.value = true;
+    resetErrorMessage.value = null;
+
     try {
+        const user = resetTargetUser.value;
         const res = await axios.post(`/admin/users/${user.id}/reset-password`);
-        showResetSuccessModal(
-            user.name,
-            user.email,
-            res.data?.temporary_password || 'Hospital2026!',
-        );
+        const tempPass = res.data?.temporary_password || 'Hospital2026!';
+
+        resetTargetUser.value = null;
+        showResetSuccessModal(user.name, user.email, tempPass);
     } catch (err: any) {
-        alert(err.response?.data?.message || 'Gagal mereset password.');
+        resetErrorMessage.value =
+            err.response?.data?.message || 'Gagal mereset password pengguna.';
+    } finally {
+        isResettingPassword.value = false;
     }
 };
 
@@ -385,14 +406,14 @@ const copyToClipboard = () => {
             <motion.header
                 :initial="{ opacity: 0, y: -12 }"
                 :animate="{ opacity: 1, y: 0 }"
-                class="flex flex-col gap-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-xs sm:flex-row sm:items-center sm:justify-between sm:p-7"
+                class="flex flex-col gap-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none sm:flex-row sm:items-center sm:justify-between sm:p-7"
             >
                 <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                         <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-[#065f46] px-3 py-1 text-xs font-bold text-[#ffffff]"
+                            class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
                         >
-                            <ShieldCheck class="size-3.5" />
+                            <ShieldCheck class="size-3.5 text-[#000000]" />
                             <span>Direktori Pengguna & Tenaga Medis</span>
                         </span>
                     </div>
@@ -401,7 +422,7 @@ const copyToClipboard = () => {
                     >
                         Provisioning & Tata Kelola Akun
                     </h1>
-                    <p class="text-xs text-[#333333] sm:text-sm">
+                    <p class="text-xs text-[#333333] sm:text-sm font-['Rubik']">
                         Kelola akun dokter DPJP, staf perawat tetap, dokter muda
                         (koas), dan hak akses Spatie dengan aman.
                     </p>
@@ -415,7 +436,7 @@ const copyToClipboard = () => {
                         :whileHover="{ scale: 1.02 }"
                         :whileTap="{ scale: 0.98 }"
                         @click="openDoctorModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#065f46] px-5 py-2.5 text-xs font-bold text-[#ffffff] shadow-xs transition-colors hover:bg-[#054d38] sm:text-sm"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a] sm:text-sm font-['Rubik']"
                     >
                         <Stethoscope class="size-4 text-[#beedc0]" />
                         <span>Tambah Dokter DPJP</span>
@@ -426,9 +447,9 @@ const copyToClipboard = () => {
                         :whileHover="{ scale: 1.02 }"
                         :whileTap="{ scale: 0.98 }"
                         @click="openNurseModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#000000]/15 bg-[#fffff3] px-4 py-2.5 text-xs font-semibold text-[#000000] transition-colors hover:bg-[#edede2] sm:text-sm"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-5 py-2.5 text-xs font-medium text-[#000000] transition-colors hover:bg-[#edede2] sm:text-sm font-['Rubik']"
                     >
-                        <UserPlus class="size-4 text-[#065f46]" />
+                        <UserPlus class="size-4 text-[#000000]" />
                         <span>Tambah Staf / Koas</span>
                     </motion.button>
                 </div>
@@ -445,10 +466,10 @@ const copyToClipboard = () => {
                     class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-5"
                 >
                     <div
-                        class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Total Pengguna
                         </div>
@@ -460,25 +481,25 @@ const copyToClipboard = () => {
                     </div>
 
                     <div
-                        class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Dokter DPJP
                         </div>
                         <div
-                            class="mt-1 font-mono text-2xl font-bold text-[#065f46]"
+                            class="mt-1 font-mono text-2xl font-bold text-[#000000]"
                         >
                             {{ stats.total_doctors }}
                         </div>
                     </div>
 
                     <div
-                        class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Perawat Tetap
                         </div>
@@ -490,30 +511,30 @@ const copyToClipboard = () => {
                     </div>
 
                     <div
-                        class="rounded-3xl border border-amber-300 bg-amber-50 p-4 shadow-xs"
+                        class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-amber-900 uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Dokter Muda
                         </div>
                         <div
-                            class="mt-1 font-mono text-2xl font-bold text-amber-900"
+                            class="mt-1 font-mono text-2xl font-bold text-[#000000]"
                         >
                             {{ stats.total_nurses_koas }}
                         </div>
                     </div>
 
                     <div
-                        class="col-span-2 rounded-3xl border border-rose-300 bg-rose-50 p-4 shadow-xs sm:col-span-1"
+                        class="col-span-2 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none sm:col-span-1"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-rose-900 uppercase"
+                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
                         >
                             Akun Nonaktif
                         </div>
                         <div
-                            class="mt-1 font-mono text-2xl font-bold text-rose-900"
+                            class="mt-1 font-mono text-2xl font-bold text-[#000000]"
                         >
                             {{ stats.total_inactive }}
                         </div>
@@ -554,11 +575,11 @@ const copyToClipboard = () => {
                                 role="tab"
                                 :aria-selected="selectedRole === tab.id"
                                 @click="setRoleTab(tab.id)"
-                                class="min-h-[40px] shrink-0 cursor-pointer rounded-xl px-4 py-2 text-xs font-bold transition-all"
+                                class="min-h-[40px] shrink-0 cursor-pointer rounded-full px-4 py-2 text-xs font-medium transition-all"
                                 :class="
                                     selectedRole === tab.id
-                                        ? 'bg-[#065f46] text-[#ffffff] shadow-xs'
-                                        : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/75 hover:bg-[#edede2]'
+                                        ? 'bg-[#000000] text-[#ffffff] shadow-none'
+                                        : 'border border-[#000000]/10 bg-[#fffff3] text-[#000000]/80 hover:bg-[#edede2]'
                                 "
                             >
                                 {{ tab.label }}
@@ -567,7 +588,7 @@ const copyToClipboard = () => {
 
                         <!-- Search and Status Select -->
                         <div
-                            class="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-3 shadow-xs sm:flex-row sm:items-center sm:p-4"
+                            class="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-3 shadow-none sm:flex-row sm:items-center sm:p-4"
                         >
                             <div class="relative flex-1">
                                 <label for="user-search-input" class="sr-only"
@@ -583,7 +604,7 @@ const copyToClipboard = () => {
                                     @keyup.enter="applyFilters"
                                     type="text"
                                     placeholder="Cari nama, email, SIP dokter, STR/NIM..."
-                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#edede2]/40 pr-4 pl-10 text-xs text-[#000000] placeholder-[#000000]/60 focus:border-[#065f46] focus:outline-none sm:text-sm"
+                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] pr-4 pl-10 text-xs text-[#000000] placeholder-[#000000]/50 focus:border-[#000000] focus:outline-none sm:text-sm"
                                 />
                             </div>
 
@@ -595,7 +616,7 @@ const copyToClipboard = () => {
                                     id="user-status-filter"
                                     v-model="selectedStatus"
                                     @change="applyFilters"
-                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2 text-xs font-semibold text-[#000000] focus:border-[#065f46] focus:outline-none sm:w-auto"
+                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2 text-xs font-medium text-[#000000] focus:border-[#000000] focus:outline-none sm:w-auto"
                                 >
                                     <option value="all">Semua Status</option>
                                     <option value="active">Aktif</option>
@@ -606,7 +627,7 @@ const copyToClipboard = () => {
                                     type="button"
                                     @click="applyFilters"
                                     aria-label="Terapkan Filter Pencarian"
-                                    class="min-h-[44px] shrink-0 rounded-xl bg-[#065f46] px-4 text-xs font-bold text-[#ffffff] hover:bg-[#054d38]"
+                                    class="min-h-[44px] shrink-0 rounded-[40.5px] bg-[#000000] px-5 text-xs font-medium text-[#ffffff] hover:bg-[#1a1a1a]"
                                 >
                                     Cari
                                 </button>
@@ -636,7 +657,7 @@ const copyToClipboard = () => {
                     <td class="px-4 py-3.5 sm:px-6">
                         <div class="font-bold text-[#000000]">{{ u.name }}</div>
                         <div
-                            class="max-w-[180px] truncate text-xs text-[#000000]/70 sm:max-w-none"
+                            class="max-w-[180px] truncate text-xs text-[#333333] sm:max-w-none"
                         >
                             {{ u.email }}
                         </div>
@@ -646,37 +667,37 @@ const copyToClipboard = () => {
                     <td class="px-4 py-3.5">
                         <span
                             v-if="u.doctor || u.role === 'doctor'"
-                            class="inline-flex items-center gap-1.5 rounded-full border border-emerald-300 bg-emerald-100 px-2.5 py-0.5 text-xs font-bold text-emerald-900"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3 py-0.5 text-xs font-bold text-[#000000]"
                         >
-                            <Stethoscope class="size-3" />
+                            <Stethoscope class="size-3 text-[#000000]" />
                             <span>Dokter DPJP</span>
                         </span>
                         <span
                             v-else-if="u.nurse?.type === 'tetap'"
-                            class="inline-flex items-center gap-1.5 rounded-full border border-blue-300 bg-blue-100 px-2.5 py-0.5 text-xs font-bold text-blue-900"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[#000000]/10 bg-[#edede2] px-3 py-0.5 text-xs font-bold text-[#000000]"
                         >
-                            <ShieldCheck class="size-3" />
+                            <ShieldCheck class="size-3 text-[#000000]" />
                             <span>Perawat Tetap</span>
                         </span>
                         <span
                             v-else-if="u.nurse?.type === 'koas'"
-                            class="inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-100/70 px-3 py-0.5 text-xs font-bold text-amber-900"
                         >
-                            <GraduationCap class="size-3" />
+                            <GraduationCap class="size-3 text-amber-900" />
                             <span>Dokter Muda (Koas)</span>
                         </span>
                         <span
                             v-else-if="
                                 u.role === 'admin' || u.role === 'super-admin'
                             "
-                            class="inline-flex items-center gap-1.5 rounded-full border border-purple-300 bg-purple-100 px-2.5 py-0.5 text-xs font-bold text-purple-900"
+                            class="inline-flex items-center gap-1.5 rounded-full bg-[#000000] px-3 py-0.5 text-xs font-bold text-[#ffffff]"
                         >
-                            <Shield class="size-3" />
+                            <Shield class="size-3 text-[#beedc0]" />
                             <span>Super Admin</span>
                         </span>
                         <span
                             v-else
-                            class="inline-flex items-center gap-1 rounded-full border border-neutral-300 bg-neutral-100 px-2.5 py-0.5 text-xs font-medium text-neutral-800"
+                            class="inline-flex items-center gap-1 rounded-full border border-[#000000]/10 bg-[#edede2] px-3 py-0.5 text-xs font-medium text-[#333333]"
                         >
                             <span>Pasien</span>
                         </span>
@@ -685,14 +706,14 @@ const copyToClipboard = () => {
                     <!-- Detail Tenaga Medis -->
                     <td class="px-4 py-3.5 text-xs">
                         <div v-if="u.doctor" class="space-y-0.5">
-                            <div class="font-bold text-[#065f46]">
+                            <div class="font-bold text-[#000000]">
                                 {{
                                     u.doctor.specialization
                                         ?.name_specialization || 'Spesialis'
                                 }}
                             </div>
                             <div
-                                class="font-mono text-[11px] text-[#000000]/70"
+                                class="font-mono text-[11px] text-[#333333]"
                             >
                                 SIP: {{ u.doctor.sip_number }}
                             </div>
@@ -702,13 +723,13 @@ const copyToClipboard = () => {
                                 {{ u.nurse.institute || 'RS Utama' }}
                             </div>
                             <div
-                                class="font-mono text-[11px] text-[#000000]/70"
+                                class="font-mono text-[11px] text-[#333333]"
                             >
                                 {{ u.nurse.type === 'koas' ? 'NIM' : 'STR' }}:
                                 {{ u.nurse.registration_number || '-' }}
                             </div>
                         </div>
-                        <span v-else class="text-[#000000]/60">-</span>
+                        <span v-else class="text-[#333333]">-</span>
                     </td>
 
                     <!-- Status -->
@@ -716,15 +737,15 @@ const copyToClipboard = () => {
                         <span
                             :class="
                                 u.is_active
-                                    ? 'border-emerald-300 bg-emerald-100 text-emerald-900'
-                                    : 'border-rose-300 bg-rose-100 text-rose-900'
+                                    ? 'border-[#beedc0] bg-[#beedc0]/40 text-[#000000]'
+                                    : 'border-rose-200 bg-rose-100/70 text-rose-900'
                             "
-                            class="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-bold"
+                            class="inline-flex items-center gap-1.5 rounded-full border px-3 py-0.5 text-xs font-bold"
                         >
                             <span
                                 :class="
                                     u.is_active
-                                        ? 'bg-emerald-600'
+                                        ? 'bg-[#000000]'
                                         : 'bg-rose-600'
                                 "
                                 class="size-1.5 rounded-full"
@@ -743,12 +764,12 @@ const copyToClipboard = () => {
                             <!-- Reset Password -->
                             <button
                                 type="button"
-                                @click="handleResetPassword(u)"
+                                @click="openResetPasswordModal(u)"
                                 :aria-label="`Reset Password Pengguna ${u.name}`"
                                 :title="`Reset Password ${u.name}`"
-                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-xl border border-[#000000]/15 bg-[#fffff3] px-2.5 py-1.5 text-xs font-semibold text-[#000000] transition-colors hover:bg-[#edede2] sm:px-3"
+                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-3 py-1.5 text-xs font-medium text-[#000000] transition-colors hover:bg-[#edede2] sm:px-3.5"
                             >
-                                <KeyRound class="size-3.5 text-[#065f46]" />
+                                <KeyRound class="size-3.5 text-[#000000]" />
                                 <span class="hidden sm:inline">Reset Pass</span>
                             </button>
 
@@ -762,11 +783,11 @@ const copyToClipboard = () => {
                                         ? 'Nonaktifkan Akun'
                                         : 'Aktifkan Akun'
                                 "
-                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-xl border px-2.5 py-1.5 text-xs font-bold transition-colors sm:px-3"
+                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border px-3 py-1.5 text-xs font-medium transition-colors sm:px-3.5"
                                 :class="
                                     u.is_active
-                                        ? 'border-rose-300 bg-rose-50 text-rose-900 hover:bg-rose-100'
-                                        : 'border-emerald-300 bg-emerald-50 text-emerald-900 hover:bg-emerald-100'
+                                        ? 'border-rose-200 bg-rose-50 text-rose-900 hover:bg-rose-100'
+                                        : 'border-[#beedc0] bg-[#beedc0]/30 text-[#000000] hover:bg-[#beedc0]/50'
                                 "
                             >
                                 <ToggleLeft v-if="u.is_active" class="size-4" />
@@ -783,7 +804,7 @@ const copyToClipboard = () => {
                 <template #pagination v-if="users.total > 0">
                     <nav
                         aria-label="Navigasi Halaman Pengguna"
-                        class="flex flex-col items-center justify-between gap-3 text-xs text-[#000000]/70 sm:flex-row"
+                        class="flex flex-col items-center justify-between gap-3 text-xs text-[#333333] sm:flex-row"
                     >
                         <div>
                             Menampilkan halaman
@@ -806,10 +827,10 @@ const copyToClipboard = () => {
                                     :href="link.url"
                                     v-html="link.label"
                                     :aria-label="`Buka halaman ${link.label}`"
-                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 font-semibold transition-colors"
+                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 font-medium transition-colors"
                                     :class="
                                         link.active
-                                            ? 'bg-[#065f46] text-[#ffffff]'
+                                            ? 'bg-[#000000] text-[#ffffff]'
                                             : 'bg-[#edede2]/60 text-[#000000] hover:bg-[#edede2]'
                                     "
                                 />
@@ -845,18 +866,18 @@ const copyToClipboard = () => {
                 >
                     <div class="flex items-center gap-3">
                         <div
-                            class="flex size-10 items-center justify-center rounded-2xl bg-[#beedc0] text-[#065f46]"
+                            class="flex size-10 items-center justify-center rounded-full bg-[#beedc0] text-[#000000]"
                         >
                             <Stethoscope class="size-5" />
                         </div>
                         <div>
                             <h2
                                 id="doctor-modal-title"
-                                class="font-serif text-base font-bold text-[#000000] sm:text-lg"
+                                class="font-['ivypresto-headline'] text-lg font-bold text-[#000000] sm:text-xl"
                             >
                                 Pendaftaran Dokter DPJP
                             </h2>
-                            <p class="text-[11px] text-[#333333] sm:text-xs">
+                            <p class="text-[11px] text-[#333333] sm:text-xs font-['Rubik']">
                                 Provisioning akun dokter dan penetapan jadwal
                                 praktik
                             </p>
@@ -866,7 +887,7 @@ const copyToClipboard = () => {
                         type="button"
                         @click="isDoctorModalOpen = false"
                         aria-label="Tutup Dialog Pendaftaran Dokter"
-                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-[#000000]/70 hover:text-[#000000]"
+                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#000000]/70 hover:bg-[#edede2] hover:text-[#000000]"
                     >
                         <X class="size-5" />
                     </button>
@@ -874,14 +895,20 @@ const copyToClipboard = () => {
 
                 <!-- Scrollable Body -->
                 <div
-                    class="flex-1 space-y-4 overflow-y-auto pr-1 text-xs sm:text-sm"
+                    class="flex-1 space-y-4 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
                 >
+                    <div
+                        v-if="doctorGeneralError"
+                        class="rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-xs font-semibold text-rose-800"
+                    >
+                        {{ doctorGeneralError }}
+                    </div>
                     <!-- Nama & Email -->
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                         <div>
                             <label
                                 for="doctor-form-name"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Nama Lengkap & Gelar *</label
                             >
                             <input
@@ -889,7 +916,7 @@ const copyToClipboard = () => {
                                 v-model="doctorForm.name"
                                 type="text"
                                 placeholder="Contoh: dr. Andrea Wijaya, Sp.PD"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             />
                             <p
                                 v-if="doctorErrors.name"
@@ -902,7 +929,7 @@ const copyToClipboard = () => {
                         <div>
                             <label
                                 for="doctor-form-email"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Alamat Email Login *</label
                             >
                             <input
@@ -910,7 +937,7 @@ const copyToClipboard = () => {
                                 v-model="doctorForm.email"
                                 type="email"
                                 placeholder="dokter@hospital.com"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             />
                             <p
                                 v-if="doctorErrors.email"
@@ -926,13 +953,13 @@ const copyToClipboard = () => {
                         <div>
                             <label
                                 for="doctor-form-specialization"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Bidang Spesialisasi *</label
                             >
                             <select
                                 id="doctor-form-specialization"
                                 v-model="doctorForm.specialization_id"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             >
                                 <option
                                     v-for="sp in specializations"
@@ -953,7 +980,7 @@ const copyToClipboard = () => {
                         <div>
                             <label
                                 for="doctor-form-sip"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Nomor SIP (Surat Izin Praktik) *</label
                             >
                             <input
@@ -961,7 +988,7 @@ const copyToClipboard = () => {
                                 v-model="doctorForm.sip_number"
                                 type="text"
                                 placeholder="Contoh: SIP.503/123/2026"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             />
                             <p
                                 v-if="doctorErrors.sip_number"
@@ -977,13 +1004,13 @@ const copyToClipboard = () => {
                         <div>
                             <label
                                 for="doctor-form-gender"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Jenis Kelamin *</label
                             >
                             <select
                                 id="doctor-form-gender"
                                 v-model="doctorForm.gender"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             >
                                 <option value="Laki-laki">Laki-laki</option>
                                 <option value="Perempuan">Perempuan</option>
@@ -993,7 +1020,7 @@ const copyToClipboard = () => {
                         <div>
                             <label
                                 for="doctor-form-phone"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >No. WhatsApp / HP</label
                             >
                             <input
@@ -1001,7 +1028,7 @@ const copyToClipboard = () => {
                                 v-model="doctorForm.number_phone"
                                 type="text"
                                 placeholder="081234567890"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             />
                         </div>
                     </div>
@@ -1010,7 +1037,7 @@ const copyToClipboard = () => {
                     <div>
                         <label
                             for="doctor-form-password"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Password Sementara (Default: Hospital2026!)</label
                         >
                         <input
@@ -1018,7 +1045,7 @@ const copyToClipboard = () => {
                             v-model="doctorForm.password"
                             type="text"
                             placeholder="Hospital2026!"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         />
                     </div>
 
@@ -1026,31 +1053,31 @@ const copyToClipboard = () => {
                     <div class="space-y-3 border-t border-[#000000]/10 pt-3">
                         <label
                             for="doctor-form-create-schedule"
-                            class="flex cursor-pointer items-center gap-2 font-bold text-[#065f46]"
+                            class="flex cursor-pointer items-center gap-2 font-medium text-[#000000]"
                         >
                             <input
                                 id="doctor-form-create-schedule"
                                 type="checkbox"
                                 v-model="doctorForm.create_schedule"
-                                class="size-4 rounded accent-[#065f46]"
+                                class="size-4 rounded accent-[#000000]"
                             />
                             <span>Buat Jadwal Praktik Perdana Otomatis</span>
                         </label>
 
                         <div
                             v-if="doctorForm.create_schedule"
-                            class="grid grid-cols-1 gap-3 rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-4 sm:grid-cols-3"
+                            class="grid grid-cols-1 gap-3 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 sm:grid-cols-3"
                         >
                             <div>
                                 <label
                                     for="doctor-form-poli"
-                                    class="mb-1 block font-bold text-[#000000]"
+                                    class="mb-1 block font-medium text-[#000000]"
                                     >Poliklinik</label
                                 >
                                 <select
                                     id="doctor-form-poli"
                                     v-model="doctorForm.poli_id"
-                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] p-2 text-xs"
+                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] p-2 text-xs"
                                 >
                                     <option
                                         v-for="p in polis"
@@ -1065,13 +1092,13 @@ const copyToClipboard = () => {
                             <div>
                                 <label
                                     for="doctor-form-room"
-                                    class="mb-1 block font-bold text-[#000000]"
+                                    class="mb-1 block font-medium text-[#000000]"
                                     >Ruangan</label
                                 >
                                 <select
                                     id="doctor-form-room"
                                     v-model="doctorForm.room_id"
-                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] p-2 text-xs"
+                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] p-2 text-xs"
                                 >
                                     <option
                                         v-for="r in rooms"
@@ -1086,13 +1113,13 @@ const copyToClipboard = () => {
                             <div>
                                 <label
                                     for="doctor-form-day"
-                                    class="mb-1 block font-bold text-[#000000]"
+                                    class="mb-1 block font-medium text-[#000000]"
                                     >Hari Praktik</label
                                 >
                                 <select
                                     id="doctor-form-day"
                                     v-model="doctorForm.day"
-                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] p-2 text-xs"
+                                    class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] p-2 text-xs"
                                 >
                                     <option
                                         v-for="d in [
@@ -1122,7 +1149,7 @@ const copyToClipboard = () => {
                     <button
                         type="button"
                         @click="isDoctorModalOpen = false"
-                        class="min-h-[44px] rounded-xl border border-[#000000]/15 px-5 py-2.5 text-xs font-semibold text-[#000000]/75 hover:bg-[#edede2]"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2.5 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
                     >
                         Batal
                     </button>
@@ -1131,7 +1158,7 @@ const copyToClipboard = () => {
                         type="button"
                         @click="handleCreateDoctor"
                         :disabled="isDoctorSubmitting"
-                        class="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#065f46] px-6 py-2.5 text-xs font-bold text-[#ffffff] shadow-xs hover:bg-[#054d38]"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a]"
                     >
                         <Loader2
                             v-if="isDoctorSubmitting"
@@ -1164,18 +1191,18 @@ const copyToClipboard = () => {
                 >
                     <div class="flex items-center gap-3">
                         <div
-                            class="flex size-10 items-center justify-center rounded-2xl border border-blue-200 bg-blue-100 text-blue-900"
+                            class="flex size-10 items-center justify-center rounded-full bg-[#beedc0] text-[#000000]"
                         >
                             <UserPlus class="size-5" />
                         </div>
                         <div>
                             <h2
                                 id="nurse-modal-title"
-                                class="font-serif text-base font-bold text-[#000000] sm:text-lg"
+                                class="font-['ivypresto-headline'] text-lg font-bold text-[#000000] sm:text-xl"
                             >
                                 Pendaftaran Staf / Koas
                             </h2>
-                            <p class="text-[11px] text-[#333333] sm:text-xs">
+                            <p class="text-[11px] text-[#333333] sm:text-xs font-['Rubik']">
                                 Penetapan perawat tetap atau dokter muda magang
                             </p>
                         </div>
@@ -1184,18 +1211,24 @@ const copyToClipboard = () => {
                         type="button"
                         @click="isNurseModalOpen = false"
                         aria-label="Tutup Dialog Pendaftaran Staf"
-                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl text-[#000000]/70 hover:text-[#000000]"
+                        class="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full text-[#000000]/70 hover:bg-[#edede2] hover:text-[#000000]"
                     >
                         <X class="size-5" />
                     </button>
                 </div>
 
                 <div
-                    class="flex-1 space-y-4 overflow-y-auto pr-1 text-xs sm:text-sm"
+                    class="flex-1 space-y-4 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
                 >
+                    <div
+                        v-if="nurseGeneralError"
+                        class="rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-xs font-semibold text-rose-800"
+                    >
+                        {{ nurseGeneralError }}
+                    </div>
                     <!-- Tipe Penugasan -->
                     <div>
-                        <span class="mb-1 block font-bold text-[#000000]"
+                        <span class="mb-1 block font-medium text-[#000000]"
                             >Tipe Penugasan *</span
                         >
                         <div
@@ -1207,8 +1240,8 @@ const copyToClipboard = () => {
                                 for="nurse-type-tetap"
                                 :class="
                                     nurseForm.type === 'tetap'
-                                        ? 'border-[#065f46] bg-[#beedc0]/20 ring-1 ring-[#065f46]'
-                                        : 'border-[#000000]/15 bg-[#fffff3]'
+                                        ? 'border-[#000000] bg-[#beedc0]/30 ring-1 ring-[#000000]'
+                                        : 'border-[#000000]/15 bg-[#ffffff]'
                                 "
                                 class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-xl border p-3"
                             >
@@ -1217,15 +1250,15 @@ const copyToClipboard = () => {
                                     type="radio"
                                     v-model="nurseForm.type"
                                     value="tetap"
-                                    class="accent-[#065f46]"
+                                    class="accent-[#000000]"
                                 />
                                 <div>
                                     <div
-                                        class="text-xs font-bold text-[#065f46]"
+                                        class="text-xs font-bold text-[#000000]"
                                     >
                                         Perawat Tetap
                                     </div>
-                                    <div class="text-[11px] text-[#000000]/70">
+                                    <div class="text-[11px] text-[#333333]">
                                         Akses Kasir & POS
                                     </div>
                                 </div>
@@ -1236,7 +1269,7 @@ const copyToClipboard = () => {
                                 :class="
                                     nurseForm.type === 'koas'
                                         ? 'border-amber-500 bg-amber-50 ring-1 ring-amber-500'
-                                        : 'border-[#000000]/15 bg-[#fffff3]'
+                                        : 'border-[#000000]/15 bg-[#ffffff]'
                                 "
                                 class="flex min-h-[44px] cursor-pointer items-center gap-2 rounded-xl border p-3"
                             >
@@ -1253,7 +1286,7 @@ const copyToClipboard = () => {
                                     >
                                         Dokter Muda
                                     </div>
-                                    <div class="text-[11px] text-[#000000]/70">
+                                    <div class="text-[11px] text-[#333333]">
                                         Logbook Klinis
                                     </div>
                                 </div>
@@ -1265,7 +1298,7 @@ const copyToClipboard = () => {
                     <div>
                         <label
                             for="nurse-form-name"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Nama Lengkap *</label
                         >
                         <input
@@ -1273,7 +1306,7 @@ const copyToClipboard = () => {
                             v-model="nurseForm.name"
                             type="text"
                             placeholder="Nama tenaga medis"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         />
                         <p
                             v-if="nurseErrors.name"
@@ -1286,7 +1319,7 @@ const copyToClipboard = () => {
                     <div>
                         <label
                             for="nurse-form-email"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Alamat Email Login *</label
                         >
                         <input
@@ -1294,7 +1327,7 @@ const copyToClipboard = () => {
                             v-model="nurseForm.email"
                             type="email"
                             placeholder="staf@hospital.com"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         />
                         <p
                             v-if="nurseErrors.email"
@@ -1309,7 +1342,7 @@ const copyToClipboard = () => {
                         <div>
                             <label
                                 for="nurse-form-reg"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                             >
                                 {{
                                     nurseForm.type === 'koas'
@@ -1326,20 +1359,20 @@ const copyToClipboard = () => {
                                         ? 'NIM-FK-2026'
                                         : 'STR-NURSE-001'
                                 "
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             />
                         </div>
 
                         <div>
                             <label
                                 for="nurse-form-gender"
-                                class="mb-1 block font-bold text-[#000000]"
+                                class="mb-1 block font-medium text-[#000000]"
                                 >Jenis Kelamin *</label
                             >
                             <select
                                 id="nurse-form-gender"
                                 v-model="nurseForm.gender"
-                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                                class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                             >
                                 <option value="Perempuan">Perempuan</option>
                                 <option value="Laki-laki">Laki-laki</option>
@@ -1351,7 +1384,7 @@ const copyToClipboard = () => {
                     <div v-if="nurseForm.type === 'koas'">
                         <label
                             for="nurse-form-institute"
-                            class="mb-1 block font-bold text-[#000000]"
+                            class="mb-1 block font-medium text-[#000000]"
                             >Fakultas / Universitas Asal *</label
                         >
                         <input
@@ -1359,7 +1392,7 @@ const copyToClipboard = () => {
                             v-model="nurseForm.institute"
                             type="text"
                             placeholder="Contoh: Fakultas Kedokteran Universitas Negeri"
-                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#fffff3] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#065f46] focus:outline-none sm:text-xs"
+                            class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-base text-[#000000] focus:border-[#000000] focus:outline-none sm:text-xs"
                         />
                         <p
                             v-if="nurseErrors.institute"
@@ -1377,7 +1410,7 @@ const copyToClipboard = () => {
                     <button
                         type="button"
                         @click="isNurseModalOpen = false"
-                        class="min-h-[44px] rounded-xl border border-[#000000]/15 px-5 py-2.5 text-xs font-semibold text-[#000000]/75 hover:bg-[#edede2]"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2.5 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
                     >
                         Batal
                     </button>
@@ -1386,7 +1419,7 @@ const copyToClipboard = () => {
                         type="button"
                         @click="handleCreateNurse"
                         :disabled="isNurseSubmitting"
-                        class="flex min-h-[44px] items-center gap-2 rounded-xl bg-[#065f46] px-6 py-2.5 text-xs font-bold text-[#ffffff] shadow-xs hover:bg-[#054d38]"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a]"
                     >
                         <Loader2
                             v-if="isNurseSubmitting"
@@ -1416,11 +1449,11 @@ const copyToClipboard = () => {
             >
                 <div class="flex items-center gap-3">
                     <div
-                        class="flex size-10 items-center justify-center rounded-2xl"
+                        class="flex size-10 items-center justify-center rounded-full"
                         :class="
                             statusTargetUser.is_active
                                 ? 'border border-rose-200 bg-rose-100 text-rose-900'
-                                : 'border border-emerald-200 bg-emerald-100 text-emerald-900'
+                                : 'border border-[#beedc0] bg-[#beedc0]/40 text-[#000000]'
                         "
                     >
                         <ShieldAlert
@@ -1432,7 +1465,7 @@ const copyToClipboard = () => {
                     <div>
                         <h2
                             id="status-toggle-title"
-                            class="font-serif text-base font-bold text-[#000000]"
+                            class="font-['ivypresto-headline'] text-base font-bold text-[#000000] sm:text-lg"
                         >
                             {{
                                 statusTargetUser.is_active
@@ -1440,14 +1473,14 @@ const copyToClipboard = () => {
                                     : 'Aktifkan Kembali Akun'
                             }}
                         </h2>
-                        <p class="text-xs text-[#333333]">
+                        <p class="text-xs text-[#333333] font-['Rubik']">
                             {{ statusTargetUser.name }}
                         </p>
                     </div>
                 </div>
 
                 <div
-                    class="space-y-2 rounded-2xl border border-[#000000]/5 bg-[#edede2]/60 p-4 text-xs text-[#000000]/80"
+                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 text-xs text-[#000000]/80 font-['Rubik']"
                 >
                     <p v-if="statusTargetUser.is_active">
                         Menonaktifkan akun akan memblokir hak login pengguna.
@@ -1462,11 +1495,18 @@ const copyToClipboard = () => {
                     </p>
                 </div>
 
+                <div
+                    v-if="statusErrorMessage"
+                    class="rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-xs font-semibold text-rose-800"
+                >
+                    {{ statusErrorMessage }}
+                </div>
+
                 <div class="flex items-center justify-end gap-3 pt-2">
                     <button
                         type="button"
                         @click="statusTargetUser = null"
-                        class="min-h-[44px] rounded-xl border border-[#000000]/15 px-5 py-2 text-xs font-semibold text-[#000000]/75 hover:bg-[#edede2]"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
                     >
                         Batal
                     </button>
@@ -1475,11 +1515,11 @@ const copyToClipboard = () => {
                         type="button"
                         @click="confirmToggleStatus"
                         :disabled="isTogglingStatus"
-                        class="flex min-h-[44px] items-center gap-2 rounded-xl px-5 py-2 text-xs font-bold text-[#ffffff] shadow-xs"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] px-5 py-2 text-xs font-medium text-[#ffffff] shadow-none"
                         :class="
                             statusTargetUser.is_active
                                 ? 'bg-rose-600 hover:bg-rose-700'
-                                : 'bg-[#065f46] hover:bg-[#054d38]'
+                                : 'bg-[#000000] hover:bg-[#1a1a1a]'
                         "
                     >
                         <Loader2
@@ -1490,6 +1530,87 @@ const copyToClipboard = () => {
                             statusTargetUser.is_active
                                 ? 'Ya, Nonaktifkan'
                                 : 'Ya, Aktifkan'
+                        }}</span>
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Modal Konfirmasi Reset Password
+             ═══════════════════════════════════════════════════════════════ -->
+        <div
+            v-if="resetTargetUser"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/60 p-4 backdrop-blur-xs"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="reset-confirm-title"
+        >
+            <motion.div
+                :initial="{ opacity: 0, scale: 0.95 }"
+                :animate="{ opacity: 1, scale: 1 }"
+                class="w-full max-w-md space-y-4 rounded-3xl border border-[#000000]/15 bg-[#fffff3] p-6 shadow-2xl"
+            >
+                <div class="flex items-center gap-3">
+                    <div
+                        class="flex size-10 items-center justify-center rounded-full border border-[#beedc0] bg-[#beedc0]/40 text-[#000000]"
+                    >
+                        <KeyRound class="size-5 text-[#000000]" />
+                    </div>
+                    <div>
+                        <h2
+                            id="reset-confirm-title"
+                            class="font-['ivypresto-headline'] text-base font-bold text-[#000000] sm:text-lg"
+                        >
+                            Konfirmasi Reset Password
+                        </h2>
+                        <p class="text-xs text-[#333333] font-['Rubik']">
+                            {{ resetTargetUser.name }}
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 text-xs text-[#000000]/80 font-['Rubik']"
+                >
+                    <p>
+                        Apakah Anda yakin ingin mereset password untuk akun <strong class="text-[#000000]">{{ resetTargetUser.email }}</strong>?
+                    </p>
+                    <p class="text-[#333333]">
+                        Sistem akan menghasilkan <strong>password sementara baru</strong>. Kredensial baru akan ditampilkan setelah konfirmasi agar dapat disalin langsung.
+                    </p>
+                    <div
+                        v-if="resetErrorMessage"
+                        class="mt-2 rounded-xl border border-rose-200 bg-rose-50 p-2.5 text-xs font-semibold text-rose-800"
+                    >
+                        {{ resetErrorMessage }}
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button
+                        type="button"
+                        @click="resetTargetUser = null"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
+                    >
+                        Batal
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="confirmResetPassword"
+                        :disabled="isResettingPassword"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] disabled:opacity-60"
+                    >
+                        <Loader2
+                            v-if="isResettingPassword"
+                            class="size-4 animate-spin text-[#beedc0]"
+                        />
+                        <KeyRound v-else class="size-4 text-[#beedc0]" />
+                        <span>{{
+                            isResettingPassword
+                                ? 'Mereset...'
+                                : 'Ya, Reset Password'
                         }}</span>
                     </button>
                 </div>
@@ -1509,22 +1630,22 @@ const copyToClipboard = () => {
             <motion.div
                 :initial="{ opacity: 0, scale: 0.95 }"
                 :animate="{ opacity: 1, scale: 1 }"
-                class="w-full max-w-md space-y-4 rounded-3xl border border-[#065f46]/30 bg-[#fffff3] p-6 shadow-2xl"
+                class="w-full max-w-md space-y-4 rounded-3xl border border-[#000000]/15 bg-[#fffff3] p-6 shadow-2xl"
             >
                 <div class="flex items-center gap-3">
                     <div
-                        class="flex size-10 items-center justify-center rounded-2xl bg-[#beedc0] text-[#065f46]"
+                        class="flex size-10 items-center justify-center rounded-full bg-[#beedc0] text-[#000000]"
                     >
                         <KeyRound class="size-5" />
                     </div>
                     <div>
                         <h2
                             id="reset-pass-title"
-                            class="font-serif text-base font-bold text-[#000000]"
+                            class="font-['ivypresto-headline'] text-base font-bold text-[#000000] sm:text-lg"
                         >
                             Kredensial Password Baru
                         </h2>
-                        <p class="text-xs text-[#333333]">
+                        <p class="text-xs text-[#333333] font-['Rubik']">
                             {{ resetResultModal.name }} ({{
                                 resetResultModal.email
                             }})
@@ -1534,7 +1655,7 @@ const copyToClipboard = () => {
 
                 <div class="space-y-1 rounded-2xl bg-[#000000] p-4 text-center">
                     <div
-                        class="text-[11px] font-bold tracking-wider text-[#beedc0] uppercase"
+                        class="text-[11px] font-medium tracking-wider text-[#beedc0] uppercase"
                     >
                         Password Akses SIMRS
                     </div>
@@ -1549,7 +1670,7 @@ const copyToClipboard = () => {
                     <button
                         type="button"
                         @click="copyToClipboard"
-                        class="flex min-h-[44px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#065f46] text-xs font-bold text-[#ffffff] shadow-xs hover:bg-[#054d38]"
+                        class="flex min-h-[44px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a]"
                     >
                         <Check v-if="copied" class="size-4 text-[#beedc0]" />
                         <Copy v-else class="size-4 text-[#beedc0]" />
@@ -1561,7 +1682,7 @@ const copyToClipboard = () => {
                     <button
                         type="button"
                         @click="resetResultModal = null"
-                        class="min-h-[44px] rounded-xl border border-[#000000]/15 px-5 text-xs font-semibold text-[#000000]/75 hover:bg-[#edede2]"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 text-xs font-medium text-[#000000] hover:bg-[#edede2]"
                     >
                         Tutup
                     </button>

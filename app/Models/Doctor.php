@@ -8,6 +8,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $doctor_id
+ * @property int $user_id
+ * @property int $specialization_id
+ * @property string $name
+ * @property string $sip_number
+ * @property string $gender
+ * @property string|null $number_phone
+ * @property string|null $email
+ * @property string|null $alamat
+ * @property string $join_date
+ * @property string $status
+ */
 class Doctor extends Model
 {
     use HasFactory;

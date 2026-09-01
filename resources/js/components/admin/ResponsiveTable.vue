@@ -14,7 +14,7 @@ defineProps<{
 </script>
 
 <template>
-    <div class="space-y-4">
+    <div class="space-y-4 font-['Rubik']">
         <!-- 1. Filter & Search Action Bar Slot -->
         <div v-if="$slots.filters" class="w-full">
             <slot name="filters" />
@@ -22,7 +22,7 @@ defineProps<{
 
         <!-- 2. Responsive Table Card -->
         <div
-            class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-xs"
+            class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-none"
         >
             <!-- Scrollable Table Container -->
             <div
@@ -46,19 +46,19 @@ defineProps<{
                         <tr v-if="isEmpty">
                             <td
                                 colspan="100"
-                                class="px-4 py-12 text-center text-[#000000]/50"
+                                class="px-4 py-12 text-center text-[#333333]"
                             >
                                 <slot name="empty">
                                     <div
                                         class="flex flex-col items-center justify-center space-y-2"
                                     >
                                         <div
-                                            class="flex size-12 items-center justify-center rounded-full bg-[#edede2] text-[#000000]/30"
+                                            class="flex size-12 items-center justify-center rounded-full bg-[#edede2] text-[#000000]/40"
                                         >
                                             <FileQuestion class="size-6" />
                                         </div>
                                         <p
-                                            class="text-xs font-medium sm:text-sm"
+                                            class="text-xs font-medium sm:text-sm text-[#333333]"
                                         >
                                             {{
                                                 emptyMessage ||

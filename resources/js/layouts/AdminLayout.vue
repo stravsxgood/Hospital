@@ -29,6 +29,7 @@ import {
     Pill,
     Receipt,
     Search,
+    Settings,
     Shield,
     ShieldAlert,
     ShieldCheck,
@@ -41,7 +42,6 @@ import {
 import { motion } from 'motion-v';
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
-import { Toaster } from '@/components/ui/sonner';
 
 export interface BreadcrumbItem {
     title: string;
@@ -159,25 +159,13 @@ const adminNavGroups = computed(() => [
         ],
     },
     {
-        title: 'Akses Portal SIMRS',
+        title: 'Konfigurasi Sistem',
         items: [
             {
-                label: 'Dashboard Staf / Kasir',
-                href: '/staff',
-                icon: LayoutGrid,
-                activePattern: '/staff',
-            },
-            {
-                label: 'Panggilan Antrean Dokter',
-                href: '/doctor/queue',
-                icon: Stethoscope,
-                activePattern: '/doctor/queue',
-            },
-            {
-                label: 'Portal Layanan Pasien',
-                href: '/',
-                icon: Home,
-                activePattern: '/patient',
+                label: 'Pengaturan Sistem',
+                href: '/admin/settings',
+                icon: Settings,
+                activePattern: '/admin/settings',
             },
         ],
     },
@@ -224,7 +212,7 @@ const handleLogout = () => {
                 <!-- Brand Logo & Title -->
                 <Link href="/admin/dashboard" class="flex items-center gap-2.5">
                     <div
-                        class="flex size-8 items-center justify-center rounded-full bg-[#beedc0] text-[#065f46] shadow-xs"
+                        class="flex size-8 items-center justify-center rounded-full bg-[#beedc0] text-[#000000] shadow-xs"
                     >
                         <AppLogoIcon class="size-5" />
                     </div>
@@ -235,7 +223,7 @@ const handleLogout = () => {
                             Hospital Population
                         </span>
                         <span
-                            class="mt-0.5 text-[10px] font-bold tracking-wider text-[#065f46] uppercase"
+                            class="mt-0.5 text-[10px] font-bold tracking-wider text-[#333333] uppercase"
                         >
                             Super Admin
                         </span>
@@ -246,9 +234,9 @@ const handleLogout = () => {
             <!-- Header Right: User Role Badge -->
             <div class="flex items-center gap-2">
                 <span
-                    class="inline-flex items-center gap-1 rounded-full bg-[#065f46] px-2.5 py-1 text-[11px] font-bold text-[#ffffff]"
+                    class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3 py-1 text-[11px] font-bold text-[#000000]"
                 >
-                    <ShieldCheck class="size-3 text-[#beedc0]" />
+                    <ShieldCheck class="size-3 text-[#000000]" />
                     <span class="max-w-[100px] truncate sm:max-w-none">{{
                         authUser?.name || 'Super Admin'
                     }}</span>
@@ -303,7 +291,7 @@ const handleLogout = () => {
                             class="flex items-center gap-2.5"
                         >
                             <div
-                                class="flex size-9 items-center justify-center rounded-full bg-[#beedc0] text-[#065f46] shadow-xs"
+                                class="flex size-9 items-center justify-center rounded-full bg-[#beedc0] text-[#000000] shadow-xs"
                             >
                                 <AppLogoIcon class="size-5" />
                             </div>
@@ -314,7 +302,7 @@ const handleLogout = () => {
                                     Hospital SIMRS
                                 </h2>
                                 <p
-                                    class="text-[11px] font-bold text-[#065f46] uppercase"
+                                    class="text-[11px] font-bold text-[#333333] uppercase"
                                 >
                                     Master Governance
                                 </p>
@@ -342,7 +330,7 @@ const handleLogout = () => {
                             class="space-y-1.5"
                         >
                             <div
-                                class="px-3 text-[10px] font-extrabold tracking-wider text-[#065f46] uppercase"
+                                class="px-3 text-[10px] font-extrabold tracking-wider text-[#333333] uppercase"
                             >
                                 {{ group.title }}
                             </div>
@@ -355,7 +343,7 @@ const handleLogout = () => {
                                     class="flex min-h-[44px] items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all"
                                     :class="
                                         isRouteActive(item.activePattern)
-                                            ? 'bg-[#065f46] text-[#ffffff] shadow-xs'
+                                            ? 'bg-[#000000] text-[#ffffff] shadow-xs'
                                             : 'text-[#000000]/80 hover:bg-[#edede2] hover:text-[#000000]'
                                     "
                                 >
@@ -365,7 +353,7 @@ const handleLogout = () => {
                                         :class="
                                             isRouteActive(item.activePattern)
                                                 ? 'text-[#beedc0]'
-                                                : 'text-[#065f46]'
+                                                : 'text-[#000000]'
                                         "
                                     />
                                     <span>{{ item.label }}</span>
@@ -378,7 +366,7 @@ const handleLogout = () => {
                     <div class="space-y-3 border-t border-[#000000]/10 pt-4">
                         <div class="flex items-center gap-3 px-2">
                             <div
-                                class="flex size-9 items-center justify-center rounded-full bg-[#065f46] text-xs font-bold text-[#ffffff]"
+                                class="flex size-9 items-center justify-center rounded-full bg-[#beedc0] text-xs font-bold text-[#000000]"
                             >
                                 {{
                                     authUser?.name
@@ -393,7 +381,7 @@ const handleLogout = () => {
                                     {{ authUser?.name }}
                                 </div>
                                 <div
-                                    class="truncate text-[11px] text-[#000000]/70"
+                                    class="truncate text-[11px] text-[#333333]"
                                 >
                                     {{ authUser?.email }}
                                 </div>
@@ -431,7 +419,7 @@ const handleLogout = () => {
                         <motion.div
                             :whileHover="{ scale: 1.08, rotate: 3 }"
                             :whileTap="{ scale: 0.95 }"
-                            class="flex size-10 items-center justify-center rounded-2xl bg-[#beedc0] text-[#065f46] shadow-xs"
+                            class="flex size-10 items-center justify-center rounded-2xl bg-[#beedc0] text-[#000000] shadow-xs"
                         >
                             <AppLogoIcon class="size-6" />
                         </motion.div>
@@ -442,7 +430,7 @@ const handleLogout = () => {
                                 Hospital Population
                             </span>
                             <span
-                                class="mt-1 text-[11px] font-bold tracking-wider text-[#065f46] uppercase"
+                                class="mt-1 text-[11px] font-bold tracking-wider text-[#333333] uppercase"
                             >
                                 Super Admin Console
                             </span>
@@ -460,7 +448,7 @@ const handleLogout = () => {
                             class="space-y-1.5"
                         >
                             <div
-                                class="px-3 text-[10px] font-extrabold tracking-wider text-[#065f46] uppercase"
+                                class="px-3 text-[10px] font-extrabold tracking-wider text-[#333333] uppercase"
                             >
                                 {{ group.title }}
                             </div>
@@ -472,7 +460,7 @@ const handleLogout = () => {
                                     class="flex min-h-[44px] items-center gap-3 rounded-xl px-3.5 py-2.5 text-xs font-semibold transition-all duration-150"
                                     :class="
                                         isRouteActive(item.activePattern)
-                                            ? 'bg-[#065f46] text-[#ffffff] shadow-xs'
+                                            ? 'bg-[#000000] text-[#ffffff] shadow-xs'
                                             : 'text-[#000000]/80 hover:bg-[#edede2] hover:text-[#000000]'
                                     "
                                 >
@@ -482,7 +470,7 @@ const handleLogout = () => {
                                         :class="
                                             isRouteActive(item.activePattern)
                                                 ? 'text-[#beedc0]'
-                                                : 'text-[#065f46]'
+                                                : 'text-[#000000]'
                                         "
                                     />
                                     <span class="truncate">{{
@@ -498,7 +486,7 @@ const handleLogout = () => {
                 <div class="space-y-3 border-t border-[#000000]/10 pt-4">
                     <div class="flex items-center gap-3 px-2 py-1">
                         <div
-                            class="flex size-9 items-center justify-center rounded-full bg-[#065f46] text-xs font-bold text-[#ffffff] shadow-xs"
+                            class="flex size-9 items-center justify-center rounded-full bg-[#beedc0] text-xs font-bold text-[#000000] shadow-xs"
                         >
                             {{
                                 authUser?.name
@@ -512,7 +500,7 @@ const handleLogout = () => {
                             >
                                 {{ authUser?.name }}
                             </div>
-                            <div class="truncate text-[11px] text-[#000000]/70">
+                            <div class="truncate text-[11px] text-[#333333]">
                                 {{ authUser?.email }}
                             </div>
                         </div>
@@ -564,37 +552,9 @@ const handleLogout = () => {
                     </template>
                 </nav>
 
-                <!-- Flash Message Alerts -->
-                <div v-if="flash?.success || flash?.error" class="mb-6">
-                    <motion.div
-                        :initial="{ opacity: 0, y: -10 }"
-                        :animate="{ opacity: 1, y: 0 }"
-                        class="flex items-center justify-between rounded-2xl p-4 text-xs font-semibold shadow-xs sm:text-sm"
-                        :class="
-                            flash?.success
-                                ? 'border border-emerald-300 bg-emerald-100 text-emerald-900'
-                                : 'border border-rose-300 bg-rose-100 text-rose-900'
-                        "
-                    >
-                        <div class="flex items-center gap-2.5">
-                            <CheckCircle2
-                                v-if="flash?.success"
-                                class="size-5 shrink-0 text-emerald-700"
-                            />
-                            <AlertCircle
-                                v-else
-                                class="size-5 shrink-0 text-rose-700"
-                            />
-                            <span>{{ flash?.success || flash?.error }}</span>
-                        </div>
-                    </motion.div>
-                </div>
-
                 <!-- Page Slot Content -->
                 <slot />
             </main>
         </div>
-
-        <Toaster />
     </div>
 </template>

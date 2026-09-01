@@ -26,8 +26,8 @@ createInertiaApp({
             // Bebaskan halaman publik, TV display, dan admin layout terdedikasi dari default AppLayout
             case name === 'Welcome' ||
                 name === 'DisplayBoard' ||
-                name === 'Display/QueueTv' ||
-                name === 'MyAppointments' ||
+                name.startsWith('Display/') ||
+                name.startsWith('display/') ||
                 name === 'PatientStory' ||
                 name === 'Patient/Story' ||
                 name === 'Specializations/Index' ||

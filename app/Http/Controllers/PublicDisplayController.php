@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\AppSetting;
+use App\Models\DisplayVideo;
 use App\Models\DoctorSchedule;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -16,9 +18,21 @@ class PublicDisplayController extends Controller
      */
     public function index(): Response
     {
-        return Inertia::render('DisplayBoard', [
+        $videos = DisplayVideo::where('is_active', true)
+            ->orderBy('order', 'asc')
+            ->get(['id', 'title', 'file_path', 'order', 'is_active']);
+
+        return Inertia::render('Display/Index', [
             'initialData' => $this->getDisplayData(),
             'currentDate' => Carbon::today()->translatedFormat('l, d F Y'),
+            'videos' => $videos,
+            'displayConfig' => [
+                'hospital_name' => AppSetting::get('display.hospital_name', 'Hospital Population'),
+                'scroll_speed' => (int) AppSetting::get('display.scroll_speed', '5000'),
+                'show_patient_name' => AppSetting::get('display.show_patient_name', 'true') === 'true',
+                'theme' => AppSetting::get('display.theme', 'evergreen'),
+                'announcement_text' => AppSetting::get('display.announcement_text', ''),
+            ],
         ]);
     }
 

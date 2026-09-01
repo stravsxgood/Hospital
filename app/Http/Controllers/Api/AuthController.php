@@ -118,13 +118,25 @@ class AuthController extends Controller
             default => null,
         };
 
-        // 4. Tentukan URL Tujuan Berdasarkan Role (Dokter, Perawat, dan Staf Internal diarahkan ke /staff)
-        $isStaff = in_array($user->role, ['doctor', 'nurse', 'admin'], true)
+        // 4. Tentukan URL Tujuan Berdasarkan Hierarki Role
+        $isAdmin = (bool) $user->is_admin
+            || in_array(strtolower(trim((string) $user->role)), ['super-admin', 'admin', 'super admin', 'super_admin', 'administrator'], true)
+            || in_array(strtolower(trim((string) ($user->getAttributes()['role'] ?? ''))), ['super-admin', 'admin', 'super admin', 'super_admin', 'administrator'], true)
+            || $user->hasAnyRole(['super-admin', 'Super Admin', 'super_admin', 'super admin', 'admin', 'Admin', 'Administrator']);
+
+        $isStaff = in_array(strtolower(trim((string) $user->role)), ['doctor', 'nurse', 'dpjp-doctor', 'dokter', 'perawat', 'perawat-tetap', 'perawat-koas', 'koas', 'koas-intern', 'staff-pekerja', 'kasir', 'staff'], true)
             || (bool) $user->is_doctor
+            || $user->hasAnyRole(['doctor', 'dpjp-doctor', 'Dokter', 'nurse', 'Perawat', 'Kasir', 'perawat-tetap', 'perawat-koas', 'koas', 'koas-intern', 'staff-pekerja', 'staff'])
             || $user->doctor()->exists()
             || $user->nurse()->exists();
 
-        $redirectTo = $isStaff ? '/staff' : '/patient/dashboard';
+        if ($isAdmin) {
+            $redirectTo = '/admin/dashboard';
+        } elseif ($isStaff) {
+            $redirectTo = '/staff';
+        } else {
+            $redirectTo = '/patient/dashboard';
+        }
 
         return response()->json([
             'status' => 'success',
@@ -138,6 +150,10 @@ class AuthController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'role' => $user->role,
+                    'raw_role' => $user->getAttributes()['role'] ?? null,
+                    'is_admin' => $isAdmin,
+                    'is_doctor' => (bool) $user->is_doctor,
+                    'roles' => $user->roles->pluck('name')->all(),
                 ],
                 'profile' => $profile,
             ],
