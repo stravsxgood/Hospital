@@ -58,7 +58,7 @@ defineProps<{
                                             <FileQuestion class="size-6" />
                                         </div>
                                         <p
-                                            class="text-xs font-medium sm:text-sm text-[#333333]"
+                                            class="text-xs font-medium text-[#333333] sm:text-sm"
                                         >
                                             {{
                                                 emptyMessage ||

@@ -1232,8 +1232,6 @@ const handleBookingSuccess = (ticket: TicketData | null) => {
                                 />
                             </Link>
 
-
-
                             <!-- Lokasi Klinik -->
                             <Link
                                 href="/clinic-location"

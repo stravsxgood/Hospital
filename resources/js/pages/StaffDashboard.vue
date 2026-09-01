@@ -1221,7 +1221,9 @@ defineOptions({
                                 Peringatan Stok Obat
                             </h3>
                         </div>
-                        <span class="rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold text-rose-800">
+                        <span
+                            class="rounded-full border border-rose-200 bg-rose-50 px-2.5 py-0.5 text-[11px] font-bold text-rose-800"
+                        >
                             Stok ≤ 10
                         </span>
                     </div>
@@ -1460,12 +1462,14 @@ defineOptions({
                         <table class="w-full text-left text-xs sm:text-sm">
                             <thead>
                                 <tr
-                                    class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold uppercase tracking-wider text-[#000000]"
+                                    class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
                                 >
                                     <th class="px-4 py-3.5 text-center">
                                         No. Antrean
                                     </th>
-                                    <th class="px-4 py-3.5">Nama Pasien & NIK</th>
+                                    <th class="px-4 py-3.5">
+                                        Nama Pasien & NIK
+                                    </th>
                                     <th class="px-4 py-3.5">
                                         Poli & Dokter Tujuan
                                     </th>
@@ -1478,7 +1482,9 @@ defineOptions({
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#000000]/5 font-medium text-[#000000]">
+                            <tbody
+                                class="divide-y divide-[#000000]/5 font-medium text-[#000000]"
+                            >
                                 <tr
                                     v-for="apt in filteredAppointments"
                                     :key="apt.appointment_id"
@@ -1496,13 +1502,17 @@ defineOptions({
                                     <!-- Pasien -->
                                     <td class="px-4 py-4">
                                         <div class="font-bold text-[#000000]">
-                                            {{ apt.patient?.name ?? 'Nama Pasien' }}
+                                            {{
+                                                apt.patient?.name ??
+                                                'Nama Pasien'
+                                            }}
                                         </div>
                                         <div
                                             class="font-mono text-xs text-[#333333]"
                                         >
                                             NIK:
-                                            {{ apt.patient?.resident_n ?? '-' }} ·
+                                            {{ apt.patient?.resident_n ?? '-' }}
+                                            ·
                                             {{ apt.patient?.gender ?? '-' }}
                                         </div>
                                     </td>
@@ -1513,19 +1523,22 @@ defineOptions({
                                             {{
                                                 apt.doctor_schedule?.poli
                                                     ?.name_poli ??
-                                                apt.doctor_schedule?.poli?.name ??
+                                                apt.doctor_schedule?.poli
+                                                    ?.name ??
                                                 'Poliklinik'
                                             }}
                                         </div>
                                         <div class="text-xs text-[#333333]">
                                             {{
-                                                apt.doctor_schedule?.doctor?.name ??
-                                                'Dokter'
+                                                apt.doctor_schedule?.doctor
+                                                    ?.name ?? 'Dokter'
                                             }}
-                                            <span class="text-[10px] text-[#333333]"
+                                            <span
+                                                class="text-[10px] text-[#333333]"
                                                 >({{
                                                     apt.doctor_schedule?.room
-                                                        ?.name_room ?? 'R. Periksa'
+                                                        ?.name_room ??
+                                                    'R. Periksa'
                                                 }})</span
                                             >
                                         </div>
@@ -1546,13 +1559,15 @@ defineOptions({
                                         <span
                                             class="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold"
                                             :class="
-                                                getStatusBadge(apt.status).classes
+                                                getStatusBadge(apt.status)
+                                                    .classes
                                             "
                                         >
                                             <span
                                                 class="size-1.5 rounded-full"
                                                 :class="
-                                                    getStatusBadge(apt.status).dot
+                                                    getStatusBadge(apt.status)
+                                                        .dot
                                                 "
                                             />
                                             <span>{{
@@ -1597,7 +1612,9 @@ defineOptions({
                                                 "
                                                 class="inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-bold text-blue-800"
                                             >
-                                                <CheckCircle2 class="size-3.5" />
+                                                <CheckCircle2
+                                                    class="size-3.5"
+                                                />
                                                 <span>Siap Diperiksa</span>
                                             </span>
 
@@ -1713,8 +1730,12 @@ defineOptions({
                         <div
                             class="grid grid-cols-3 gap-2 border-t border-[#000000]/10 pt-3 text-center text-xs"
                         >
-                            <div class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5">
-                                <div class="text-[10px] text-[#333333] uppercase">
+                            <div
+                                class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5"
+                            >
+                                <div
+                                    class="text-[10px] text-[#333333] uppercase"
+                                >
                                     Dipanggil
                                 </div>
                                 <div
@@ -1723,8 +1744,12 @@ defineOptions({
                                     {{ clinic.current_calling || '-' }}
                                 </div>
                             </div>
-                            <div class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5">
-                                <div class="text-[10px] text-[#333333] uppercase">
+                            <div
+                                class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5"
+                            >
+                                <div
+                                    class="text-[10px] text-[#333333] uppercase"
+                                >
                                     Menunggu
                                 </div>
                                 <div
@@ -1733,8 +1758,12 @@ defineOptions({
                                     {{ clinic.waiting_count }}
                                 </div>
                             </div>
-                            <div class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5">
-                                <div class="text-[10px] text-[#333333] uppercase">
+                            <div
+                                class="rounded-2xl border border-[#000000]/5 bg-[#edede2]/50 p-2.5"
+                            >
+                                <div
+                                    class="text-[10px] text-[#333333] uppercase"
+                                >
                                     Selesai
                                 </div>
                                 <div

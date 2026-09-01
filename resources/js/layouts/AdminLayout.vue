@@ -234,7 +234,7 @@ const handleLogout = () => {
             <!-- Header Right: User Role Badge -->
             <div class="flex items-center gap-2">
                 <span
-                    class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3 py-1 text-[11px] font-bold text-[#000000]"
+                    class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3 py-1 text-[11px] font-bold text-[#000000]"
                 >
                     <ShieldCheck class="size-3 text-[#000000]" />
                     <span class="max-w-[100px] truncate sm:max-w-none">{{

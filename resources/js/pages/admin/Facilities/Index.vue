@@ -300,7 +300,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                         <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3.5 py-1 text-xs font-bold text-[#000000]"
                         >
                             <Building2 class="size-3.5 text-[#000000]" />
                             <span>Master Fasilitas & Operasional</span>
@@ -311,7 +311,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                     >
                         Tata Kelola Poliklinik & Jadwal DPJP
                     </h1>
-                    <p class="text-xs text-[#333333] sm:text-sm font-['Rubik']">
+                    <p class="font-['Rubik'] text-xs text-[#333333] sm:text-sm">
                         Konfigurasi unit layanan poliklinik, pemetaan ruangan
                         periksa, dan alokasi kuota antrean praktik dokter.
                     </p>
@@ -324,7 +324,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         v-if="activeTab === 'polis'"
                         type="button"
                         @click="openCreatePoliModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] sm:text-sm font-['Rubik']"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 font-['Rubik'] text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] sm:text-sm"
                     >
                         <Plus class="size-4 text-[#beedc0]" />
                         <span>Tambah Poliklinik</span>
@@ -334,7 +334,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                         v-else-if="activeTab === 'schedules'"
                         type="button"
                         @click="openCreateScheduleModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] sm:text-sm font-['Rubik']"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 font-['Rubik'] text-xs font-medium text-[#ffffff] shadow-none hover:bg-[#1a1a1a] sm:text-sm"
                     >
                         <Plus class="size-4 text-[#beedc0]" />
                         <span>Tambah Jadwal DPJP</span>
@@ -405,7 +405,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
             <section
                 v-if="activeTab === 'polis'"
                 aria-labelledby="polis-table-heading"
-                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-none font-['Rubik']"
+                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] font-['Rubik'] shadow-none"
             >
                 <h2 id="polis-table-heading" class="sr-only">
                     Tabel Data Unit Poliklinik
@@ -449,9 +449,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                                         {{ poli.kode_poli }}
                                     </div>
                                 </td>
-                                <td
-                                    class="px-4 py-3.5 text-xs text-[#333333]"
-                                >
+                                <td class="px-4 py-3.5 text-xs text-[#333333]">
                                     <div class="flex items-center gap-1.5">
                                         <MapPin
                                             class="size-3.5 shrink-0 text-[#000000]"
@@ -514,7 +512,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
             <section
                 v-else-if="activeTab === 'schedules'"
                 aria-labelledby="schedules-table-heading"
-                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-none font-['Rubik']"
+                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] font-['Rubik'] shadow-none"
             >
                 <h2 id="schedules-table-heading" class="sr-only">
                     Tabel Data Jadwal Praktik Dokter DPJP
@@ -646,7 +644,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
             <section
                 v-else-if="activeTab === 'rooms'"
                 aria-labelledby="rooms-table-heading"
-                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] shadow-none font-['Rubik']"
+                class="overflow-hidden rounded-3xl border border-[#000000]/10 bg-[#fffff3] font-['Rubik'] shadow-none"
             >
                 <h2 id="rooms-table-heading" class="sr-only">
                     Tabel Data Ruangan Periksa
@@ -748,7 +746,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 </div>
 
                 <div
-                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
+                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 font-['Rubik'] text-xs sm:text-sm"
                 >
                     <div>
                         <label
@@ -895,7 +893,7 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                 </div>
 
                 <div
-                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
+                    class="flex-1 space-y-3.5 overflow-y-auto pr-1 font-['Rubik'] text-xs sm:text-sm"
                 >
                     <div>
                         <label

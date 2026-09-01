@@ -181,8 +181,8 @@ const extractedYoutubeId = computed(() => {
     const val = videoUploadForm.youtube_url.trim();
 
     if (!val) {
-return null;
-}
+        return null;
+    }
 
     const iframeMatch = val.match(/src=["']([^"']+)["']/i);
     const target = iframeMatch ? iframeMatch[1] : val;
@@ -192,12 +192,12 @@ return null;
     );
 
     if (match) {
-return match[1];
-}
+        return match[1];
+    }
 
     if (/^[a-zA-Z0-9_-]{11}$/.test(target)) {
-return target;
-}
+        return target;
+    }
 
     return null;
 });
@@ -271,10 +271,14 @@ const onFileDrop = (event: DragEvent) => {
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
         const file = event.dataTransfer.files[0];
 
-        if (file.type.startsWith('video/') || /\.(mp4|webm|ogg|mov|m4v)$/i.test(file.name)) {
+        if (
+            file.type.startsWith('video/') ||
+            /\.(mp4|webm|ogg|mov|m4v)$/i.test(file.name)
+        ) {
             handleFileSelected(file);
         } else {
-            fileSizeError.value = 'Format file tidak didukung. Harap pilih file video (MP4, WebM, OGG, MOV, M4V).';
+            fileSizeError.value =
+                'Format file tidak didukung. Harap pilih file video (MP4, WebM, OGG, MOV, M4V).';
         }
     }
 };
@@ -289,12 +293,12 @@ const removeSelectedFile = () => {
 
 const isSubmitDisabled = computed(() => {
     if (videoUploadForm.processing) {
-return true;
-}
+        return true;
+    }
 
     if (!videoUploadForm.title.trim()) {
-return true;
-}
+        return true;
+    }
 
     if (videoUploadForm.source_type === 'youtube') {
         return !videoUploadForm.youtube_url.trim() || !extractedYoutubeId.value;
@@ -335,8 +339,8 @@ const openDeleteVideoModal = (video: DisplayVideoItem) => {
 
 const confirmDeleteVideo = () => {
     if (!deleteTargetVideo.value) {
-return;
-}
+        return;
+    }
 
     isDeletingVideo.value = true;
     router.delete(`/admin/display-videos/${deleteTargetVideo.value.id}`, {
@@ -368,7 +372,7 @@ return;
                 <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                         <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3.5 py-1 text-xs font-bold text-[#000000]"
                         >
                             <ShieldCheck class="size-3.5 text-[#000000]" />
                             <span>Konsol Tata Kelola Eksekutif</span>
@@ -379,9 +383,10 @@ return;
                     >
                         Tata Kelola & Agregasi SIMRS
                     </h1>
-                    <p class="text-xs text-[#333333] sm:text-sm font-['Rubik']">
+                    <p class="font-['Rubik'] text-xs text-[#333333] sm:text-sm">
                         Monitoring real-time pendapatan kasir & gateway Xendit,
-                        morbiditas pasien, dan manajemen video playlist layar monitor antrean TV.
+                        morbiditas pasien, dan manajemen video playlist layar
+                        monitor antrean TV.
                     </p>
                 </div>
 
@@ -392,7 +397,7 @@ return;
                         href="/display"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#edede2] px-5 py-2.5 text-xs font-semibold text-[#000000] transition-colors hover:bg-[#beedc0] sm:text-sm font-['Rubik']"
+                        class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#edede2] px-5 py-2.5 font-['Rubik'] text-xs font-semibold text-[#000000] transition-colors hover:bg-[#beedc0] sm:text-sm"
                         title="Buka Layar Monitor Antrean TV di Tab Baru"
                     >
                         <ExternalLink class="size-4 text-[#000000]" />
@@ -401,7 +406,7 @@ return;
 
                     <Link
                         href="/admin/users"
-                        class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a] sm:text-sm font-['Rubik']"
+                        class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 font-['Rubik'] text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a] sm:text-sm"
                     >
                         <Users class="size-4 text-[#beedc0]" />
                         <span>Manajemen Pengguna</span>
@@ -409,7 +414,7 @@ return;
 
                     <Link
                         href="/admin/polis"
-                        class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-5 py-2.5 text-xs font-medium text-[#000000] transition-colors hover:bg-[#edede2] sm:text-sm font-['Rubik']"
+                        class="inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-5 py-2.5 font-['Rubik'] text-xs font-medium text-[#000000] transition-colors hover:bg-[#edede2] sm:text-sm"
                     >
                         <Building2 class="size-4 text-[#000000]" />
                         <span>Fasilitas & Jadwal</span>
@@ -420,11 +425,13 @@ return;
             <!-- ═══════════════════════════════════════════════════════════════
                  2. Tab Switcher (Overview vs Display & Video Settings)
                  ═══════════════════════════════════════════════════════════════ -->
-            <div class="flex flex-wrap items-center gap-2.5 border-b border-[#000000]/10 pb-3">
+            <div
+                class="flex flex-wrap items-center gap-2.5 border-b border-[#000000]/10 pb-3"
+            >
                 <button
                     type="button"
                     @click="activeTab = 'overview'"
-                    class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-[40.5px] px-5 py-2 text-xs font-semibold transition-all sm:text-sm font-['Rubik']"
+                    class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-[40.5px] px-5 py-2 font-['Rubik'] text-xs font-semibold transition-all sm:text-sm"
                     :class="
                         activeTab === 'overview'
                             ? 'bg-[#000000] text-[#ffffff] shadow-xs'
@@ -445,7 +452,7 @@ return;
                 <button
                     type="button"
                     @click="activeTab = 'display_videos'"
-                    class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-[40.5px] px-5 py-2 text-xs font-semibold transition-all sm:text-sm font-['Rubik']"
+                    class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-[40.5px] px-5 py-2 font-['Rubik'] text-xs font-semibold transition-all sm:text-sm"
                     :class="
                         activeTab === 'display_videos'
                             ? 'bg-[#000000] text-[#ffffff] shadow-xs'
@@ -511,7 +518,8 @@ return;
                                     {{ formatRupiah(financial.today_revenue) }}
                                 </div>
                                 <div class="mt-1 text-[11px] text-[#333333]">
-                                    Terakumulasi dari tagihan kasir & QRIS hari ini
+                                    Terakumulasi dari tagihan kasir & QRIS hari
+                                    ini
                                 </div>
                             </div>
                         </motion.div>
@@ -569,13 +577,14 @@ return;
                                     class="font-mono text-2xl font-bold text-[#000000]"
                                 >
                                     {{ operational.today_active_queues }}
-                                    <span class="text-xs font-normal text-[#333333]"
+                                    <span
+                                        class="text-xs font-normal text-[#333333]"
                                         >pasien</span
                                     >
                                 </div>
                                 <div class="mt-1 text-[11px] text-[#333333]">
-                                    {{ operational.today_completed_queues }} antrean
-                                    telah selesai diperiksa
+                                    {{ operational.today_completed_queues }}
+                                    antrean telah selesai diperiksa
                                 </div>
                             </div>
                         </motion.div>
@@ -603,12 +612,14 @@ return;
                                     class="font-mono text-2xl font-bold text-[#000000]"
                                 >
                                     {{ operational.doctors_on_duty_count }}
-                                    <span class="text-xs font-normal text-[#333333]"
+                                    <span
+                                        class="text-xs font-normal text-[#333333]"
                                         >DPJP On-Duty</span
                                     >
                                 </div>
                                 <div class="mt-1 text-[11px] text-[#333333]">
-                                    Dari total {{ staff_stats.total_doctors }} dokter
+                                    Dari total
+                                    {{ staff_stats.total_doctors }} dokter
                                     spesialis terdaftar
                                 </div>
                             </div>
@@ -627,49 +638,57 @@ return;
 
                     <!-- Tren Pendapatan 6 Bulan Terakhir -->
                     <div
-                        class="flex flex-col justify-between space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 lg:col-span-8 sm:p-6"
+                        class="flex flex-col justify-between space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 sm:p-6 lg:col-span-8"
                     >
-                        <div class="flex items-center justify-between border-b border-[#000000]/10 pb-4">
+                        <div
+                            class="flex items-center justify-between border-b border-[#000000]/10 pb-4"
+                        >
                             <div>
                                 <h3
                                     class="font-['ivypresto-headline'] text-lg font-bold text-[#000000] sm:text-xl"
                                 >
                                     Tren Pendapatan 6 Bulan Terakhir
                                 </h3>
-                                <p class="text-xs text-[#333333] font-['Rubik']">
-                                    Rekonsiliasi transaksi lunas seluruh loket & kasir
+                                <p
+                                    class="font-['Rubik'] text-xs text-[#333333]"
+                                >
+                                    Rekonsiliasi transaksi lunas seluruh loket &
+                                    kasir
                                 </p>
                             </div>
                             <span
-                                class="font-mono text-xs font-semibold text-[#000000] bg-[#beedc0] px-3 py-1 rounded-full"
+                                class="rounded-full bg-[#beedc0] px-3 py-1 font-mono text-xs font-semibold text-[#000000]"
                             >
-                                Total Bulan Ini: {{ formatRupiah(financial.month_revenue) }}
+                                Total Bulan Ini:
+                                {{ formatRupiah(financial.month_revenue) }}
                             </span>
                         </div>
 
                         <!-- CSS/SVG Pure Bar Chart -->
                         <div class="pt-4">
                             <div
-                                class="grid grid-cols-6 gap-2 sm:gap-4 items-end h-48 border-b border-[#000000]/15 pb-2"
+                                class="grid h-48 grid-cols-6 items-end gap-2 border-b border-[#000000]/15 pb-2 sm:gap-4"
                             >
                                 <div
-                                    v-for="(item, idx) in financial.monthly_trend"
+                                    v-for="(
+                                        item, idx
+                                    ) in financial.monthly_trend"
                                     :key="idx"
-                                    class="flex flex-col items-center gap-1.5 h-full justify-end group"
+                                    class="group flex h-full flex-col items-center justify-end gap-1.5"
                                 >
                                     <div
-                                        class="text-[10px] sm:text-xs font-mono font-medium text-[#000000] opacity-0 group-hover:opacity-100 transition-opacity truncate max-w-full"
+                                        class="max-w-full truncate font-mono text-[10px] font-medium text-[#000000] opacity-0 transition-opacity group-hover:opacity-100 sm:text-xs"
                                     >
                                         {{ formatRupiah(item.revenue) }}
                                     </div>
                                     <div
-                                        class="w-full max-w-[48px] rounded-t-lg bg-[#000000] transition-all hover:bg-[#beedc0] group-hover:scale-y-105 origin-bottom"
+                                        class="w-full max-w-[48px] origin-bottom rounded-t-lg bg-[#000000] transition-all group-hover:scale-y-105 hover:bg-[#beedc0]"
                                         :style="{
                                             height: `${Math.max((item.revenue / maxMonthlyRevenue) * 100, 4)}%`,
                                         }"
                                     ></div>
                                     <span
-                                        class="text-[10px] sm:text-xs font-medium text-[#333333] text-center truncate w-full"
+                                        class="w-full truncate text-center text-[10px] font-medium text-[#333333] sm:text-xs"
                                     >
                                         {{ item.month }}
                                     </span>
@@ -680,7 +699,7 @@ return;
 
                     <!-- Distribusi Metode Pembayaran -->
                     <div
-                        class="flex flex-col justify-between space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 lg:col-span-4 sm:p-6"
+                        class="flex flex-col justify-between space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 sm:p-6 lg:col-span-4"
                     >
                         <div class="border-b border-[#000000]/10 pb-4">
                             <h3
@@ -688,14 +707,16 @@ return;
                             >
                                 Metode Pembayaran
                             </h3>
-                            <p class="text-xs text-[#333333] font-['Rubik']">
+                            <p class="font-['Rubik'] text-xs text-[#333333]">
                                 Agregasi kanal pelunasan tagihan
                             </p>
                         </div>
 
                         <div class="space-y-3">
                             <div
-                                v-for="(method, idx) in financial.revenue_by_method"
+                                v-for="(
+                                    method, idx
+                                ) in financial.revenue_by_method"
                                 :key="idx"
                                 class="flex items-center justify-between rounded-xl border border-[#000000]/5 bg-[#ffffff] p-3 text-xs"
                             >
@@ -708,13 +729,17 @@ return;
                                             class="size-3.5"
                                         />
                                         <QrCode
-                                            v-else-if="method.method.includes('qris')"
+                                            v-else-if="
+                                                method.method.includes('qris')
+                                            "
                                             class="size-3.5"
                                         />
                                         <Wallet v-else class="size-3.5" />
                                     </div>
                                     <div>
-                                        <div class="font-semibold text-[#000000]">
+                                        <div
+                                            class="font-semibold text-[#000000]"
+                                        >
                                             {{ method.label }}
                                         </div>
                                         <div class="text-[10px] text-[#333333]">
@@ -723,7 +748,9 @@ return;
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <div class="font-mono font-bold text-[#000000]">
+                                    <div
+                                        class="font-mono font-bold text-[#000000]"
+                                    >
                                         {{ formatRupiah(method.total) }}
                                     </div>
                                 </div>
@@ -743,7 +770,7 @@ return;
 
                     <!-- Top 10 Diagnosis (Morbiditas) -->
                     <div
-                        class="flex flex-col space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 lg:col-span-5 sm:p-6"
+                        class="flex flex-col space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 sm:p-6 lg:col-span-5"
                     >
                         <div class="border-b border-[#000000]/10 pb-4">
                             <div class="flex items-center gap-2">
@@ -754,14 +781,14 @@ return;
                                     Top 10 Diagnosis Klinis
                                 </h3>
                             </div>
-                            <p class="text-xs text-[#333333] font-['Rubik']">
+                            <p class="font-['Rubik'] text-xs text-[#333333]">
                                 Pola morbiditas pasien dari rekam medis (SOAP)
                             </p>
                         </div>
 
                         <div
                             v-if="morbidity.top_diagnoses.length > 0"
-                            class="space-y-2.5 overflow-y-auto max-h-72 pr-1"
+                            class="max-h-72 space-y-2.5 overflow-y-auto pr-1"
                         >
                             <div
                                 v-for="(item, idx) in morbidity.top_diagnoses"
@@ -774,7 +801,9 @@ return;
                                     >
                                         {{ idx + 1 }}
                                     </span>
-                                    <span class="truncate font-medium text-[#000000]">
+                                    <span
+                                        class="truncate font-medium text-[#000000]"
+                                    >
                                         {{ item.diagnosis }}
                                     </span>
                                 </div>
@@ -785,14 +814,17 @@ return;
                                 </span>
                             </div>
                         </div>
-                        <div v-else class="py-8 text-center text-xs text-[#333333]">
+                        <div
+                            v-else
+                            class="py-8 text-center text-xs text-[#333333]"
+                        >
                             Belum ada data diagnosa rekam medis.
                         </div>
                     </div>
 
                     <!-- Matriks Poliklinik & Ruangan -->
                     <div
-                        class="flex flex-col space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 lg:col-span-7 sm:p-6"
+                        class="flex flex-col space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 sm:p-6 lg:col-span-7"
                     >
                         <div
                             class="flex items-center justify-between border-b border-[#000000]/10 pb-4"
@@ -806,8 +838,11 @@ return;
                                         Matriks Kesiapan Poliklinik
                                     </h3>
                                 </div>
-                                <p class="text-xs text-[#333333] font-['Rubik']">
-                                    Status dokter jaga dan antrean per poliklinik
+                                <p
+                                    class="font-['Rubik'] text-xs text-[#333333]"
+                                >
+                                    Status dokter jaga dan antrean per
+                                    poliklinik
                                 </p>
                             </div>
                             <Link
@@ -818,14 +853,18 @@ return;
                             </Link>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+                        <div
+                            class="grid max-h-72 grid-cols-1 gap-3 overflow-y-auto pr-1 sm:grid-cols-2"
+                        >
                             <div
                                 v-for="poli in operational.clinic_matrix"
                                 :key="poli.poli_id"
-                                class="rounded-2xl border border-[#000000]/10 bg-[#ffffff] p-3.5 space-y-2"
+                                class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#ffffff] p-3.5"
                             >
                                 <div class="flex items-center justify-between">
-                                    <span class="font-bold text-xs text-[#000000]">
+                                    <span
+                                        class="text-xs font-bold text-[#000000]"
+                                    >
                                         {{ poli.name_poli }}
                                     </span>
                                     <span
@@ -836,18 +875,28 @@ return;
                                         "
                                         class="rounded-full px-2 py-0.5 text-[10px] font-bold"
                                     >
-                                        {{ poli.is_active_today ? 'Buka' : 'Tutup' }}
+                                        {{
+                                            poli.is_active_today
+                                                ? 'Buka'
+                                                : 'Tutup'
+                                        }}
                                     </span>
                                 </div>
                                 <div class="text-[11px] text-[#333333]">
                                     <div>{{ poli.doctor_name }}</div>
                                     <div class="text-[10px] text-[#333333]/70">
-                                        {{ poli.room_name }} ({{ poli.location }})
+                                        {{ poli.room_name }} ({{
+                                            poli.location
+                                        }})
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-between border-t border-[#000000]/5 pt-1.5 text-[11px]">
+                                <div
+                                    class="flex items-center justify-between border-t border-[#000000]/5 pt-1.5 text-[11px]"
+                                >
                                     <span class="text-[#333333]">Antrean:</span>
-                                    <span class="font-bold font-mono text-[#000000]">
+                                    <span
+                                        class="font-mono font-bold text-[#000000]"
+                                    >
                                         {{ poli.waiting_count }} pasien
                                     </span>
                                 </div>
@@ -861,7 +910,9 @@ return;
                     class="space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 sm:p-6"
                     aria-labelledby="users-summary-heading"
                 >
-                    <div class="flex items-center justify-between border-b border-[#000000]/10 pb-4">
+                    <div
+                        class="flex items-center justify-between border-b border-[#000000]/10 pb-4"
+                    >
                         <div class="flex items-center gap-2">
                             <Users class="size-4 text-[#000000]" />
                             <h3
@@ -884,7 +935,7 @@ return;
                             class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 text-center shadow-none"
                         >
                             <div
-                                class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                                class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                             >
                                 Dokter DPJP
                             </div>
@@ -902,7 +953,7 @@ return;
                             class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 text-center shadow-none"
                         >
                             <div
-                                class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                                class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                             >
                                 Perawat Tetap
                             </div>
@@ -920,7 +971,7 @@ return;
                             class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 text-center shadow-none"
                         >
                             <div
-                                class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                                class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                             >
                                 Dokter Muda (Koas)
                             </div>
@@ -938,7 +989,7 @@ return;
                             class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 text-center shadow-none"
                         >
                             <div
-                                class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                                class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                             >
                                 Pasien Terdaftar
                             </div>
@@ -965,61 +1016,89 @@ return;
                     <motion.div
                         :initial="{ opacity: 0, y: 10 }"
                         :animate="{ opacity: 1, y: 0 }"
-                        class="rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-6 lg:col-span-7 sm:p-7 shadow-none space-y-5"
+                        class="space-y-5 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-6 shadow-none sm:p-7 lg:col-span-7"
                     >
                         <div class="border-b border-[#000000]/10 pb-4">
                             <div class="flex items-center gap-2">
                                 <Film class="size-5 text-[#000000]" />
-                                <h2 class="font-['ivypresto-headline'] text-xl font-bold text-[#000000]">
+                                <h2
+                                    class="font-['ivypresto-headline'] text-xl font-bold text-[#000000]"
+                                >
                                     Tambah Video ke Playlist Layar TV
                                 </h2>
                             </div>
-                            <p class="text-xs text-[#333333] font-['Rubik'] mt-0.5">
-                                Pilih metode input via Link/Embed YouTube atau unggah file video fisik lokal (maksimal 800 MB).
+                            <p
+                                class="mt-0.5 font-['Rubik'] text-xs text-[#333333]"
+                            >
+                                Pilih metode input via Link/Embed YouTube atau
+                                unggah file video fisik lokal (maksimal 800 MB).
                             </p>
                         </div>
 
                         <!-- Method Switcher Tabs -->
                         <div class="space-y-1.5 font-['Rubik']">
-                            <label class="block text-xs font-semibold text-[#000000]">
+                            <label
+                                class="block text-xs font-semibold text-[#000000]"
+                            >
                                 Metode Sumber Video *
                             </label>
-                            <div class="grid grid-cols-2 gap-2 rounded-2xl bg-[#edede2] p-1.5 border border-[#000000]/10">
+                            <div
+                                class="grid grid-cols-2 gap-2 rounded-2xl border border-[#000000]/10 bg-[#edede2] p-1.5"
+                            >
                                 <button
                                     type="button"
-                                    @click="videoUploadForm.source_type = 'youtube'"
+                                    @click="
+                                        videoUploadForm.source_type = 'youtube'
+                                    "
                                     :class="
-                                        videoUploadForm.source_type === 'youtube'
-                                            ? 'bg-[#ffffff] text-[#000000] shadow-xs font-bold border border-[#000000]/15'
-                                            : 'text-[#333333] hover:text-[#000000] font-medium border border-transparent'
+                                        videoUploadForm.source_type ===
+                                        'youtube'
+                                            ? 'border border-[#000000]/15 bg-[#ffffff] font-bold text-[#000000] shadow-xs'
+                                            : 'border border-transparent font-medium text-[#333333] hover:text-[#000000]'
                                     "
                                     class="flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs transition-all"
                                 >
-                                    <svg class="size-4 text-red-600 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                    <svg
+                                        class="size-4 shrink-0 text-red-600"
+                                        viewBox="0 0 24 24"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                                        />
                                     </svg>
                                     <span class="truncate">YouTube</span>
                                 </button>
                                 <button
                                     type="button"
-                                    @click="videoUploadForm.source_type = 'file'"
+                                    @click="
+                                        videoUploadForm.source_type = 'file'
+                                    "
                                     :class="
                                         videoUploadForm.source_type === 'file'
-                                            ? 'bg-[#ffffff] text-[#000000] shadow-xs font-bold border border-[#000000]/15'
-                                            : 'text-[#333333] hover:text-[#000000] font-medium border border-transparent'
+                                            ? 'border border-[#000000]/15 bg-[#ffffff] font-bold text-[#000000] shadow-xs'
+                                            : 'border border-transparent font-medium text-[#333333] hover:text-[#000000]'
                                     "
                                     class="flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-xs transition-all"
                                 >
-                                    <UploadCloud class="size-4 text-emerald-700 shrink-0" />
+                                    <UploadCloud
+                                        class="size-4 shrink-0 text-emerald-700"
+                                    />
                                     <span class="truncate">Upload File</span>
                                 </button>
                             </div>
                         </div>
 
-                        <form @submit.prevent="handleUploadVideo" class="space-y-4 text-xs font-['Rubik']">
+                        <form
+                            @submit.prevent="handleUploadVideo"
+                            class="space-y-4 font-['Rubik'] text-xs"
+                        >
                             <!-- Judul Video -->
                             <div>
-                                <label for="video-title" class="mb-1 block font-medium text-[#000000]">
+                                <label
+                                    for="video-title"
+                                    class="mb-1 block font-medium text-[#000000]"
+                                >
                                     Judul Video Edukasi / Promosi *
                                 </label>
                                 <input
@@ -1029,43 +1108,76 @@ return;
                                     placeholder="Contoh: Edukasi Pola Hidup Sehat & Alur Rawat Jalan"
                                     class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-xs text-[#000000] focus:border-[#000000] focus:outline-none"
                                 />
-                                <p v-if="videoUploadForm.errors.title" class="mt-1 text-xs font-semibold text-rose-700">
+                                <p
+                                    v-if="videoUploadForm.errors.title"
+                                    class="mt-1 text-xs font-semibold text-rose-700"
+                                >
                                     {{ videoUploadForm.errors.title }}
                                 </p>
                             </div>
 
                             <!-- METODE 1: Link YouTube / Embed Iframe -->
-                            <div v-if="videoUploadForm.source_type === 'youtube'" class="space-y-3">
+                            <div
+                                v-if="videoUploadForm.source_type === 'youtube'"
+                                class="space-y-3"
+                            >
                                 <div>
-                                    <label for="video-youtube-url" class="mb-1 block font-medium text-[#000000]">
-                                        Link Video YouTube / Kode Embed &lt;iframe&gt; *
+                                    <label
+                                        for="video-youtube-url"
+                                        class="mb-1 block font-medium text-[#000000]"
+                                    >
+                                        Link Video YouTube / Kode Embed
+                                        &lt;iframe&gt; *
                                     </label>
                                     <textarea
                                         id="video-youtube-url"
                                         v-model="videoUploadForm.youtube_url"
                                         rows="2"
                                         placeholder="Contoh: https://www.youtube.com/watch?v=zVgKnfN9i34 atau tempelkan kode <iframe> dari YouTube"
-                                        class="w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] p-3 text-xs text-[#000000] focus:border-[#000000] focus:outline-none font-mono"
+                                        class="w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] p-3 font-mono text-xs text-[#000000] focus:border-[#000000] focus:outline-none"
                                     ></textarea>
-                                    <p v-if="videoUploadForm.errors.youtube_url" class="mt-1 text-xs font-semibold text-rose-700">
+                                    <p
+                                        v-if="
+                                            videoUploadForm.errors.youtube_url
+                                        "
+                                        class="mt-1 text-xs font-semibold text-rose-700"
+                                    >
                                         {{ videoUploadForm.errors.youtube_url }}
                                     </p>
                                     <p class="mt-1 text-[11px] text-[#333333]">
-                                        Mendukung link standar (youtube.com), link singkat (youtu.be), YouTube Shorts, maupun kode embed &lt;iframe&gt;.
+                                        Mendukung link standar (youtube.com),
+                                        link singkat (youtu.be), YouTube Shorts,
+                                        maupun kode embed &lt;iframe&gt;.
                                     </p>
                                 </div>
 
                                 <!-- Live Preview Box YouTube -->
-                                <div v-if="livePreviewEmbedUrl" class="space-y-1.5 rounded-2xl border border-[#000000]/10 bg-[#edede2]/50 p-3">
-                                    <div class="flex items-center gap-1.5 text-xs font-bold text-[#000000]">
-                                        <CheckCircle2 class="size-3.5 text-emerald-600" />
+                                <div
+                                    v-if="livePreviewEmbedUrl"
+                                    class="space-y-1.5 rounded-2xl border border-[#000000]/10 bg-[#edede2]/50 p-3"
+                                >
+                                    <div
+                                        class="flex items-center gap-1.5 text-xs font-bold text-[#000000]"
+                                    >
+                                        <CheckCircle2
+                                            class="size-3.5 text-emerald-600"
+                                        />
                                         <span>Pratinjau Video YouTube:</span>
                                     </div>
-                                    <div class="aspect-video w-full max-w-sm overflow-hidden rounded-xl bg-black">
+                                    <div
+                                        class="aspect-video w-full max-w-sm overflow-hidden rounded-xl bg-black"
+                                    >
                                         <iframe
                                             :src="livePreviewEmbedUrl"
                                             class="h-full w-full border-0"
-                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allow="
+                                                accelerometer;
+                                                autoplay;
+                                                clipboard-write;
+                                                encrypted-media;
+                                                gyroscope;
+                                                picture-in-picture;
+                                            "
                                             allowfullscreen
                                         ></iframe>
                                     </div>
@@ -1074,7 +1186,9 @@ return;
 
                             <!-- METODE 2: Upload File Video Fisik (Maks. 800 MB) -->
                             <div v-else class="space-y-3">
-                                <label class="mb-1 block font-medium text-[#000000]">
+                                <label
+                                    class="mb-1 block font-medium text-[#000000]"
+                                >
                                     Pilih Berkas File Video (Maks. 800 MB) *
                                 </label>
 
@@ -1094,36 +1208,58 @@ return;
                                     @dragleave.prevent="isDraggingFile = false"
                                     @drop.prevent="onFileDrop"
                                     :class="[
-                                        'flex flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center cursor-pointer transition-all',
+                                        'flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed p-6 text-center transition-all',
                                         isDraggingFile
                                             ? 'border-[#000000] bg-[#beedc0]/30'
                                             : 'border-[#000000]/20 bg-[#ffffff] hover:border-[#000000]/40 hover:bg-[#edede2]/40',
                                     ]"
                                 >
-                                    <div class="flex size-12 items-center justify-center rounded-2xl bg-[#edede2] text-[#000000] mb-2">
-                                        <UploadCloud class="size-6 text-[#000000]" />
+                                    <div
+                                        class="mb-2 flex size-12 items-center justify-center rounded-2xl bg-[#edede2] text-[#000000]"
+                                    >
+                                        <UploadCloud
+                                            class="size-6 text-[#000000]"
+                                        />
                                     </div>
                                     <p class="text-xs font-bold text-[#000000]">
-                                        Klik untuk memilih file atau seret file video ke sini
+                                        Klik untuk memilih file atau seret file
+                                        video ke sini
                                     </p>
-                                    <p class="text-[11px] text-[#333333] mt-1">
-                                        Format: MP4, WebM, OGG, MOV, M4V &bull; Ukuran Maksimal: <strong>800 MB</strong>
+                                    <p class="mt-1 text-[11px] text-[#333333]">
+                                        Format: MP4, WebM, OGG, MOV, M4V &bull;
+                                        Ukuran Maksimal: <strong>800 MB</strong>
                                     </p>
                                 </div>
 
                                 <!-- Selected File Info & Preview -->
                                 <div v-else class="space-y-3">
-                                    <div class="flex items-center justify-between rounded-2xl border border-[#000000]/15 bg-[#ffffff] p-3.5 shadow-xs">
-                                        <div class="flex items-center gap-3 overflow-hidden">
-                                            <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#beedc0] text-[#000000]">
+                                    <div
+                                        class="flex items-center justify-between rounded-2xl border border-[#000000]/15 bg-[#ffffff] p-3.5 shadow-xs"
+                                    >
+                                        <div
+                                            class="flex items-center gap-3 overflow-hidden"
+                                        >
+                                            <div
+                                                class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#beedc0] text-[#000000]"
+                                            >
                                                 <FileVideo class="size-5" />
                                             </div>
                                             <div class="min-w-0">
-                                                <p class="truncate text-xs font-bold text-[#000000]">
+                                                <p
+                                                    class="truncate text-xs font-bold text-[#000000]"
+                                                >
                                                     {{ localVideoFile.name }}
                                                 </p>
-                                                <p class="text-[11px] text-[#333333]">
-                                                    Ukuran: <strong>{{ formatBytes(localVideoFile.size) }}</strong> / 800 MB
+                                                <p
+                                                    class="text-[11px] text-[#333333]"
+                                                >
+                                                    Ukuran:
+                                                    <strong>{{
+                                                        formatBytes(
+                                                            localVideoFile.size,
+                                                        )
+                                                    }}</strong>
+                                                    / 800 MB
                                                 </p>
                                             </div>
                                         </div>
@@ -1138,12 +1274,21 @@ return;
                                     </div>
 
                                     <!-- Local Video Player Preview -->
-                                    <div v-if="localVideoPreviewUrl" class="space-y-1.5 rounded-2xl border border-[#000000]/10 bg-[#edede2]/50 p-3">
-                                        <div class="flex items-center gap-1.5 text-xs font-bold text-[#000000]">
-                                            <CheckCircle2 class="size-3.5 text-emerald-600" />
+                                    <div
+                                        v-if="localVideoPreviewUrl"
+                                        class="space-y-1.5 rounded-2xl border border-[#000000]/10 bg-[#edede2]/50 p-3"
+                                    >
+                                        <div
+                                            class="flex items-center gap-1.5 text-xs font-bold text-[#000000]"
+                                        >
+                                            <CheckCircle2
+                                                class="size-3.5 text-emerald-600"
+                                            />
                                             <span>Pratinjau Video Lokal:</span>
                                         </div>
-                                        <div class="aspect-video w-full max-w-sm overflow-hidden rounded-xl bg-black">
+                                        <div
+                                            class="aspect-video w-full max-w-sm overflow-hidden rounded-xl bg-black"
+                                        >
                                             <video
                                                 :src="localVideoPreviewUrl"
                                                 controls
@@ -1155,23 +1300,43 @@ return;
                                 </div>
 
                                 <!-- Error Messages -->
-                                <p v-if="fileSizeError" class="mt-1 text-xs font-semibold text-rose-700">
+                                <p
+                                    v-if="fileSizeError"
+                                    class="mt-1 text-xs font-semibold text-rose-700"
+                                >
                                     {{ fileSizeError }}
                                 </p>
-                                <p v-if="videoUploadForm.errors.video_file" class="mt-1 text-xs font-semibold text-rose-700">
+                                <p
+                                    v-if="videoUploadForm.errors.video_file"
+                                    class="mt-1 text-xs font-semibold text-rose-700"
+                                >
                                     {{ videoUploadForm.errors.video_file }}
                                 </p>
 
                                 <!-- Upload Progress Bar -->
-                                <div v-if="videoUploadForm.progress" class="space-y-1 rounded-xl bg-[#ffffff] p-3 border border-[#000000]/10">
-                                    <div class="flex items-center justify-between text-xs font-semibold text-[#000000]">
+                                <div
+                                    v-if="videoUploadForm.progress"
+                                    class="space-y-1 rounded-xl border border-[#000000]/10 bg-[#ffffff] p-3"
+                                >
+                                    <div
+                                        class="flex items-center justify-between text-xs font-semibold text-[#000000]"
+                                    >
                                         <span>Mengunggah File Video...</span>
-                                        <span>{{ videoUploadForm.progress.percentage }}%</span>
+                                        <span
+                                            >{{
+                                                videoUploadForm.progress
+                                                    .percentage
+                                            }}%</span
+                                        >
                                     </div>
-                                    <div class="h-2 w-full overflow-hidden rounded-full bg-[#edede2]">
+                                    <div
+                                        class="h-2 w-full overflow-hidden rounded-full bg-[#edede2]"
+                                    >
                                         <div
                                             class="h-full bg-[#000000] transition-all duration-200"
-                                            :style="{ width: `${videoUploadForm.progress.percentage}%` }"
+                                            :style="{
+                                                width: `${videoUploadForm.progress.percentage}%`,
+                                            }"
                                         ></div>
                                     </div>
                                 </div>
@@ -1180,7 +1345,10 @@ return;
                             <!-- Urutan Putar & Status Awal -->
                             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                                 <div>
-                                    <label for="video-order" class="mb-1 block font-medium text-[#000000]">
+                                    <label
+                                        for="video-order"
+                                        class="mb-1 block font-medium text-[#000000]"
+                                    >
                                         Urutan Pemutaran (Nomor Playlist)
                                     </label>
                                     <input
@@ -1190,19 +1358,26 @@ return;
                                         min="0"
                                         class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2.5 text-xs text-[#000000] focus:border-[#000000] focus:outline-none"
                                     />
-                                    <p v-if="videoUploadForm.errors.order" class="mt-1 text-xs font-semibold text-rose-700">
+                                    <p
+                                        v-if="videoUploadForm.errors.order"
+                                        class="mt-1 text-xs font-semibold text-rose-700"
+                                    >
                                         {{ videoUploadForm.errors.order }}
                                     </p>
                                 </div>
 
                                 <div class="flex items-center pt-6">
-                                    <label class="flex items-center gap-2.5 cursor-pointer">
+                                    <label
+                                        class="flex cursor-pointer items-center gap-2.5"
+                                    >
                                         <input
                                             type="checkbox"
                                             v-model="videoUploadForm.is_active"
                                             class="size-4.5 rounded accent-[#000000]"
                                         />
-                                        <span class="font-medium text-[#000000]">
+                                        <span
+                                            class="font-medium text-[#000000]"
+                                        >
                                             Langsung Aktifkan di TV
                                         </span>
                                     </label>
@@ -1214,44 +1389,89 @@ return;
                                 <button
                                     type="submit"
                                     :disabled="isSubmitDisabled"
-                                    class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a] disabled:opacity-50 disabled:cursor-not-allowed"
+                                    class="inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a] disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    <Loader2 v-if="videoUploadForm.processing" class="size-4 animate-spin text-[#beedc0]" />
-                                    <CheckCircle2 v-else class="size-4 text-[#beedc0]" />
-                                    <span>{{ videoUploadForm.processing ? 'Menyimpan...' : 'Simpan ke Playlist TV' }}</span>
+                                    <Loader2
+                                        v-if="videoUploadForm.processing"
+                                        class="size-4 animate-spin text-[#beedc0]"
+                                    />
+                                    <CheckCircle2
+                                        v-else
+                                        class="size-4 text-[#beedc0]"
+                                    />
+                                    <span>{{
+                                        videoUploadForm.processing
+                                            ? 'Menyimpan...'
+                                            : 'Simpan ke Playlist TV'
+                                    }}</span>
                                 </button>
                             </div>
                         </form>
                     </motion.div>
 
                     <!-- Banner Informasi Layar Display TV -->
-                    <div class="flex flex-col justify-between space-y-4 rounded-3xl border border-[#000000]/10 bg-[#000000] p-6 lg:col-span-5 sm:p-7 text-[#ffffff] shadow-xl">
+                    <div
+                        class="flex flex-col justify-between space-y-4 rounded-3xl border border-[#000000]/10 bg-[#000000] p-6 text-[#ffffff] shadow-xl sm:p-7 lg:col-span-5"
+                    >
                         <div class="space-y-3">
-                            <div class="flex size-12 items-center justify-center rounded-2xl bg-[#beedc0] text-[#000000]">
+                            <div
+                                class="flex size-12 items-center justify-center rounded-2xl bg-[#beedc0] text-[#000000]"
+                            >
                                 <Tv class="size-6" />
                             </div>
-                            <h3 class="font-['ivypresto-headline'] text-2xl font-bold text-[#ffffff]">
+                            <h3
+                                class="font-['ivypresto-headline'] text-2xl font-bold text-[#ffffff]"
+                            >
                                 Layar Monitor TV Ruang Tunggu
                             </h3>
-                            <p class="text-xs text-[#ffffff]/80 font-['Rubik'] leading-relaxed">
-                                Fitur Auto-Looping Video Playlist mendukung pemutaran video edukasi melalui streaming link YouTube maupun file video lokal resolusi tinggi hingga 800 MB secara berurutan dan bersiklus tanpa jeda.
+                            <p
+                                class="font-['Rubik'] text-xs leading-relaxed text-[#ffffff]/80"
+                            >
+                                Fitur Auto-Looping Video Playlist mendukung
+                                pemutaran video edukasi melalui streaming link
+                                YouTube maupun file video lokal resolusi tinggi
+                                hingga 800 MB secara berurutan dan bersiklus
+                                tanpa jeda.
                             </p>
-                            <ul class="space-y-2 text-xs text-[#ffffff]/90 font-['Rubik'] border-t border-[#ffffff]/15 pt-3">
+                            <ul
+                                class="space-y-2 border-t border-[#ffffff]/15 pt-3 font-['Rubik'] text-xs text-[#ffffff]/90"
+                            >
                                 <li class="flex items-center gap-2">
-                                    <CheckCircle2 class="size-4 text-[#beedc0]" />
-                                    <span>Mendukung streaming YouTube Iframe API</span>
+                                    <CheckCircle2
+                                        class="size-4 text-[#beedc0]"
+                                    />
+                                    <span
+                                        >Mendukung streaming YouTube Iframe
+                                        API</span
+                                    >
                                 </li>
                                 <li class="flex items-center gap-2">
-                                    <CheckCircle2 class="size-4 text-[#beedc0]" />
-                                    <span>Mendukung upload file video lokal hingga <strong>800 MB</strong> (MP4, WebM, MOV)</span>
+                                    <CheckCircle2
+                                        class="size-4 text-[#beedc0]"
+                                    />
+                                    <span
+                                        >Mendukung upload file video lokal
+                                        hingga <strong>800 MB</strong> (MP4,
+                                        WebM, MOV)</span
+                                    >
                                 </li>
                                 <li class="flex items-center gap-2">
-                                    <CheckCircle2 class="size-4 text-[#beedc0]" />
-                                    <span>Fitur Smart Audio Ducking saat panggilan antrean berlangsung</span>
+                                    <CheckCircle2
+                                        class="size-4 text-[#beedc0]"
+                                    />
+                                    <span
+                                        >Fitur Smart Audio Ducking saat
+                                        panggilan antrean berlangsung</span
+                                    >
                                 </li>
                                 <li class="flex items-center gap-2">
-                                    <CheckCircle2 class="size-4 text-[#beedc0]" />
-                                    <span>Auto-cycle video berikutnya saat durasi berakhir</span>
+                                    <CheckCircle2
+                                        class="size-4 text-[#beedc0]"
+                                    />
+                                    <span
+                                        >Auto-cycle video berikutnya saat durasi
+                                        berakhir</span
+                                    >
                                 </li>
                             </ul>
                         </div>
@@ -1269,22 +1489,35 @@ return;
                 </div>
 
                 <!-- Grid Inventori Video Playlist -->
-                <section class="space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-6 sm:p-7 shadow-none">
-                    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-[#000000]/10 pb-4">
+                <section
+                    class="space-y-4 rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-6 shadow-none sm:p-7"
+                >
+                    <div
+                        class="flex flex-col gap-2 border-b border-[#000000]/10 pb-4 sm:flex-row sm:items-center sm:justify-between"
+                    >
                         <div>
                             <div class="flex items-center gap-2">
                                 <Film class="size-5 text-[#000000]" />
-                                <h3 class="font-['ivypresto-headline'] text-xl font-bold text-[#000000]">
+                                <h3
+                                    class="font-['ivypresto-headline'] text-xl font-bold text-[#000000]"
+                                >
                                     Daftar Playlist Video TV Antrean
                                 </h3>
                             </div>
-                            <p class="text-xs text-[#333333] font-['Rubik']">
-                                Urutan dan status aktif video yang sedang tayang di layar ruang tunggu
+                            <p class="font-['Rubik'] text-xs text-[#333333]">
+                                Urutan dan status aktif video yang sedang tayang
+                                di layar ruang tunggu
                             </p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="rounded-full bg-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]">
-                                {{ display_videos.filter(v => v.is_active).length }} Video Tayang Aktif
+                            <span
+                                class="rounded-full bg-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
+                            >
+                                {{
+                                    display_videos.filter((v) => v.is_active)
+                                        .length
+                                }}
+                                Video Tayang Aktif
                             </span>
                         </div>
                     </div>
@@ -1292,7 +1525,7 @@ return;
                     <!-- Video Grid Cards -->
                     <div
                         v-if="display_videos.length > 0"
-                        class="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3 pt-2"
+                        class="grid grid-cols-1 gap-5 pt-2 md:grid-cols-2 xl:grid-cols-3"
                     >
                         <div
                             v-for="video in display_videos"
@@ -1301,12 +1534,21 @@ return;
                         >
                             <div class="space-y-3">
                                 <!-- Mini Video Player Preview (YouTube Iframe) -->
-                                <div class="relative aspect-video w-full overflow-hidden rounded-xl bg-[#000000]">
+                                <div
+                                    class="relative aspect-video w-full overflow-hidden rounded-xl bg-[#000000]"
+                                >
                                     <iframe
                                         v-if="video.youtube_id"
                                         :src="`https://www.youtube.com/embed/${video.youtube_id}`"
                                         class="h-full w-full border-0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allow="
+                                            accelerometer;
+                                            autoplay;
+                                            clipboard-write;
+                                            encrypted-media;
+                                            gyroscope;
+                                            picture-in-picture;
+                                        "
                                         allowfullscreen
                                     ></iframe>
                                     <video
@@ -1319,24 +1561,40 @@ return;
                                 </div>
 
                                 <div>
-                                    <div class="flex items-center justify-between gap-2">
-                                        <div class="flex items-center gap-1.5 flex-wrap">
-                                            <span class="inline-flex items-center gap-1 rounded-md bg-[#edede2] px-2 py-0.5 text-[10px] font-bold text-[#000000]">
+                                    <div
+                                        class="flex items-center justify-between gap-2"
+                                    >
+                                        <div
+                                            class="flex flex-wrap items-center gap-1.5"
+                                        >
+                                            <span
+                                                class="inline-flex items-center gap-1 rounded-md bg-[#edede2] px-2 py-0.5 text-[10px] font-bold text-[#000000]"
+                                            >
                                                 <ListOrdered class="size-3" />
-                                                <span>Urutan #{{ video.order }}</span>
+                                                <span
+                                                    >Urutan #{{
+                                                        video.order
+                                                    }}</span
+                                                >
                                             </span>
                                             <span
                                                 v-if="video.youtube_id"
-                                                class="inline-flex items-center gap-1 rounded-md bg-red-50 text-red-700 border border-red-200 px-2 py-0.5 text-[10px] font-bold"
+                                                class="inline-flex items-center gap-1 rounded-md border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-700"
                                             >
-                                                <svg class="size-3 text-red-600 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                                <svg
+                                                    class="size-3 shrink-0 text-red-600"
+                                                    viewBox="0 0 24 24"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                                                    />
                                                 </svg>
                                                 <span>YouTube</span>
                                             </span>
                                             <span
                                                 v-else
-                                                class="inline-flex items-center gap-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 text-[10px] font-bold"
+                                                class="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold text-emerald-800"
                                             >
                                                 <FileVideo class="size-3" />
                                                 <span>File Lokal</span>
@@ -1350,20 +1608,33 @@ return;
                                             "
                                             class="rounded-full px-2.5 py-0.5 text-[10px] font-bold"
                                         >
-                                            {{ video.is_active ? 'Tayang Aktif' : 'Nonaktif' }}
+                                            {{
+                                                video.is_active
+                                                    ? 'Tayang Aktif'
+                                                    : 'Nonaktif'
+                                            }}
                                         </span>
                                     </div>
-                                    <h4 class="font-['ivypresto-headline'] text-base font-bold text-[#000000] mt-2 line-clamp-1">
+                                    <h4
+                                        class="mt-2 line-clamp-1 font-['ivypresto-headline'] text-base font-bold text-[#000000]"
+                                    >
                                         {{ video.title }}
                                     </h4>
-                                    <p class="text-[11px] text-[#333333] font-['Rubik'] mt-0.5">
-                                        Ukuran/Format: <strong>{{ video.file_size_formatted }}</strong>
+                                    <p
+                                        class="mt-0.5 font-['Rubik'] text-[11px] text-[#333333]"
+                                    >
+                                        Ukuran/Format:
+                                        <strong>{{
+                                            video.file_size_formatted
+                                        }}</strong>
                                     </p>
                                 </div>
                             </div>
 
                             <!-- Tombol Aksi Item Video -->
-                            <div class="flex items-center justify-between border-t border-[#000000]/10 pt-3 mt-4">
+                            <div
+                                class="mt-4 flex items-center justify-between border-t border-[#000000]/10 pt-3"
+                            >
                                 <button
                                     type="button"
                                     @click="handleToggleVideoStatus(video)"
@@ -1375,9 +1646,16 @@ return;
                                             : 'border-[#000000] bg-[#000000] text-[#ffffff] hover:bg-[#1a1a1a]'
                                     "
                                 >
-                                    <Loader2 v-if="isTogglingVideoId === video.id" class="size-3.5 animate-spin" />
+                                    <Loader2
+                                        v-if="isTogglingVideoId === video.id"
+                                        class="size-3.5 animate-spin"
+                                    />
                                     <Power v-else class="size-3.5" />
-                                    <span>{{ video.is_active ? 'Nonaktifkan' : 'Aktifkan' }}</span>
+                                    <span>{{
+                                        video.is_active
+                                            ? 'Nonaktifkan'
+                                            : 'Aktifkan'
+                                    }}</span>
                                 </button>
 
                                 <button
@@ -1399,11 +1677,16 @@ return;
                         class="flex flex-col items-center justify-center p-12 text-center"
                     >
                         <Film class="size-12 text-[#000000]/25" />
-                        <h4 class="font-['ivypresto-headline'] text-lg font-bold text-[#000000] mt-3">
+                        <h4
+                            class="mt-3 font-['ivypresto-headline'] text-lg font-bold text-[#000000]"
+                        >
                             Belum Ada Video di Playlist
                         </h4>
-                        <p class="text-xs text-[#333333] font-['Rubik'] max-w-sm mt-1">
-                            Masukkan link video YouTube di atas untuk mulai menayangkan video edukasi di layar TV antrean.
+                        <p
+                            class="mt-1 max-w-sm font-['Rubik'] text-xs text-[#333333]"
+                        >
+                            Masukkan link video YouTube di atas untuk mulai
+                            menayangkan video edukasi di layar TV antrean.
                         </p>
                     </div>
                 </section>
@@ -1438,20 +1721,28 @@ return;
                         >
                             Hapus Video dari Playlist
                         </h2>
-                        <p class="text-xs text-[#333333] font-['Rubik'] line-clamp-1">
+                        <p
+                            class="line-clamp-1 font-['Rubik'] text-xs text-[#333333]"
+                        >
                             {{ deleteTargetVideo.title }}
                         </p>
                     </div>
                 </div>
 
                 <div
-                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 text-xs text-[#000000]/80 font-['Rubik']"
+                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 font-['Rubik'] text-xs text-[#000000]/80"
                 >
                     <p>
-                        Apakah Anda yakin ingin menghapus video <strong class="text-[#000000]">{{ deleteTargetVideo.title }}</strong>?
+                        Apakah Anda yakin ingin menghapus video
+                        <strong class="text-[#000000]">{{
+                            deleteTargetVideo.title
+                        }}</strong
+                        >?
                     </p>
                     <p class="text-[#333333]">
-                        File fisik video akan dihapus permanen dari media penyimpanan server dan dikeluarkan dari seluruh rotasi layar TV antrean.
+                        File fisik video akan dihapus permanen dari media
+                        penyimpanan server dan dikeluarkan dari seluruh rotasi
+                        layar TV antrean.
                     </p>
                 </div>
 
@@ -1476,9 +1767,7 @@ return;
                         />
                         <Trash2 v-else class="size-4 text-[#ffffff]" />
                         <span>{{
-                            isDeletingVideo
-                                ? 'Menghapus...'
-                                : 'Ya, Hapus Video'
+                            isDeletingVideo ? 'Menghapus...' : 'Ya, Hapus Video'
                         }}</span>
                     </button>
                 </div>

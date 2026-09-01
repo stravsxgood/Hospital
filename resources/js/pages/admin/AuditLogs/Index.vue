@@ -140,7 +140,7 @@ const formatDate = (iso: string) => {
                 <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                         <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3.5 py-1 text-xs font-bold text-[#000000]"
                         >
                             <ShieldCheck class="size-3.5 text-[#000000]" />
                             <span>Kepatuhan UU PDP No. 27/2022</span>
@@ -151,7 +151,7 @@ const formatDate = (iso: string) => {
                     >
                         Audit Jejak Akses EMR Global
                     </h1>
-                    <p class="text-xs text-[#333333] sm:text-sm font-['Rubik']">
+                    <p class="font-['Rubik'] text-xs text-[#333333] sm:text-sm">
                         Log audit otomatis tak-terubah (immutable) merekam
                         setiap inspeksi, pembuatan, modifikasi, dan ekspor data
                         klinis.
@@ -166,12 +166,14 @@ const formatDate = (iso: string) => {
                 <h2 id="audit-stats-overview-heading" class="sr-only">
                     Statistik Ringkas Log Audit
                 </h2>
-                <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4 font-['Rubik']">
+                <div
+                    class="grid grid-cols-2 gap-3 font-['Rubik'] sm:grid-cols-4 sm:gap-4"
+                >
                     <div
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Total Event Akses
                         </div>
@@ -186,7 +188,7 @@ const formatDate = (iso: string) => {
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Inspeksi Hari Ini
                         </div>
@@ -201,7 +203,7 @@ const formatDate = (iso: string) => {
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             EMR Baru Hari Ini
                         </div>
@@ -216,7 +218,7 @@ const formatDate = (iso: string) => {
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Ekspor PDF Hari Ini
                         </div>
@@ -239,7 +241,7 @@ const formatDate = (iso: string) => {
                 <!-- Filters Slot -->
                 <template #filters>
                     <div
-                        class="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-3 shadow-none sm:flex-row sm:items-center sm:p-4 font-['Rubik']"
+                        class="flex flex-col items-stretch justify-between gap-3 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-3 font-['Rubik'] shadow-none sm:flex-row sm:items-center sm:p-4"
                     >
                         <div class="relative flex-1">
                             <label for="audit-search-input" class="sr-only"
@@ -374,9 +376,7 @@ const formatDate = (iso: string) => {
                             <div class="font-bold text-[#000000]">
                                 {{ log.medical_record.patient.name }}
                             </div>
-                            <div
-                                class="font-mono text-[11px] text-[#333333]"
-                            >
+                            <div class="font-mono text-[11px] text-[#333333]">
                                 NIK: {{ log.medical_record.patient.resident_n }}
                             </div>
                         </div>
@@ -484,7 +484,9 @@ const formatDate = (iso: string) => {
                     </button>
                 </div>
 
-                <div class="flex-1 space-y-3 overflow-y-auto pr-1 text-xs font-['Rubik']">
+                <div
+                    class="flex-1 space-y-3 overflow-y-auto pr-1 font-['Rubik'] text-xs"
+                >
                     <div
                         class="space-y-1.5 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-3.5"
                     >

@@ -5,8 +5,8 @@
  * di semua dashboard (Admin, Staff, Dokter, Pasien) serta mengekspor fungsi utilitas toast.
  */
 import { router } from '@inertiajs/vue3';
-import { toast   } from 'vue3-toastify';
-import type {ToastOptions, ToastType} from 'vue3-toastify';
+import { toast } from 'vue3-toastify';
+import type { ToastOptions, ToastType } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
 export interface FlashPayload {
@@ -38,8 +38,8 @@ let lastShownTime = 0;
  */
 function shouldShowToast(msg: string): boolean {
     if (!msg || typeof msg !== 'string') {
-return false;
-}
+        return false;
+    }
 
     const now = Date.now();
 
@@ -58,22 +58,49 @@ return false;
  */
 export function handleFlashMessage(flash?: FlashPayload): void {
     if (!flash) {
-return;
-}
+        return;
+    }
 
-    if (flash.success && typeof flash.success === 'string' && shouldShowToast(flash.success)) {
+    if (
+        flash.success &&
+        typeof flash.success === 'string' &&
+        shouldShowToast(flash.success)
+    ) {
         toast.success(flash.success, defaultOptions);
-    } else if (flash.error && typeof flash.error === 'string' && shouldShowToast(flash.error)) {
+    } else if (
+        flash.error &&
+        typeof flash.error === 'string' &&
+        shouldShowToast(flash.error)
+    ) {
         toast.error(flash.error, defaultOptions);
-    } else if (flash.warning && typeof flash.warning === 'string' && shouldShowToast(flash.warning)) {
+    } else if (
+        flash.warning &&
+        typeof flash.warning === 'string' &&
+        shouldShowToast(flash.warning)
+    ) {
         toast.warning(flash.warning, defaultOptions);
-    } else if (flash.info && typeof flash.info === 'string' && shouldShowToast(flash.info)) {
+    } else if (
+        flash.info &&
+        typeof flash.info === 'string' &&
+        shouldShowToast(flash.info)
+    ) {
         toast.info(flash.info, defaultOptions);
-    } else if (flash.message && typeof flash.message === 'string' && shouldShowToast(flash.message)) {
+    } else if (
+        flash.message &&
+        typeof flash.message === 'string' &&
+        shouldShowToast(flash.message)
+    ) {
         toast.info(flash.message, defaultOptions);
-    } else if (flash.toast && flash.toast.message && shouldShowToast(flash.toast.message)) {
+    } else if (
+        flash.toast &&
+        flash.toast.message &&
+        shouldShowToast(flash.toast.message)
+    ) {
         const type = flash.toast.type || 'info';
-        toast(flash.toast.message, { ...defaultOptions, type: type as ToastType });
+        toast(flash.toast.message, {
+            ...defaultOptions,
+            type: type as ToastType,
+        });
     }
 }
 

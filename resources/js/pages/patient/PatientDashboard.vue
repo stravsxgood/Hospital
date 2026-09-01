@@ -124,7 +124,7 @@ const getStatusLabel = (status: string) => {
                         <Activity class="size-3.5 text-[#000000]" />
                         <span>Portal Layanan Pasien</span>
                     </span>
-                    <span class="text-xs text-[#333333] font-medium">
+                    <span class="text-xs font-medium text-[#333333]">
                         {{ currentDate }}
                     </span>
                 </div>
@@ -137,8 +137,8 @@ const getStatusLabel = (status: string) => {
                     class="max-w-xl text-xs leading-relaxed text-[#333333] sm:text-sm"
                 >
                     Kelola antrean poliklinik, pantau nomor antrean aktif secara
-                    langsung, dan akses riwayat pemeriksaan medis Anda dalam satu
-                    portal terpadu.
+                    langsung, dan akses riwayat pemeriksaan medis Anda dalam
+                    satu portal terpadu.
                 </p>
             </div>
 
@@ -266,7 +266,10 @@ const getStatusLabel = (status: string) => {
         </motion.section>
 
         <!-- 3 Ringkasan Statistik Pasien -->
-        <section aria-label="Ringkasan Statistik Pasien" class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <section
+            aria-label="Ringkasan Statistik Pasien"
+            class="grid grid-cols-1 gap-4 sm:grid-cols-3"
+        >
             <!-- Kartu: Total Kunjungan -->
             <motion.div
                 :initial="{ opacity: 0, y: 12 }"
@@ -275,7 +278,8 @@ const getStatusLabel = (status: string) => {
                 class="flex items-center justify-between rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none sm:p-6"
             >
                 <div>
-                    <span class="block text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                    <span
+                        class="block text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >Total Kunjungan</span
                     >
                     <span
@@ -301,7 +305,8 @@ const getStatusLabel = (status: string) => {
                 class="flex items-center justify-between rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none sm:p-6"
             >
                 <div>
-                    <span class="block text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                    <span
+                        class="block text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >Jadwal Mendatang</span
                     >
                     <span
@@ -327,7 +332,8 @@ const getStatusLabel = (status: string) => {
                 class="flex items-center justify-between rounded-3xl border border-[#000000]/10 bg-[#fffff3] p-5 shadow-none sm:p-6"
             >
                 <div>
-                    <span class="block text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                    <span
+                        class="block text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >Konsultasi Selesai</span
                     >
                     <span
@@ -384,16 +390,24 @@ const getStatusLabel = (status: string) => {
                     <div class="scrollbar-thin overflow-x-auto">
                         <table class="w-full text-left text-xs sm:text-sm">
                             <thead
-                                class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold uppercase tracking-wider text-[#000000]"
+                                class="border-b border-[#000000]/10 bg-[#edede2]/80 text-[11px] font-bold tracking-wider text-[#000000] uppercase"
                             >
                                 <tr>
-                                    <th class="px-4 py-3 sm:px-5">No. Antrean</th>
+                                    <th class="px-4 py-3 sm:px-5">
+                                        No. Antrean
+                                    </th>
                                     <th class="px-4 py-3">Tanggal</th>
-                                    <th class="px-4 py-3">Poliklinik & Dokter</th>
-                                    <th class="px-4 py-3 text-right sm:px-5">Status</th>
+                                    <th class="px-4 py-3">
+                                        Poliklinik & Dokter
+                                    </th>
+                                    <th class="px-4 py-3 text-right sm:px-5">
+                                        Status
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-[#000000]/5 font-medium text-[#000000]">
+                            <tbody
+                                class="divide-y divide-[#000000]/5 font-medium text-[#000000]"
+                            >
                                 <tr
                                     v-for="item in recentAppointments"
                                     :key="item.appointment_id"
@@ -404,7 +418,9 @@ const getStatusLabel = (status: string) => {
                                     >
                                         {{ item.queue_number }}
                                     </td>
-                                    <td class="px-4 py-3.5 font-mono text-xs text-[#333333]">
+                                    <td
+                                        class="px-4 py-3.5 font-mono text-xs text-[#333333]"
+                                    >
                                         {{ item.appointment_date }}
                                     </td>
                                     <td class="px-4 py-3.5 text-xs">
@@ -414,11 +430,14 @@ const getStatusLabel = (status: string) => {
                                             {{
                                                 item.doctor_schedule?.poli
                                                     ?.name_poli ||
-                                                item.doctor_schedule?.poli?.name ||
+                                                item.doctor_schedule?.poli
+                                                    ?.name ||
                                                 'Poliklinik'
                                             }}
                                         </span>
-                                        <span class="text-[11px] text-[#333333]">
+                                        <span
+                                            class="text-[11px] text-[#333333]"
+                                        >
                                             {{
                                                 formatDoctorName(
                                                     item.doctor_schedule?.doctor
@@ -431,7 +450,9 @@ const getStatusLabel = (status: string) => {
                                         <span
                                             :class="[
                                                 'inline-flex items-center rounded-full border px-3 py-0.5 text-xs font-bold',
-                                                getStatusBadgeClass(item.status),
+                                                getStatusBadgeClass(
+                                                    item.status,
+                                                ),
                                             ]"
                                         >
                                             {{ getStatusLabel(item.status) }}
@@ -498,10 +519,7 @@ const getStatusLabel = (status: string) => {
                         </div>
                     </div>
 
-                    <p
-                        v-else
-                        class="py-6 text-center text-xs text-[#333333]"
-                    >
+                    <p v-else class="py-6 text-center text-xs text-[#333333]">
                         Tidak ada jadwal poliklinik yang tersedia saat ini.
                     </p>
                 </div>

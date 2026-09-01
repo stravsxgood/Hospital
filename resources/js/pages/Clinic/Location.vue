@@ -888,8 +888,6 @@ const hospitalFacilities = [
                                 />
                             </Link>
 
-
-
                             <!-- Lokasi Klinik -->
                             <Link
                                 href="/clinic-location"

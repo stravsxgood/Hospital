@@ -1007,8 +1007,6 @@ const patientFaqs = [
                                 />
                             </Link>
 
-
-
                             <!-- Lokasi Klinik -->
                             <Link
                                 href="/clinic-location"
@@ -1779,7 +1777,6 @@ const patientFaqs = [
                             Informasi Pasien
                         </span>
                         <ul class="space-y-2 text-[#333333]">
-
                             <li>
                                 <button
                                     type="button"

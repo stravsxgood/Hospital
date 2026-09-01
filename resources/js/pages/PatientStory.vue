@@ -928,8 +928,6 @@ const hospitalFacilities = [
                                 />
                             </Link>
 
-
-
                             <!-- Lokasi Klinik -->
                             <Link
                                 href="/clinic-location"
@@ -1747,7 +1745,6 @@ const hospitalFacilities = [
                             Informasi Pasien
                         </span>
                         <ul class="space-y-2 text-[#333333]">
-
                             <li>
                                 <Link
                                     href="/login"

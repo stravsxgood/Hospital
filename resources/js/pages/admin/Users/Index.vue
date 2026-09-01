@@ -411,7 +411,7 @@ const copyToClipboard = () => {
                 <div class="space-y-1.5">
                     <div class="flex items-center gap-2">
                         <span
-                            class="inline-flex items-center gap-1.5 rounded-full bg-[#beedc0]/40 border border-[#beedc0] px-3.5 py-1 text-xs font-bold text-[#000000]"
+                            class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3.5 py-1 text-xs font-bold text-[#000000]"
                         >
                             <ShieldCheck class="size-3.5 text-[#000000]" />
                             <span>Direktori Pengguna & Tenaga Medis</span>
@@ -422,7 +422,7 @@ const copyToClipboard = () => {
                     >
                         Provisioning & Tata Kelola Akun
                     </h1>
-                    <p class="text-xs text-[#333333] sm:text-sm font-['Rubik']">
+                    <p class="font-['Rubik'] text-xs text-[#333333] sm:text-sm">
                         Kelola akun dokter DPJP, staf perawat tetap, dokter muda
                         (koas), dan hak akses Spatie dengan aman.
                     </p>
@@ -436,7 +436,7 @@ const copyToClipboard = () => {
                         :whileHover="{ scale: 1.02 }"
                         :whileTap="{ scale: 0.98 }"
                         @click="openDoctorModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a] sm:text-sm font-['Rubik']"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 font-['Rubik'] text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a] sm:text-sm"
                     >
                         <Stethoscope class="size-4 text-[#beedc0]" />
                         <span>Tambah Dokter DPJP</span>
@@ -447,7 +447,7 @@ const copyToClipboard = () => {
                         :whileHover="{ scale: 1.02 }"
                         :whileTap="{ scale: 0.98 }"
                         @click="openNurseModal"
-                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-5 py-2.5 text-xs font-medium text-[#000000] transition-colors hover:bg-[#edede2] sm:text-sm font-['Rubik']"
+                        class="inline-flex min-h-[44px] cursor-pointer items-center justify-center gap-2 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-5 py-2.5 font-['Rubik'] text-xs font-medium text-[#000000] transition-colors hover:bg-[#edede2] sm:text-sm"
                     >
                         <UserPlus class="size-4 text-[#000000]" />
                         <span>Tambah Staf / Koas</span>
@@ -469,7 +469,7 @@ const copyToClipboard = () => {
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Total Pengguna
                         </div>
@@ -484,7 +484,7 @@ const copyToClipboard = () => {
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Dokter DPJP
                         </div>
@@ -499,7 +499,7 @@ const copyToClipboard = () => {
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Perawat Tetap
                         </div>
@@ -514,7 +514,7 @@ const copyToClipboard = () => {
                         class="rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Dokter Muda
                         </div>
@@ -529,7 +529,7 @@ const copyToClipboard = () => {
                         class="col-span-2 rounded-2xl border border-[#000000]/10 bg-[#fffff3] p-4 shadow-none sm:col-span-1"
                     >
                         <div
-                            class="truncate text-xs font-semibold text-[#333333] uppercase tracking-wider"
+                            class="truncate text-xs font-semibold tracking-wider text-[#333333] uppercase"
                         >
                             Akun Nonaktif
                         </div>
@@ -712,9 +712,7 @@ const copyToClipboard = () => {
                                         ?.name_specialization || 'Spesialis'
                                 }}
                             </div>
-                            <div
-                                class="font-mono text-[11px] text-[#333333]"
-                            >
+                            <div class="font-mono text-[11px] text-[#333333]">
                                 SIP: {{ u.doctor.sip_number }}
                             </div>
                         </div>
@@ -722,9 +720,7 @@ const copyToClipboard = () => {
                             <div class="font-medium text-[#000000]">
                                 {{ u.nurse.institute || 'RS Utama' }}
                             </div>
-                            <div
-                                class="font-mono text-[11px] text-[#333333]"
-                            >
+                            <div class="font-mono text-[11px] text-[#333333]">
                                 {{ u.nurse.type === 'koas' ? 'NIM' : 'STR' }}:
                                 {{ u.nurse.registration_number || '-' }}
                             </div>
@@ -744,9 +740,7 @@ const copyToClipboard = () => {
                         >
                             <span
                                 :class="
-                                    u.is_active
-                                        ? 'bg-[#000000]'
-                                        : 'bg-rose-600'
+                                    u.is_active ? 'bg-[#000000]' : 'bg-rose-600'
                                 "
                                 class="size-1.5 rounded-full"
                             ></span>
@@ -877,7 +871,9 @@ const copyToClipboard = () => {
                             >
                                 Pendaftaran Dokter DPJP
                             </h2>
-                            <p class="text-[11px] text-[#333333] sm:text-xs font-['Rubik']">
+                            <p
+                                class="font-['Rubik'] text-[11px] text-[#333333] sm:text-xs"
+                            >
                                 Provisioning akun dokter dan penetapan jadwal
                                 praktik
                             </p>
@@ -895,7 +891,7 @@ const copyToClipboard = () => {
 
                 <!-- Scrollable Body -->
                 <div
-                    class="flex-1 space-y-4 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
+                    class="flex-1 space-y-4 overflow-y-auto pr-1 font-['Rubik'] text-xs sm:text-sm"
                 >
                     <div
                         v-if="doctorGeneralError"
@@ -1202,7 +1198,9 @@ const copyToClipboard = () => {
                             >
                                 Pendaftaran Staf / Koas
                             </h2>
-                            <p class="text-[11px] text-[#333333] sm:text-xs font-['Rubik']">
+                            <p
+                                class="font-['Rubik'] text-[11px] text-[#333333] sm:text-xs"
+                            >
                                 Penetapan perawat tetap atau dokter muda magang
                             </p>
                         </div>
@@ -1218,7 +1216,7 @@ const copyToClipboard = () => {
                 </div>
 
                 <div
-                    class="flex-1 space-y-4 overflow-y-auto pr-1 text-xs sm:text-sm font-['Rubik']"
+                    class="flex-1 space-y-4 overflow-y-auto pr-1 font-['Rubik'] text-xs sm:text-sm"
                 >
                     <div
                         v-if="nurseGeneralError"
@@ -1473,14 +1471,14 @@ const copyToClipboard = () => {
                                     : 'Aktifkan Kembali Akun'
                             }}
                         </h2>
-                        <p class="text-xs text-[#333333] font-['Rubik']">
+                        <p class="font-['Rubik'] text-xs text-[#333333]">
                             {{ statusTargetUser.name }}
                         </p>
                     </div>
                 </div>
 
                 <div
-                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 text-xs text-[#000000]/80 font-['Rubik']"
+                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 font-['Rubik'] text-xs text-[#000000]/80"
                 >
                     <p v-if="statusTargetUser.is_active">
                         Menonaktifkan akun akan memblokir hak login pengguna.
@@ -1564,20 +1562,27 @@ const copyToClipboard = () => {
                         >
                             Konfirmasi Reset Password
                         </h2>
-                        <p class="text-xs text-[#333333] font-['Rubik']">
+                        <p class="font-['Rubik'] text-xs text-[#333333]">
                             {{ resetTargetUser.name }}
                         </p>
                     </div>
                 </div>
 
                 <div
-                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 text-xs text-[#000000]/80 font-['Rubik']"
+                    class="space-y-2 rounded-2xl border border-[#000000]/10 bg-[#edede2]/40 p-4 font-['Rubik'] text-xs text-[#000000]/80"
                 >
                     <p>
-                        Apakah Anda yakin ingin mereset password untuk akun <strong class="text-[#000000]">{{ resetTargetUser.email }}</strong>?
+                        Apakah Anda yakin ingin mereset password untuk akun
+                        <strong class="text-[#000000]">{{
+                            resetTargetUser.email
+                        }}</strong
+                        >?
                     </p>
                     <p class="text-[#333333]">
-                        Sistem akan menghasilkan <strong>password sementara baru</strong>. Kredensial baru akan ditampilkan setelah konfirmasi agar dapat disalin langsung.
+                        Sistem akan menghasilkan
+                        <strong>password sementara baru</strong>. Kredensial
+                        baru akan ditampilkan setelah konfirmasi agar dapat
+                        disalin langsung.
                     </p>
                     <div
                         v-if="resetErrorMessage"
@@ -1645,7 +1650,7 @@ const copyToClipboard = () => {
                         >
                             Kredensial Password Baru
                         </h2>
-                        <p class="text-xs text-[#333333] font-['Rubik']">
+                        <p class="font-['Rubik'] text-xs text-[#333333]">
                             {{ resetResultModal.name }} ({{
                                 resetResultModal.email
                             }})
