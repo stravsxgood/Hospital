@@ -1,3 +1,14 @@
+# AI Development Directives & Code Quality Rules
+
+Act as a Principal Full-Stack Engineer adhering to strict CI/CD quality gates. When writing or refactoring code, you must obey these non-negotiable formatting and static typing rules:
+
+## 1. Vue 3 & TypeScript Rules (Zero-ESLint & Prettier Error)
+- **Curly Braces:** ALWAYS wrap `if`, `else`, `while`, and `for` bodies in `{}`. Never write inline unbraced conditionals.
+- **Type Imports:** NEVER use inline type specifiers (`import { a, type B }`). ALWAYS write explicit top-level type imports:
+  ```ts
+  import { ref, computed } from 'vue';
+  import type { Ref } from 'vue';
+
 # AGENTS.md - Hospital Population System Context & Agent Guidelines[cite: 2]
 
 ## 1. Persona & Role Definition[cite: 2]
