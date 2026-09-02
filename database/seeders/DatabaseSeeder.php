@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,13 +17,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Buat role terlebih dahulu agar assignRole tidak crash
+        $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // 2. Buat User Admin dengan firstOrCreate yang benar
+        $user = User::firstOrCreate(
+            ['email' => 'admin@hospital.test'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password123'),
+                'email_verified_at' => now(),
+            ]
+        );
 
+        // 3. Pasangkan role ke user
+        if (! $user->hasRole('Super admin')) {
+            $user->assignRole($adminRole);
+        }
+
+        // 4. Jalankan seeder master lainnya
         $this->call([
             DoctorSeeder::class,
             HospitalMasterSeeder::class,
