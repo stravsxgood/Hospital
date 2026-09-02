@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Buat role terlebih dahulu agar assignRole tidak crash
+        // 1. Buat role admin
         $adminRole = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'web']);
 
-        // 2. Buat User Admin dengan firstOrCreate yang benar
+        // 2. Buat User Admin
         $user = User::firstOrCreate(
             ['email' => 'admin@hospital.test'],
             [
@@ -30,10 +30,8 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 3. Pasangkan role ke user
-        if (!$user->hasRole('Super admin')) {
-            $user->assignRole($adminRole);
-        }
+        // 3. Pasangkan role (idempoten, tanpa memicu benturan operator Pint)
+        $user->syncRoles([$adminRole]);
 
         // 4. Jalankan seeder master lainnya
         $this->call([
