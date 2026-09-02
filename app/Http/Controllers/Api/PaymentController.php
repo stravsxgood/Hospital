@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Registration;
 use App\Services\XenditService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -27,8 +28,9 @@ class PaymentController extends Controller
         $user = $request->user();
         $patient = $user?->patient;
         $isStaffOrAdmin = $user && ($user->is_admin || $user->nurse || $user->doctor || in_array($user->role, ['admin', 'super-admin', 'nurse', 'staff', 'doctor', 'staff-pekerja'], true));
+        $registration = $payment->registration;
 
-        if (! $isStaffOrAdmin && (! $patient || $payment->registration?->patient_id !== $patient->patient_id)) {
+        if (! $isStaffOrAdmin && (! $patient || ! $registration instanceof Registration || $registration->patient_id !== $patient->patient_id)) {
             abort(403, 'Anda tidak memiliki hak otorisasi untuk mengakses tagihan ini.');
         }
     }

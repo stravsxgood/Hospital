@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use App\Models\Billing;
+use App\Models\Patient;
 use App\Services\AuditLogService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -19,7 +20,8 @@ class MedicalDocumentController extends Controller
     {
         $user = $request->user();
         $isStaffOrAdmin = $user && ($user->is_admin || $user->nurse || $user->doctor || in_array($user->role, ['admin', 'super-admin', 'nurse', 'staff', 'doctor', 'staff-pekerja', 'koas-intern'], true));
-        $isOwner = $user && $appointment->patient && $appointment->patient->user_id === $user->id;
+        $patient = $appointment->patient;
+        $isOwner = $user && $patient instanceof Patient && $patient->user_id === $user->id;
 
         if (! $isStaffOrAdmin && ! $isOwner) {
             abort(403, 'Anda tidak memiliki hak akses untuk mencetak atau melihat dokumen medis ini.');
