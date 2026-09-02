@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Billing/Show.vue — Rincian Tagihan & Lembar Pelunasan Kasir Modern POS
+ * Billing/Show.vue : Rincian Tagihan & Lembar Pelunasan Kasir Modern POS
  *
  * Khusus Staf / Perawat Tetap (Pekerja).
  * Menampilkan rincian item tagihan (konsultasi, obat, tindakan),

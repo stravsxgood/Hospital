@@ -464,7 +464,7 @@ const hospitalFacilities = [
 </script>
 
 <template>
-    <Head :title="`${safeCurrentPoli.name} — Tim Medis & Fasilitas Poliklinik`">
+    <Head :title="`${safeCurrentPoli.name} | Tim Medis & Fasilitas Poliklinik`">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
             rel="preconnect"

@@ -13,6 +13,20 @@ use Illuminate\Support\Facades\Gate;
 class MedicalDocumentController extends Controller
 {
     /**
+     * Memvalidasi bahwa pengguna adalah staf medis atau pasien pemilik dokumen.
+     */
+    protected function authorizeDocumentAccess(Request $request, Appointment $appointment): void
+    {
+        $user = $request->user();
+        $isStaffOrAdmin = $user && ($user->is_admin || $user->nurse || $user->doctor || in_array($user->role, ['admin', 'super-admin', 'nurse', 'staff', 'doctor', 'staff-pekerja', 'koas-intern'], true));
+        $isOwner = $user && $appointment->patient && $appointment->patient->user_id === $user->id;
+
+        if (! $isStaffOrAdmin && ! $isOwner) {
+            abort(403, 'Anda tidak memiliki hak akses untuk mencetak atau melihat dokumen medis ini.');
+        }
+    }
+
+    /**
      * Cetak Dokumen Resume Medis Pasien (Bisa diakses Staf Tetap & Koas).
      */
     public function printResume(int $reservationId, Request $request): Response
@@ -24,6 +38,8 @@ class MedicalDocumentController extends Controller
             'doctorSchedule.room',
             'medicalRecord.prescription.items.medicine',
         ])->findOrFail($reservationId);
+
+        $this->authorizeDocumentAccess($request, $appointment);
 
         $patient = $appointment->patient;
         $medicalRecord = $appointment->medicalRecord;
@@ -65,6 +81,8 @@ class MedicalDocumentController extends Controller
             'medicalRecord',
         ])->findOrFail($reservationId);
 
+        $this->authorizeDocumentAccess($request, $appointment);
+
         $days = (int) $request->query('days', 3);
         $patient = $appointment->patient;
         $medicalRecord = $appointment->medicalRecord;
@@ -98,6 +116,8 @@ class MedicalDocumentController extends Controller
             'doctorSchedule.poli',
             'medicalRecord.prescription.items.medicine',
         ])->findOrFail($reservationId);
+
+        $this->authorizeDocumentAccess($request, $appointment);
 
         $patient = $appointment->patient;
         $medicalRecord = $appointment->medicalRecord;

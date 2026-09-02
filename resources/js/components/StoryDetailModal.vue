@@ -223,7 +223,7 @@ const scheduleUrl = computed(() => {
                     <span
                         class="mt-2 block text-right text-[11px] font-semibold text-[#333333]"
                     >
-                        — {{ story.patient_name }}
+                        {{ story.patient_name }}
                     </span>
                 </div>
 

@@ -21,7 +21,7 @@ class XenditWebhookController extends Controller
         $expectedToken = config('services.xendit.webhook_token');
 
         // Validasi Keamanan Callback Token
-        if (! empty($expectedToken) && $incomingToken !== $expectedToken) {
+        if (empty($expectedToken) || ! is_string($incomingToken) || ! hash_equals($expectedToken, $incomingToken)) {
             Log::warning('Xendit Webhook Unauthorized Token Attempt', [
                 'ip' => $request->ip(),
                 'incoming_token' => $incomingToken,
@@ -141,7 +141,7 @@ class XenditWebhookController extends Controller
         $expectedToken = config('services.xendit.webhook_token');
 
         // Validasi Keamanan Callback Token
-        if (! empty($expectedToken) && $incomingToken !== $expectedToken) {
+        if (empty($expectedToken) || ! is_string($incomingToken) || ! hash_equals($expectedToken, $incomingToken)) {
             Log::warning('Xendit QR Webhook Unauthorized Token Attempt', [
                 'ip' => $request->ip(),
                 'incoming_token' => $incomingToken,

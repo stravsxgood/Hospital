@@ -276,7 +276,7 @@ const hospitalFacilities = [
 </script>
 
 <template>
-    <Head title="Cerita Pasien & Testimoni Medis — Hospital Population">
+    <Head title="Cerita Pasien & Testimoni Medis | Hospital Population">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
             rel="preconnect"

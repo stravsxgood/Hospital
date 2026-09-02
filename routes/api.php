@@ -10,22 +10,35 @@ use App\Http\Controllers\XenditWebhookController;
 use App\Http\Middleware\VerifyXenditWebhook;
 use Illuminate\Support\Facades\Route;
 
-// Public Endpoints
-Route::post('/register', [AuthController::class, 'registerPatient']);
+// Public Endpoints with Rate Limiting
+Route::post('/register', [AuthController::class, 'registerPatient'])
+    ->middleware('throttle:6,1');
 
-// Tambahkan middleware 'web' agar sesi browser aktif saat login via API
-Route::post('/login', [AuthController::class, 'login'])->middleware('web');
+// Tambahkan middleware 'web' agar sesi browser aktif saat login via API + rate limiting
+Route::post('/login', [AuthController::class, 'login'])
+    ->middleware(['web', 'throttle:10,1']);
 
-// 1. Endpoint Webhook Publik (Wajib di luar auth middleware)
+// 1. Endpoint Webhook Publik dengan Verifikasi Callback Token Xendit
 Route::post('/xendit/webhook', [PaymentController::class, 'handleWebhook'])
     ->middleware(VerifyXenditWebhook::class);
-Route::post('/webhooks/xendit', [XenditWebhookController::class, 'handle']);
-Route::post('/webhooks/xendit/qr', [XenditWebhookController::class, 'handleQrCallback']);
+Route::post('/webhooks/xendit', [XenditWebhookController::class, 'handle'])
+    ->middleware(VerifyXenditWebhook::class);
+Route::post('/webhooks/xendit/qr', [XenditWebhookController::class, 'handleQrCallback'])
+    ->middleware(VerifyXenditWebhook::class);
 
-// 2. Endpoint untuk jadwal dokter
-Route::apiResource('doctor-schedules', DoctorScheduleController::class);
+// 2. Endpoint Publik Jadwal Dokter (Hanya Read-Only)
+Route::get('doctor-schedules', [DoctorScheduleController::class, 'index']);
+Route::get('doctor-schedules/{id}', [DoctorScheduleController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
+
+    // Mutasi Jadwal Dokter (Hanya Staf Medis & Admin yang Terotentikasi)
+    Route::middleware('role:super-admin,admin,staff,nurse,doctor')->group(function () {
+        Route::post('doctor-schedules', [DoctorScheduleController::class, 'store']);
+        Route::put('doctor-schedules/{id}', [DoctorScheduleController::class, 'update']);
+        Route::patch('doctor-schedules/{id}', [DoctorScheduleController::class, 'update']);
+        Route::delete('doctor-schedules/{id}', [DoctorScheduleController::class, 'destroy']);
+    });
 
     // Manajemen Sesi User
     Route::get('/me', [AuthController::class, 'me']);

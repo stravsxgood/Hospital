@@ -213,10 +213,22 @@ class DoctorConsultationController extends Controller
 
     /**
      * Mengambil riwayat rekam medis dan klinis masa lalu seorang pasien (Patient Medical History).
+     * Dibatasi hanya untuk Staf Medis (Dokter/Perawat/Admin) atau Pasien Pemilik Rekam Medis (BOLA/IDOR protection).
      */
-    public function getPatientHistory(int $patient_id): JsonResponse
+    public function getPatientHistory(int $patient_id, Request $request): JsonResponse
     {
         $patient = Patient::findOrFail($patient_id);
+        $user = $request->user();
+
+        $isStaffOrDoctor = $user && ($user->is_admin || $user->nurse || $user->doctor || in_array($user->role, ['admin', 'super-admin', 'nurse', 'staff', 'doctor', 'staff-pekerja', 'koas-intern'], true));
+        $isOwner = $user && $patient->user_id === $user->id;
+
+        if (! $isStaffOrDoctor && ! $isOwner) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Anda tidak memiliki hak otorisasi untuk mengakses riwayat rekam medis pasien ini.',
+            ], 403);
+        }
 
         $history = MedicalRecord::with([
             'doctor.specialization',

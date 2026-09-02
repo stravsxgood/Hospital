@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * @file AdminLayout.vue — Super Admin Responsive Master Layout
+ * @file AdminLayout.vue : Super Admin Responsive Master Layout
  * @description Layout terdedikasi Super Admin dengan Mobile Off-Canvas Drawer, Desktop Sidebar,
  *              Top Header responsif, Breadcrumbs, Flash Messages, dan Touch Targets >= 44px.
  *

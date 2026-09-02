@@ -584,7 +584,7 @@ onUnmounted(() => {
                         </TextLink>
                     </div>
 
-                    <!-- Ghost Pill Button — Back to Welcome (DESIGN.md Ghost Pill pattern) -->
+                    <!-- Ghost Pill Button: Back to Welcome (DESIGN.md Ghost Pill pattern) -->
                     <motion.div
                         :initial="{ opacity: 0, y: 6 }"
                         :animate="{ opacity: 1, y: 0 }"

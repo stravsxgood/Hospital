@@ -9,9 +9,24 @@
 
 @theme inline {
     --font-sans:
-        Instrument Sans, ui-sans-serif, system-ui, sans-serif,
+        'Rubik', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+    --font-headline: 'DM Serif Display', 'ivypresto-headline', serif;
+    --font-rubik: 'Rubik', sans-serif;
+
+    /* Evergreen Design Tokens (DESIGN.md) */
+    --color-linen-canvas: #edede2;
+    --color-bone-card: #fffff3;
+    --color-pure-white: #ffffff;
+    --color-ink-black: #000000;
+    --color-charcoal: #333333;
+    --color-sage-mint: #beedc0;
+
+    --radius-pill: 40.5px;
+    --radius-tag: 46px;
+    --radius-card: 10px;
+    --radius-input: 7px;
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);

@@ -20,9 +20,23 @@ class PaymentController extends Controller
     }
 
     /**
+     * Memvalidasi otorisasi akses data tagihan untuk mencegah celah BOLA/IDOR.
+     */
+    protected function authorizePaymentAccess(Request $request, Payment $payment): void
+    {
+        $user = $request->user();
+        $patient = $user?->patient;
+        $isStaffOrAdmin = $user && ($user->is_admin || $user->nurse || $user->doctor || in_array($user->role, ['admin', 'super-admin', 'nurse', 'staff', 'doctor', 'staff-pekerja'], true));
+
+        if (! $isStaffOrAdmin && (! $patient || $payment->registration?->patient_id !== $patient->patient_id)) {
+            abort(403, 'Anda tidak memiliki hak otorisasi untuk mengakses tagihan ini.');
+        }
+    }
+
+    /**
      * Menampilkan detail tagihan pembayaran
      */
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
         $payment = Payment::with([
             'registration.patient',
@@ -30,6 +44,8 @@ class PaymentController extends Controller
             'registration.poli',
             'registration.inspection',
         ])->findOrFail($id);
+
+        $this->authorizePaymentAccess($request, $payment);
 
         return response()->json([
             'status' => 'success',
@@ -40,9 +56,11 @@ class PaymentController extends Controller
     /**
      * JALUR NON-TUNAI: Generate Invoice URL Xendit (QRIS, VA, E-Wallet)
      */
-    public function payOnline(int $id): JsonResponse
+    public function payOnline(Request $request, int $id): JsonResponse
     {
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::with('registration')->findOrFail($id);
+
+        $this->authorizePaymentAccess($request, $payment);
 
         if ($payment->payment_status === 'Lunas') {
             return response()->json([
@@ -164,7 +182,9 @@ class PaymentController extends Controller
 
     public function createOnlinePayment(Request $request, string $id)
     {
-        $payment = Payment::findOrFail($id);
+        $payment = Payment::with('registration')->findOrFail($id);
+
+        $this->authorizePaymentAccess($request, $payment);
 
         $isDp = $request->boolean('is_dp', false);
         $amount = $isDp ? ($payment->payment_total * 0.5) : ($payment->payment_total - ($payment->paid_amount ?? 0));

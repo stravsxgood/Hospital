@@ -36,6 +36,20 @@ class StaffActionController extends Controller
      */
     public function confirmArrival(Request $request, int $id): JsonResponse|RedirectResponse
     {
+        $user = $request->user();
+        $isStaff = $user && ($user->is_admin || $user->nurse || $user->doctor || in_array($user->role, ['admin', 'super-admin', 'nurse', 'staff', 'doctor', 'staff-pekerja', 'koas-intern'], true));
+
+        if (! $isStaff) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Hanya staf meja depan, perawat, atau petugas berwenang yang dapat mengonfirmasi kedatangan pasien.',
+                ], 403);
+            }
+
+            abort(403, 'Hanya staf berwenang yang dapat mengonfirmasi kedatangan pasien.');
+        }
+
         $appointment = Appointment::with(['patient', 'doctorSchedule.doctor', 'doctorSchedule.poli'])
             ->findOrFail($id);
 

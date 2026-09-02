@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * AppSidebar.vue — Main Application Sidebar
+ * AppSidebar.vue : Main Application Sidebar
  *
  * The primary navigation sidebar for Hospital Population.
  * Renders distinct menu groups based on user roles:

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * PaymentModal.vue — Point-of-Sale (POS) & Payment Gateway Kasir SIMRS
+ * PaymentModal.vue : Point-of-Sale (POS) & Payment Gateway Kasir SIMRS
  *
  * Mendukung 4 metode pembayaran:
  * 1. QRIS Dinamis Instan (Xendit Dynamic QR API + Real-time Background Polling)

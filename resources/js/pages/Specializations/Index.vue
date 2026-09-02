@@ -372,7 +372,7 @@ const hospitalFacilities = [
 </script>
 
 <template>
-    <Head :title="`${currentSpecialization.name} — Hospital Population`">
+    <Head :title="`${currentSpecialization.name} | Hospital Population`">
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
             rel="preconnect"
@@ -1368,7 +1368,7 @@ const hospitalFacilities = [
                             <span
                                 class="mt-1.5 block text-right font-sans text-[11px] font-semibold text-[#333333]"
                             >
-                                — Tim Konsultan Subspesialis Hospital Population
+                                Tim Konsultan Subspesialis Hospital Population
                             </span>
                         </div>
                     </div>

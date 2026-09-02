@@ -382,7 +382,7 @@ const getStatusLabel = (status: string) => {
                             <span>Lihat Karcis</span>
                         </motion.button>
 
-                        <!-- Tombol Batalkan — hanya muncul pada antrean aktif (pending/confirmed) -->
+                        <!-- Tombol Batalkan: hanya muncul pada antrean aktif (pending/confirmed) -->
                         <motion.button
                             v-if="
                                 ['pending', 'confirmed'].includes(item.status)
@@ -397,7 +397,7 @@ const getStatusLabel = (status: string) => {
                             <span>Batalkan</span>
                         </motion.button>
 
-                        <!-- Tombol Hapus Riwayat — hanya muncul pada tab riwayat (completed/cancelled) -->
+                        <!-- Tombol Hapus Riwayat: hanya muncul pada tab riwayat (completed/cancelled) -->
                         <motion.button
                             v-if="
                                 ['completed', 'cancelled'].includes(item.status)

@@ -17,7 +17,7 @@ import { motion } from 'motion-v';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 
-// GANTI DENGAN URL DEPLOYMENT GOOGLE APPS SCRIPT ANDA
+// Endpoint layanan Text-to-Speech untuk pengumuman suara antrean
 const GOOGLE_SCRIPT_TTS_URL =
     'https://script.google.com/macros/s/AKfycbyOSe0ooXdH3GTtUePmbj2leqcRYmuVDLMj7aX8pXd1QldUwCJg2WPv-_ofDoPWyqmk/exec';
 
@@ -475,7 +475,7 @@ onBeforeUnmount(() => {
             <button
                 type="button"
                 @click.stop="enableAudio"
-                class="inline-flex min-h-[40px] shrink-0 items-center justify-center gap-2 rounded-[40.5px] bg-[#beedc0] px-5 py-2 text-xs font-bold text-[#000000] shadow-sm transition-colors hover:bg-[#a6e5a8]"
+                class="inline-flex min-h-[44px] shrink-0 items-center justify-center gap-2 rounded-[40.5px] bg-[#beedc0] px-5 py-2.5 text-xs font-bold text-[#000000] shadow-sm transition-colors hover:bg-[#a6e5a8] focus:ring-2 focus:ring-[#000000] focus:outline-none"
             >
                 <Volume2 class="size-4" />
                 <span>Aktifkan Suara Sekarang</span>
@@ -525,14 +525,14 @@ onBeforeUnmount(() => {
                 :transition="{ duration: 0.22, ease: 'easeOut', delay: 0.05 }"
                 class="flex flex-wrap items-center gap-3"
             >
-                <!-- Tombol Ulangi 2x Otomatis -->
+                <!-- Kontrol Ulangi Panggilan 2x -->
                 <motion.button
                     type="button"
                     :whileHover="{ scale: 1.03 }"
                     :whileTap="{ scale: 0.97 }"
                     @click="toggleAutoRepeat"
                     :class="[
-                        'inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 rounded-full border px-3.5 text-xs font-semibold shadow-xs transition-all',
+                        'inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-full border px-4 text-xs font-semibold shadow-xs transition-all focus:ring-2 focus:ring-[#000000] focus:outline-none',
                         isAutoRepeat
                             ? 'border-[#333333]/30 bg-[#beedc0] text-[#000000]'
                             : 'border-[#333333]/20 bg-[#ffffff] text-[#333333] hover:bg-[#edede2]',
@@ -545,16 +545,16 @@ onBeforeUnmount(() => {
                     >
                 </motion.button>
 
-                <!-- Tombol Test Audio -->
+                <!-- Tombol Uji Suara -->
                 <motion.button
                     type="button"
                     :whileHover="{ scale: 1.03 }"
                     :whileTap="{ scale: 0.97 }"
                     @click="testAudio"
-                    class="inline-flex min-h-[40px] cursor-pointer items-center gap-1.5 rounded-full border border-[#333333]/20 bg-[#ffffff] px-3.5 text-xs font-semibold text-[#333333] transition-all hover:bg-[#edede2]"
-                    title="Uji coba suara bel & pengumuman"
+                    class="inline-flex min-h-[44px] cursor-pointer items-center gap-1.5 rounded-full border border-[#333333]/20 bg-[#ffffff] px-4 text-xs font-semibold text-[#333333] transition-all hover:bg-[#edede2] focus:ring-2 focus:ring-[#000000] focus:outline-none"
+                    title="Uji coba suara bel dan pengumuman"
                 >
-                    <Bell class="size-3.5 text-[#000000]" />
+                    <Bell class="size-4 text-[#000000]" />
                     <span>Uji Suara</span>
                 </motion.button>
 
@@ -565,7 +565,7 @@ onBeforeUnmount(() => {
                     :whileTap="{ scale: 0.97 }"
                     @click="toggleAudio"
                     :class="[
-                        'inline-flex min-h-[40px] cursor-pointer items-center gap-2 rounded-full border px-4 text-xs font-bold shadow-xs transition-all',
+                        'inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-full border px-4 text-xs font-bold shadow-xs transition-all focus:ring-2 focus:ring-[#000000] focus:outline-none',
                         isAudioEnabled
                             ? 'border-[#333333]/30 bg-[#beedc0] text-[#000000]'
                             : 'border-[#333333]/20 bg-[#fffff3] text-[#333333] hover:bg-[#fffff3]/80',
@@ -580,14 +580,14 @@ onBeforeUnmount(() => {
                     }}</span>
                 </motion.button>
 
-                <!-- Tombol Fullscreen -->
+                <!-- Tombol Layar Penuh -->
                 <motion.button
                     type="button"
                     :whileHover="{ scale: 1.05 }"
                     :whileTap="{ scale: 0.95 }"
                     @click="toggleFullscreen"
-                    class="flex h-[40px] w-[40px] cursor-pointer items-center justify-center rounded-full border border-[#333333]/20 bg-[#fffff3] text-[#000000] transition-colors hover:bg-[#fffff3]/80"
-                    title="Fullscreen Mode"
+                    class="flex h-11 min-h-[44px] w-11 cursor-pointer items-center justify-center rounded-full border border-[#333333]/20 bg-[#fffff3] text-[#000000] transition-colors hover:bg-[#fffff3]/80 focus:ring-2 focus:ring-[#000000] focus:outline-none"
+                    title="Mode Layar Penuh"
                 >
                     <component
                         :is="isFullscreen ? Minimize2 : Maximize2"

@@ -25,6 +25,7 @@ class SatuSehatController extends Controller
      */
     public function getFhirBundle(int $medical_record_id, Request $request): JsonResponse
     {
+        $user = $request->user();
         $record = MedicalRecord::with([
             'patient',
             'doctor.specialization',
@@ -32,6 +33,16 @@ class SatuSehatController extends Controller
             'reservation.doctorSchedule.room',
             'prescription.items.medicine',
         ])->findOrFail($medical_record_id);
+
+        $patient = $user?->patient;
+        $isStaffOrAdmin = $user && ($user->is_admin || $user->nurse || $user->doctor || in_array($user->role, ['admin', 'super-admin', 'nurse', 'staff', 'doctor', 'staff-pekerja', 'koas-intern'], true));
+
+        if (! $isStaffOrAdmin && (! $patient || $record->patient_id !== $patient->patient_id)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Anda tidak memiliki hak otorisasi untuk mengakses data SatuSehat ini.',
+            ], 403);
+        }
 
         $bundle = $this->transformer->toFhirBundle($record);
 

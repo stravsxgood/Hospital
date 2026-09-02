@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Billing/Index.vue — Panel Kasir & Manajemen Tagihan SIMRS
+ * Billing/Index.vue : Panel Kasir & Manajemen Tagihan SIMRS
  *
  * Khusus Staf / Perawat Tetap (Pekerja).
  * Menyediakan pemantauan invoice, pembuatan billing otomatis dari antrean dokter,
