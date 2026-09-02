@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
         );
 
         // 3. Pasangkan role ke user
-        if (! $user->hasRole('Super admin')) {
+        if (!$user->hasRole('Super admin')) {
             $user->assignRole($adminRole);
         }
 
