@@ -40,4 +40,5 @@ class DatabaseSeeder extends Seeder
             HospitalClinicalMasterSeeder::class,
         ]);
     }
+
 }
