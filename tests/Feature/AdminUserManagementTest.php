@@ -2,6 +2,7 @@
 
 use App\Models\Doctor;
 use App\Models\DoctorSchedule;
+use App\Models\Patient;
 use App\Models\Poli;
 use App\Models\Room;
 use App\Models\Specialization;
@@ -196,4 +197,128 @@ test('super admin can reset user password to default temporary credential', func
 
     $targetUser->refresh();
     expect(Hash::check('Hospital2026!', $targetUser->password))->toBeTrue();
+});
+
+test('super admin can navigate paginated users list preserving role and status query parameters', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole('super-admin');
+
+    // Buat 15 dokter aktif
+    User::factory()->count(15)->create([
+        'role' => 'doctor',
+        'is_active' => true,
+    ]);
+
+    $response = $this->actingAs($admin)->get('/admin/users?role=doctor&status=active&per_page=10&page=2');
+    $response->assertOk();
+
+    $response->assertInertia(fn ($page) => $page
+        ->component('admin/Users/Index')
+        ->has('users.data', 5)
+        ->where('users.current_page', 2)
+        ->where('filters.role', 'doctor')
+        ->where('filters.status', 'active')
+    );
+});
+
+test('super admin can soft-delete an inactive user', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole('super-admin');
+
+    $targetUser = User::factory()->create([
+        'role' => 'patient',
+        'is_active' => false,
+    ]);
+
+    $response = $this->actingAs($admin)->delete("/admin/users/{$targetUser->id}");
+    $response->assertSessionHas('success');
+
+    // Pastikan user terhapus secara soft delete
+    $this->assertSoftDeleted('users', ['id' => $targetUser->id]);
+    expect($targetUser->fresh()->trashed())->toBeTrue();
+    expect(User::find($targetUser->id))->toBeNull();
+    expect(User::withTrashed()->find($targetUser->id))->not->toBeNull();
+});
+
+test('super admin cannot delete an active user and receives 422 error', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole('super-admin');
+
+    $targetUser = User::factory()->create([
+        'role' => 'patient',
+        'is_active' => true,
+    ]);
+
+    $response = $this->actingAs($admin)
+        ->from('/admin/users')
+        ->delete("/admin/users/{$targetUser->id}");
+
+    $response->assertSessionHas('error', 'Only inactive accounts can be deleted. Please deactivate the account first.');
+
+    // Pastikan user masih ada dan tidak di-soft delete
+    $this->assertDatabaseHas('users', ['id' => $targetUser->id, 'deleted_at' => null]);
+});
+
+test('super admin cannot delete their own account', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole('super-admin');
+
+    $response = $this->actingAs($admin)
+        ->from('/admin/users')
+        ->delete("/admin/users/{$admin->id}");
+
+    $response->assertSessionHas('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
+    $this->assertDatabaseHas('users', ['id' => $admin->id, 'deleted_at' => null]);
+});
+
+test('unauthorized user cannot delete user accounts', function () {
+    $patient = User::factory()->create(['role' => 'patient']);
+    $patient->assignRole('patient');
+
+    $targetUser = User::factory()->create([
+        'role' => 'patient',
+        'is_active' => false,
+    ]);
+
+    $response = $this->actingAs($patient)->delete("/admin/users/{$targetUser->id}");
+    $response->assertForbidden();
+    $this->assertDatabaseHas('users', ['id' => $targetUser->id, 'deleted_at' => null]);
+});
+
+test('super admin can permanently delete patient data and account', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole('super-admin');
+
+    $patientUser = User::factory()->create(['role' => 'patient']);
+    $patient = Patient::create([
+        'user_id' => $patientUser->id,
+        'resident_n' => '3201123456789999',
+        'name' => 'Pasien Hard Delete',
+        'gender' => 'Laki-laki',
+        'birthday_date' => '1995-05-05',
+        'registration_date' => now()->toDateString(),
+        'status' => 'active',
+    ]);
+
+    $response = $this->actingAs($admin)->delete("/admin/users/{$patientUser->id}/force");
+    $response->assertSessionHas('success');
+
+    // Pastikan data benar-benar terhapus secara permanen (bukan sekadar soft delete)
+    $this->assertDatabaseMissing('users', ['id' => $patientUser->id]);
+    $this->assertDatabaseMissing('patient', ['patient_id' => $patient->patient_id]);
+    expect(User::withTrashed()->find($patientUser->id))->toBeNull();
+});
+
+test('super admin cannot permanently delete non-patient accounts', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $admin->assignRole('super-admin');
+
+    $doctorUser = User::factory()->create(['role' => 'doctor']);
+
+    $response = $this->actingAs($admin)
+        ->from('/admin/users')
+        ->delete("/admin/users/{$doctorUser->id}/force");
+
+    $response->assertSessionHas('error', 'Penghapusan permanen hanya diizinkan untuk akun dan data pasien.');
+    $this->assertDatabaseHas('users', ['id' => $doctorUser->id]);
 });

@@ -36,15 +36,20 @@ class Billing extends Model
 
     protected $fillable = [
         'reservation_id',
+        'appointment_id',
         'patient_id',
         'processed_by_nurse_id',
         'invoice_number',
+        'external_id',
         'total_amount',
+        'amount',
         'paid_amount',
         'status',
         'payment_method',
         'xendit_id',
+        'xendit_invoice_id',
         'xendit_payment_url',
+        'invoice_url',
         'paid_at',
         'cashier_shift_id',
         'notes',
@@ -56,9 +61,11 @@ class Billing extends Model
         return [
             'billing_id' => 'integer',
             'reservation_id' => 'integer',
+            'appointment_id' => 'integer',
             'patient_id' => 'integer',
             'processed_by_nurse_id' => 'integer',
             'total_amount' => 'decimal:2',
+            'amount' => 'decimal:2',
             'paid_at' => 'datetime',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
@@ -106,11 +113,19 @@ class Billing extends Model
     }
 
     /**
+     * Alias accessor id ke billing_id.
+     */
+    public function getIdAttribute(): int
+    {
+        return (int) ($this->attributes['billing_id'] ?? 0);
+    }
+
+    /**
      * Helper untuk memeriksa status lunas.
      */
     public function isPaid(): bool
     {
-        return $this->status === 'paid';
+        return in_array(strtoupper((string) $this->status), ['PAID', 'SETTLED']);
     }
 
     /**
@@ -118,6 +133,6 @@ class Billing extends Model
      */
     public function isUnpaid(): bool
     {
-        return in_array($this->status, ['unpaid', 'pending']);
+        return in_array(strtoupper((string) $this->status), ['UNPAID', 'PENDING']);
     }
 }

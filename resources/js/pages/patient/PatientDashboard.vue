@@ -529,7 +529,7 @@ const getStatusLabel = (status: string) => {
                     :whileTap="{ scale: 0.98 }"
                 >
                     <Link
-                        href="/schedule"
+                        href="/doctor-schedules"
                         class="mt-4 inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-5 py-2.5 text-xs font-medium text-[#ffffff] shadow-none transition-colors hover:bg-[#1a1a1a]"
                     >
                         <span>Lihat Semua Jadwal & Daftar</span>

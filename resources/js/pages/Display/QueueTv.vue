@@ -30,6 +30,12 @@ import { motion } from 'motion-v';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import echo from '@/echo';
+import {
+    announceHospitalQueue,
+    buildHospitalAnnouncementText,
+    getAudioContext,
+    playOpeningChime,
+} from '@/lib/queueAudio';
 
 interface CallingPayload {
     appointment_id: number;
@@ -72,124 +78,26 @@ const isSpeaking = ref(false);
 const callHistory = ref<CallingPayload[]>([]);
 
 let clockTimer: any = null;
-let audioCtx: AudioContext | null = null;
 
-// Audio Context Unlock
-const getAudioContext = (): AudioContext | null => {
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
-    try {
-        if (!audioCtx) {
-            const AudioContextClass =
-                window.AudioContext || (window as any).webkitAudioContext;
-
-            if (AudioContextClass) {
-                audioCtx = new AudioContextClass();
-            }
-        }
-
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-
-        return audioCtx;
-    } catch (e) {
-        console.warn('Audio Context initialization error:', e);
-
-        return null;
-    }
-};
-
-// 4-Tone Hospital Chime (C5 -> E5 -> G5 -> C6)
-const playHospitalChime = () => {
-    try {
-        const ctx = getAudioContext();
-
-        if (!ctx) {
-            return;
-        }
-
-        const playTone = (
-            freq: number,
-            start: number,
-            duration: number,
-            gainValue = 0.25,
-        ) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
-
-            gain.gain.setValueAtTime(gainValue, ctx.currentTime + start);
-            gain.gain.exponentialRampToValueAtTime(
-                0.0001,
-                ctx.currentTime + start + duration,
-            );
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start(ctx.currentTime + start);
-            osc.stop(ctx.currentTime + start + duration);
-        };
-
-        playTone(523.25, 0.0, 0.5, 0.25);
-        playTone(659.25, 0.2, 0.5, 0.25);
-        playTone(783.99, 0.4, 0.6, 0.3);
-        playTone(1046.5, 0.65, 0.8, 0.35);
-    } catch (e) {
-        console.warn('Audio chime playback error:', e);
-    }
-};
-
-// Text-to-Speech Engine (Web Speech API with Indonesian Voice)
+// Text-to-Speech Engine (Web Speech API with Indonesian Voice & Hospital Chimes)
 const speakVoiceText = (text: string) => {
-    if (
-        !isAudioEnabled.value ||
-        typeof window === 'undefined' ||
-        !('speechSynthesis' in window)
-    ) {
+    if (!isAudioEnabled.value) {
         return;
     }
 
-    try {
-        window.speechSynthesis.cancel();
-
-        playHospitalChime();
-
-        setTimeout(() => {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'id-ID';
-            utterance.rate = 0.92;
-            utterance.pitch = 1.05;
-
-            const voices = window.speechSynthesis.getVoices();
-            const idVoice = voices.find(
-                (v) => v.lang.includes('id') || v.lang.includes('ID'),
-            );
-
-            if (idVoice) {
-                utterance.voice = idVoice;
-            }
-
-            utterance.onstart = () => {
-                isSpeaking.value = true;
-            };
-            utterance.onend = () => {
-                isSpeaking.value = false;
-            };
-            utterance.onerror = () => {
-                isSpeaking.value = false;
-            };
-
-            window.speechSynthesis.speak(utterance);
-        }, 1200);
-    } catch (e) {
-        console.error('TTS error:', e);
-        isSpeaking.value = false;
-    }
+    announceHospitalQueue({
+        text,
+        rate: 0.80, // Laju lambat, artikulatif, dan tenang khas rumah sakit
+        onStart: () => {
+            isSpeaking.value = true;
+        },
+        onEnd: () => {
+            isSpeaking.value = false;
+        },
+        onError: () => {
+            isSpeaking.value = false;
+        },
+    });
 };
 
 // Toggle Audio Enable
@@ -198,7 +106,7 @@ const toggleAudio = () => {
 
     if (isAudioEnabled.value) {
         getAudioContext();
-        playHospitalChime();
+        playOpeningChime();
     }
 };
 
@@ -247,8 +155,16 @@ const handleIncomingCall = (payload: CallingPayload) => {
         targetClinic.patient_name = payload.patient_name;
     }
 
-    // Voice announcement
-    speakVoiceText(payload.voice_text);
+    // Voice announcement dengan pemformatan nomor antrean lambat & jelas
+    const announcementText = buildHospitalAnnouncementText({
+        queueNumber: payload.queue_number,
+        patientName: payload.patient_name,
+        poliName: payload.poli_name,
+        roomName: payload.room_name,
+        showPatientName: true,
+    });
+
+    speakVoiceText(announcementText);
 };
 
 onMounted(() => {

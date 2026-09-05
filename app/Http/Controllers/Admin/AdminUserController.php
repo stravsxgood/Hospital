@@ -21,6 +21,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Role;
@@ -36,7 +37,7 @@ class AdminUserController extends Controller
         $search = $validated['search'] ?? null;
         $roleFilter = $validated['role'] ?? 'all';
         $statusFilter = $validated['status'] ?? 'all';
-        $perPage = (int) ($validated['per_page'] ?? 15);
+        $perPage = (int) ($validated['per_page'] ?? 10);
 
         $driver = DB::connection()->getDriverName();
         $likeOp = $driver === 'pgsql' ? 'ilike' : 'like';
@@ -47,6 +48,7 @@ class AdminUserController extends Controller
                 'doctor.schedules.poli',
                 'doctor.schedules.room',
                 'nurse',
+                'patient',
                 'roles',
             ])
             ->when($search, function ($q) use ($search, $likeOp) {
@@ -55,16 +57,23 @@ class AdminUserController extends Controller
                     $sub->where('name', $likeOp, $term)
                         ->orWhere('email', $likeOp, $term)
                         ->orWhereHas('doctor', fn ($d) => $d->where('sip_number', $likeOp, $term)->orWhere('name', $likeOp, $term))
-                        ->orWhereHas('nurse', fn ($n) => $n->where('registration_number', $likeOp, $term)->orWhere('name', $likeOp, $term));
+                        ->orWhereHas('nurse', fn ($n) => $n->where('registration_number', $likeOp, $term)->orWhere('name', $likeOp, $term))
+                        ->orWhereHas('patient', fn ($p) => $p->where('resident_n', $likeOp, $term)->orWhere('name', $likeOp, $term));
                 });
             })
             ->when($roleFilter !== 'all', function ($q) use ($roleFilter) {
                 match ($roleFilter) {
-                    'doctor' => $q->where('role', 'doctor')->orWhereHas('roles', fn ($r) => $r->where('name', 'dpjp-doctor')),
+                    'doctor' => $q->where(function ($sub) {
+                        $sub->where('role', 'doctor')
+                            ->orWhereHas('roles', fn ($r) => $r->where('name', 'dpjp-doctor'));
+                    }),
                     'nurse_tetap' => $q->whereHas('nurse', fn ($n) => $n->where('type', 'tetap')),
                     'koas' => $q->whereHas('nurse', fn ($n) => $n->where('type', 'koas')),
                     'nurse' => $q->where('role', 'nurse'),
-                    'admin', 'super-admin' => $q->whereIn('role', ['admin', 'super-admin'])->orWhereHas('roles', fn ($r) => $r->where('name', 'super-admin')),
+                    'admin', 'super-admin' => $q->where(function ($sub) {
+                        $sub->whereIn('role', ['admin', 'super-admin'])
+                            ->orWhereHas('roles', fn ($r) => $r->where('name', 'super-admin'));
+                    }),
                     'patient' => $q->where('role', 'patient'),
                     default => null,
                 };
@@ -79,6 +88,20 @@ class AdminUserController extends Controller
             ->latest('id');
 
         $users = $query->paginate($perPage)->withQueryString();
+
+        $allUsers = ($search || $roleFilter !== 'all' || $statusFilter !== 'all')
+            ? (clone $query)->get()
+            : User::query()
+                ->with([
+                    'doctor.specialization',
+                    'doctor.schedules.poli',
+                    'doctor.schedules.room',
+                    'nurse',
+                    'patient',
+                    'roles',
+                ])
+                ->latest('id')
+                ->get();
 
         // Master Data untuk Modal Pendaftaran
         $specializations = Specialization::orderBy('name_specialization')->get();
@@ -95,6 +118,7 @@ class AdminUserController extends Controller
 
         $payload = [
             'users' => $users,
+            'all_users' => $allUsers,
             'filters' => [
                 'search' => $search,
                 'role' => $roleFilter,
@@ -296,5 +320,164 @@ class AdminUserController extends Controller
         }
 
         return redirect()->back()->with('success', "Password untuk {$user->name} berhasil direset menjadi: {$temporaryPassword}");
+    }
+
+    /**
+     * Remove the specified user account via soft deletion.
+     * Only inactive accounts can be deleted. Self-deletion is strictly forbidden.
+     */
+    public function destroy(Request $request, User $user): RedirectResponse|JsonResponse
+    {
+        $currentUser = $request->user();
+
+        if (! $currentUser) {
+            abort(401);
+        }
+
+        // 1. Authorization check: restrict using Spatie Permissions / Laravel Policy
+        if (! $currentUser->can('staff.delete') && ! $currentUser->hasRole(['super-admin', 'admin']) && ! in_array($currentUser->role, ['admin', 'super-admin'], true)) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki hak akses untuk menghapus akun.');
+        }
+
+        // 2. Self-Deletion Guard: Super Admin cannot delete own account
+        if ($user->id === $currentUser->id) {
+            $errorMessage = 'Anda tidak dapat menghapus akun Anda sendiri.';
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $errorMessage,
+                ], 422);
+            }
+
+            return redirect()->back()->with('error', $errorMessage);
+        }
+
+        // 3. Strict Inactive Check: Only inactive accounts can be deleted
+        if ($user->is_active !== false) {
+            $errorMessage = 'Only inactive accounts can be deleted. Please deactivate the account first.';
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $errorMessage,
+                ], 422);
+            }
+
+            return redirect()->back()->with('error', $errorMessage);
+        }
+
+        // 4. Wrap deletion in a DB::transaction and soft-delete the user
+        DB::transaction(function () use ($user) {
+            $user->delete();
+        });
+
+        // 5. Audit Logging
+        Log::info("User account ID: {$user->id} ({$user->name}, {$user->email}) was soft-deleted by Admin ID: {$currentUser->id} ({$currentUser->name}).", [
+            'deleted_user_id' => $user->id,
+            'deleted_user_email' => $user->email,
+            'deleted_user_role' => $user->role,
+            'deleted_at' => $user->deleted_at,
+            'admin_id' => $currentUser->id,
+        ]);
+
+        $successMessage = "Akun pengguna {$user->name} berhasil dihapus dari direktori aktif.";
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => $successMessage,
+            ]);
+        }
+
+        return redirect()->back()->with('success', $successMessage);
+    }
+
+    /**
+     * Permanently delete a patient account and all associated records (Hard/Force Delete).
+     */
+    public function forceDestroy(Request $request, User $user): RedirectResponse|JsonResponse
+    {
+        $currentUser = $request->user();
+
+        if (! $currentUser) {
+            abort(401);
+        }
+
+        // 1. Authorization check: Super Admin only
+        if (! $currentUser->can('staff.delete') && ! $currentUser->hasRole(['super-admin', 'admin']) && ! in_array($currentUser->role, ['admin', 'super-admin'], true)) {
+            abort(403, 'Akses ditolak. Anda tidak memiliki otoritas untuk menghapus data pasien secara permanen.');
+        }
+
+        // 2. Self-deletion guard
+        if ($user->id === $currentUser->id) {
+            $errorMessage = 'Anda tidak dapat menghapus akun Anda sendiri.';
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $errorMessage,
+                ], 422);
+            }
+
+            return redirect()->back()->with('error', $errorMessage);
+        }
+
+        // 3. Strict Patient Check: Permanent deletion is exclusively permitted for patient accounts
+        $isPatient = $user->role === 'patient' || $user->patient !== null;
+        if (! $isPatient) {
+            $errorMessage = 'Penghapusan permanen hanya diizinkan untuk akun dan data pasien.';
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $errorMessage,
+                ], 422);
+            }
+
+            return redirect()->back()->with('error', $errorMessage);
+        }
+
+        $patient = $user->patient;
+        $patientName = $patient ? $patient->name : $user->name;
+        $patientId = $patient ? $patient->patient_id : null;
+        $userEmail = $user->email;
+        $userId = $user->id;
+
+        // 4. Wrap in DB transaction: force delete patient records and user record
+        DB::transaction(function () use ($user) {
+            if ($user->patient) {
+                $patient = $user->patient;
+                $patient->medicalRecords()->delete();
+                $patient->appointments()->delete();
+                $patient->billings()->delete();
+                $patient->allergies()->delete();
+                $patient->registrations()->delete();
+                $patient->delete();
+            }
+
+            $user->roles()->detach();
+            $user->permissions()->detach();
+            $user->forceDelete();
+        });
+
+        // 5. Audit Logging
+        Log::warning("PERMANENT DELETION: Patient data for User ID: {$userId} ({$patientName}, {$userEmail}, Patient ID: {$patientId}) was PERMANENTLY deleted by Admin ID: {$currentUser->id} ({$currentUser->name}).", [
+            'deleted_user_id' => $userId,
+            'deleted_patient_id' => $patientId,
+            'patient_name' => $patientName,
+            'admin_id' => $currentUser->id,
+        ]);
+
+        $successMessage = "Data pasien {$patientName} berhasil dihapus secara permanen dari sistem.";
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => $successMessage,
+            ]);
+        }
+
+        return redirect()->back()->with('success', $successMessage);
     }
 }

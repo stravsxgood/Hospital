@@ -31,10 +31,14 @@ use App\Http\Controllers\SpecializationController;
 use App\Http\Controllers\StaffActionController;
 use App\Http\Controllers\StaffDashboardController;
 use App\Http\Controllers\Teams\TeamInvitationController;
+use App\Http\Controllers\XenditWebhookController;
 use App\Http\Middleware\EnsureTeamMembership;
 use App\Models\DoctorSchedule;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+// Webhook Publik Pembayaran Xendit (CSRF-exempted di bootstrap/app.php)
+Route::post('/webhooks/xendit', [XenditWebhookController::class, 'handle'])->name('webhooks.xendit');
 
 Route::get('/', function () {
     $schedules = DoctorSchedule::with(['doctor.specialization', 'poli', 'room'])
@@ -112,6 +116,8 @@ Route::middleware(['auth'])->group(function () {
         Route::middleware(['can:access-pekerja-only'])->group(function () {
             // Kasir & Billing POS
             Route::get('/staff/billing', [BillingController::class, 'index'])->name('staff.billing.index');
+            Route::post('/staff/billing', [BillingController::class, 'store'])->name('staff.billing.store');
+            Route::get('/staff/billing/calculate/{appointment_id}', [BillingController::class, 'calculateAmount'])->name('staff.billing.calculate');
             Route::get('/staff/billing/{id}', [BillingController::class, 'show'])->name('staff.billing.show');
             Route::post('/staff/billing/create-from-reservation/{reservation_id}', [BillingController::class, 'createFromReservation'])->name('staff.billing.create-from-reservation');
             Route::post('/staff/billing/{id}/pay-cash', [BillingController::class, 'payCash'])->name('staff.billing.pay-cash');
@@ -193,6 +199,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/users/nurses', [AdminUserController::class, 'storeNurse'])->name('users.nurses.store');
         Route::patch('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::post('/users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+        Route::delete('/users/{user}/force', [AdminUserController::class, 'forceDestroy'])->name('users.force-destroy')->withTrashed();
 
         // Master Fasilitas Poliklinik & Ruangan
         Route::resource('polis', AdminPoliController::class)->except(['create', 'edit']);

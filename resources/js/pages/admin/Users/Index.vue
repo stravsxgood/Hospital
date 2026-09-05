@@ -10,7 +10,7 @@
  *  - Motion-V untuk micro-interactions & feedback interaktif.
  *  - Target sentuh ramah minimal 44px (min-h-[44px]).
  */
-import { Head, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import {
     Activity,
     AlertCircle,
@@ -38,15 +38,29 @@ import {
     Stethoscope,
     ToggleLeft,
     ToggleRight,
+    Trash2,
     UserCheck,
     UserPlus,
     Users,
     X,
 } from '@lucide/vue';
+import {
+    columnFilteringFeature,
+    createFilteredRowModel,
+    createPaginatedRowModel,
+    createSortedRowModel,
+    globalFilteringFeature,
+    rowPaginationFeature,
+    rowSortingFeature,
+    tableFeatures,
+} from '@tanstack/table-core';
+import type { ColumnFiltersState, SortingState } from '@tanstack/table-core';
+import { createTableHook } from '@tanstack/vue-table';
 import axios from 'axios';
 import { motion } from 'motion-v';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import ResponsiveTable from '@/components/admin/ResponsiveTable.vue';
+import Pagination from '@/components/Pagination.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 
 interface SpecializationItem {
@@ -91,6 +105,13 @@ interface UserItem {
         institute: string | null;
         gender: string;
     };
+    patient?: {
+        patient_id: number;
+        resident_n: string;
+        name: string;
+        gender: string;
+        status: string;
+    };
 }
 
 const props = defineProps<{
@@ -101,6 +122,7 @@ const props = defineProps<{
         total: number;
         links: Array<{ url: string | null; label: string; active: boolean }>;
     };
+    all_users?: UserItem[];
     filters: {
         search?: string;
         role?: string;
@@ -118,30 +140,283 @@ const props = defineProps<{
     rooms: RoomOption[];
 }>();
 
+// ═══════════════════════════════════════════════════════════════
+// TANSTACK TABLE IMPLEMENTATION (Dynamic Client-Side Search & Pagination)
+// ═══════════════════════════════════════════════════════════════
+const features = tableFeatures({
+    globalFilteringFeature,
+    columnFilteringFeature,
+    rowSortingFeature,
+    rowPaginationFeature,
+    filteredRowModel: createFilteredRowModel(),
+    sortedRowModel: createSortedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+});
+
+const { useAppTable, createAppColumnHelper } = createTableHook({
+    features,
+});
+
+const allUsersData = computed<UserItem[]>(() => {
+    if (props.all_users && Array.isArray(props.all_users)) {
+        return props.all_users;
+    }
+
+    return props.users?.data || [];
+});
+
 // Search & Filter state
 const searchInput = ref(props.filters.search || '');
 const selectedRole = ref(props.filters.role || 'all');
 const selectedStatus = ref(props.filters.status || 'all');
+const sorting = ref<SortingState>([]);
+const pagination = ref({
+    pageIndex: 0,
+    pageSize: 10,
+});
 
-const applyFilters = () => {
-    router.get(
-        '/admin/users',
-        {
-            search: searchInput.value || undefined,
-            role: selectedRole.value === 'all' ? undefined : selectedRole.value,
-            status:
-                selectedStatus.value === 'all'
-                    ? undefined
-                    : selectedStatus.value,
-        },
-        { preserveState: true, replace: true },
+const columnFilters = computed<ColumnFiltersState>(() => {
+    const filters: ColumnFiltersState = [];
+
+    if (selectedRole.value && selectedRole.value !== 'all') {
+        filters.push({ id: 'role', value: selectedRole.value });
+    }
+
+    if (selectedStatus.value && selectedStatus.value !== 'all') {
+        filters.push({ id: 'status', value: selectedStatus.value });
+    }
+
+    return filters;
+});
+
+const roleFilterFn = (row: any, columnId: string, filterValue: any): boolean => {
+    if (!filterValue || filterValue === 'all') {
+        return true;
+    }
+
+    const u = row.original as UserItem;
+
+    if (!u) {
+        return true;
+    }
+
+    const role = u.role?.toLowerCase() || '';
+    const hasRole = (r: string) => {
+        return (u.roles || []).some((ro) => ro.name.toLowerCase() === r.toLowerCase());
+    };
+
+    if (filterValue === 'doctor') {
+        return role === 'doctor' || hasRole('dpjp-doctor') || Boolean(u.doctor);
+    }
+
+    if (filterValue === 'nurse_tetap') {
+        return u.nurse?.type === 'tetap';
+    }
+
+    if (filterValue === 'koas') {
+        return u.nurse?.type === 'koas';
+    }
+
+    if (filterValue === 'nurse') {
+        return role === 'nurse' || Boolean(u.nurse);
+    }
+
+    if (filterValue === 'admin' || filterValue === 'super-admin') {
+        return role === 'admin' || role === 'super-admin' || hasRole('super-admin');
+    }
+
+    if (filterValue === 'patient') {
+        return role === 'patient' || (!u.doctor && !u.nurse && role !== 'admin');
+    }
+
+    return true;
+};
+
+const statusFilterFn = (row: any, columnId: string, filterValue: any): boolean => {
+    if (!filterValue || filterValue === 'all') {
+        return true;
+    }
+
+    const u = row.original as UserItem;
+
+    if (!u) {
+        return true;
+    }
+
+    if (filterValue === 'active') {
+        return u.is_active === true;
+    }
+
+    if (filterValue === 'inactive') {
+        return u.is_active === false;
+    }
+
+    return true;
+};
+
+const globalFilterFn = (
+    row: any,
+    columnId: string,
+    filterValue: any,
+): boolean => {
+    if (!filterValue) {
+        return true;
+    }
+
+    const search = String(filterValue).toLowerCase().trim();
+
+    if (!search) {
+        return true;
+    }
+
+    const u = row.original as UserItem;
+
+    if (!u) {
+        return false;
+    }
+
+    const name = String(u.name || '').toLowerCase();
+    const email = String(u.email || '').toLowerCase();
+    const role = String(u.role || '').toLowerCase();
+    const docName = String(u.doctor?.name || '').toLowerCase();
+    const sip = String(u.doctor?.sip_number || '').toLowerCase();
+    const spec = String(u.doctor?.specialization?.name_specialization || '').toLowerCase();
+    const nurseName = String(u.nurse?.name || '').toLowerCase();
+    const regNum = String(u.nurse?.registration_number || '').toLowerCase();
+    const institute = String(u.nurse?.institute || '').toLowerCase();
+
+    return (
+        name.includes(search) ||
+        email.includes(search) ||
+        role.includes(search) ||
+        docName.includes(search) ||
+        sip.includes(search) ||
+        spec.includes(search) ||
+        nurseName.includes(search) ||
+        regNum.includes(search) ||
+        institute.includes(search)
     );
 };
 
+const columnHelper = createAppColumnHelper<UserItem>();
+
+const columns = columnHelper.columns([
+    columnHelper.accessor('name', {
+        id: 'name',
+        header: 'Pengguna & Akun',
+    }),
+    columnHelper.accessor('email', {
+        id: 'email',
+    }),
+    columnHelper.accessor('role', {
+        id: 'role',
+        header: 'Role & Akses',
+        filterFn: roleFilterFn,
+    }),
+    columnHelper.accessor(
+        (row) => {
+            if (row.doctor) {
+                return `${row.doctor.name} ${row.doctor.sip_number} ${row.doctor.specialization?.name_specialization || ''}`;
+            }
+
+            if (row.nurse) {
+                return `${row.nurse.name} ${row.nurse.registration_number || ''} ${row.nurse.institute || ''}`;
+            }
+
+            return '';
+        },
+        {
+            id: 'medicalDetails',
+            header: 'Detail Tenaga Medis',
+        },
+    ),
+    columnHelper.accessor((row) => (row.is_active ? 'active' : 'inactive'), {
+        id: 'status',
+        header: 'Status',
+        filterFn: statusFilterFn,
+    }),
+]);
+
+const table = useAppTable<UserItem>({
+    get data() {
+        return allUsersData.value;
+    },
+    columns,
+    state: {
+        get globalFilter() {
+            return searchInput.value;
+        },
+        get columnFilters() {
+            return columnFilters.value;
+        },
+        get sorting() {
+            return sorting.value;
+        },
+        get pagination() {
+            return pagination.value;
+        },
+    },
+    onGlobalFilterChange: (updaterOrValue) => {
+        searchInput.value =
+            typeof updaterOrValue === 'function'
+                ? updaterOrValue(searchInput.value)
+                : updaterOrValue;
+        pagination.value.pageIndex = 0;
+    },
+    onSortingChange: (updaterOrValue) => {
+        sorting.value =
+            typeof updaterOrValue === 'function'
+                ? updaterOrValue(sorting.value)
+                : updaterOrValue;
+    },
+    onPaginationChange: (updaterOrValue) => {
+        pagination.value =
+            typeof updaterOrValue === 'function'
+                ? updaterOrValue(pagination.value)
+                : updaterOrValue;
+    },
+    globalFilterFn,
+});
+
 const setRoleTab = (tab: string) => {
     selectedRole.value = tab;
-    applyFilters();
+    pagination.value.pageIndex = 0;
 };
+
+const handleSearch = () => {
+    pagination.value.pageIndex = 0;
+};
+
+// Sync initial page from URL query
+onMounted(() => {
+    if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageParam = parseInt(urlParams.get('page') || '1', 10);
+
+        if (pageParam > 1) {
+            pagination.value.pageIndex = pageParam - 1;
+        }
+    }
+});
+
+// Sync page changes to URL without browser refresh
+watch(
+    () => pagination.value.pageIndex,
+    (newIdx) => {
+        if (typeof window !== 'undefined') {
+            const pageNum = newIdx + 1;
+            const url = new URL(window.location.href);
+
+            if (pageNum > 1) {
+                url.searchParams.set('page', String(pageNum));
+            } else {
+                url.searchParams.delete('page');
+            }
+
+            window.history.replaceState({}, '', url.toString());
+        }
+    },
+);
 
 // ═══════════════════════════════════════════════════════════════
 // Modal Provisioning Dokter DPJP
@@ -334,6 +609,92 @@ const confirmToggleStatus = async () => {
     } finally {
         isTogglingStatus.value = false;
     }
+};
+
+// ═══════════════════════════════════════════════════════════════
+// Modal Konfirmasi Hapus Akun Nonaktif (Soft-Deletes)
+// ═══════════════════════════════════════════════════════════════
+const deleteTargetUser = ref<UserItem | null>(null);
+const isDeletingUser = ref(false);
+const deleteErrorMessage = ref<string | null>(null);
+
+const openDeleteModal = (user: UserItem) => {
+    deleteTargetUser.value = user;
+    deleteErrorMessage.value = null;
+};
+
+const confirmDeleteUser = () => {
+    if (!deleteTargetUser.value) {
+        return;
+    }
+
+    isDeletingUser.value = true;
+    deleteErrorMessage.value = null;
+
+    const userId = deleteTargetUser.value.id;
+
+    router.delete(`/admin/users/${userId}`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            deleteTargetUser.value = null;
+        },
+        onError: (errors) => {
+            deleteErrorMessage.value =
+                (Object.values(errors)[0] as string) ||
+                'Gagal menghapus akun pengguna.';
+        },
+        onFinish: () => {
+            isDeletingUser.value = false;
+        },
+    });
+};
+
+// ═══════════════════════════════════════════════════════════════
+// Modal Konfirmasi Hapus Data Pasien Secara Permanen (Hard Delete)
+// ═══════════════════════════════════════════════════════════════
+const isPatientUser = (user: UserItem): boolean => {
+    return (
+        user.role === 'patient' ||
+        Boolean(user.patient) ||
+        (!user.doctor && !user.nurse && user.role !== 'admin' && user.role !== 'super-admin')
+    );
+};
+
+const forceDeleteTargetUser = ref<UserItem | null>(null);
+const isForceDeleting = ref(false);
+const forceDeleteErrorMessage = ref<string | null>(null);
+const confirmConsent = ref(false);
+
+const openForceDeleteModal = (user: UserItem) => {
+    forceDeleteTargetUser.value = user;
+    forceDeleteErrorMessage.value = null;
+    confirmConsent.value = false;
+};
+
+const confirmForceDeleteUser = () => {
+    if (!forceDeleteTargetUser.value) {
+        return;
+    }
+
+    isForceDeleting.value = true;
+    forceDeleteErrorMessage.value = null;
+
+    const userId = forceDeleteTargetUser.value.id;
+
+    router.delete(`/admin/users/${userId}/force`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            forceDeleteTargetUser.value = null;
+        },
+        onError: (errors) => {
+            forceDeleteErrorMessage.value =
+                (Object.values(errors)[0] as string) ||
+                'Gagal menghapus data pasien secara permanen.';
+        },
+        onFinish: () => {
+            isForceDeleting.value = false;
+        },
+    });
 };
 
 // Password Reset Confirmation & Success Modal
@@ -546,7 +907,7 @@ const copyToClipboard = () => {
                  3. Filter Tabs & Search Bar (Responsive Table Component)
                  ═══════════════════════════════════════════════════════════════ -->
             <ResponsiveTable
-                :is-empty="users.data.length === 0"
+                :is-empty="table.getRowModel().rows.length === 0"
                 empty-message="Tidak ada pengguna yang sesuai dengan filter pencarian."
             >
                 <!-- Filters Slot -->
@@ -601,7 +962,7 @@ const copyToClipboard = () => {
                                 <input
                                     id="user-search-input"
                                     v-model="searchInput"
-                                    @keyup.enter="applyFilters"
+                                    @keyup.enter="handleSearch"
                                     type="text"
                                     placeholder="Cari nama, email, SIP dokter, STR/NIM..."
                                     class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] pr-4 pl-10 text-xs text-[#000000] placeholder-[#000000]/50 focus:border-[#000000] focus:outline-none sm:text-sm"
@@ -615,7 +976,6 @@ const copyToClipboard = () => {
                                 <select
                                     id="user-status-filter"
                                     v-model="selectedStatus"
-                                    @change="applyFilters"
                                     class="min-h-[44px] w-full rounded-xl border border-[#000000]/15 bg-[#ffffff] px-3.5 py-2 text-xs font-medium text-[#000000] focus:border-[#000000] focus:outline-none sm:w-auto"
                                 >
                                     <option value="all">Semua Status</option>
@@ -625,7 +985,7 @@ const copyToClipboard = () => {
 
                                 <button
                                     type="button"
-                                    @click="applyFilters"
+                                    @click="handleSearch"
                                     aria-label="Terapkan Filter Pencarian"
                                     class="min-h-[44px] shrink-0 rounded-[40.5px] bg-[#000000] px-5 text-xs font-medium text-[#ffffff] hover:bg-[#1a1a1a]"
                                 >
@@ -649,38 +1009,38 @@ const copyToClipboard = () => {
 
                 <!-- Table Body Rows -->
                 <tr
-                    v-for="u in users.data"
-                    :key="u.id"
+                    v-for="row in table.getRowModel().rows"
+                    :key="row.original.id"
                     class="transition-colors hover:bg-[#edede2]/30"
                 >
                     <!-- Nama & Email -->
                     <td class="px-4 py-3.5 sm:px-6">
-                        <div class="font-bold text-[#000000]">{{ u.name }}</div>
+                        <div class="font-bold text-[#000000]">{{ row.original.name }}</div>
                         <div
                             class="max-w-[180px] truncate text-xs text-[#333333] sm:max-w-none"
                         >
-                            {{ u.email }}
+                            {{ row.original.email }}
                         </div>
                     </td>
 
                     <!-- Role Badge -->
                     <td class="px-4 py-3.5">
                         <span
-                            v-if="u.doctor || u.role === 'doctor'"
+                            v-if="row.original.doctor || row.original.role === 'doctor'"
                             class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3 py-0.5 text-xs font-bold text-[#000000]"
                         >
                             <Stethoscope class="size-3 text-[#000000]" />
                             <span>Dokter DPJP</span>
                         </span>
                         <span
-                            v-else-if="u.nurse?.type === 'tetap'"
+                            v-else-if="row.original.nurse?.type === 'tetap'"
                             class="inline-flex items-center gap-1.5 rounded-full border border-[#000000]/10 bg-[#edede2] px-3 py-0.5 text-xs font-bold text-[#000000]"
                         >
                             <ShieldCheck class="size-3 text-[#000000]" />
                             <span>Perawat Tetap</span>
                         </span>
                         <span
-                            v-else-if="u.nurse?.type === 'koas'"
+                            v-else-if="row.original.nurse?.type === 'koas'"
                             class="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-100/70 px-3 py-0.5 text-xs font-bold text-amber-900"
                         >
                             <GraduationCap class="size-3 text-amber-900" />
@@ -688,7 +1048,7 @@ const copyToClipboard = () => {
                         </span>
                         <span
                             v-else-if="
-                                u.role === 'admin' || u.role === 'super-admin'
+                                row.original.role === 'admin' || row.original.role === 'super-admin'
                             "
                             class="inline-flex items-center gap-1.5 rounded-full bg-[#000000] px-3 py-0.5 text-xs font-bold text-[#ffffff]"
                         >
@@ -705,24 +1065,24 @@ const copyToClipboard = () => {
 
                     <!-- Detail Tenaga Medis -->
                     <td class="px-4 py-3.5 text-xs">
-                        <div v-if="u.doctor" class="space-y-0.5">
+                        <div v-if="row.original.doctor" class="space-y-0.5">
                             <div class="font-bold text-[#000000]">
                                 {{
-                                    u.doctor.specialization
+                                    row.original.doctor.specialization
                                         ?.name_specialization || 'Spesialis'
-                                }}
+                                 }}
                             </div>
                             <div class="font-mono text-[11px] text-[#333333]">
-                                SIP: {{ u.doctor.sip_number }}
+                                SIP: {{ row.original.doctor.sip_number }}
                             </div>
                         </div>
-                        <div v-else-if="u.nurse" class="space-y-0.5">
+                        <div v-else-if="row.original.nurse" class="space-y-0.5">
                             <div class="font-medium text-[#000000]">
-                                {{ u.nurse.institute || 'RS Utama' }}
+                                {{ row.original.nurse.institute || 'RS Utama' }}
                             </div>
                             <div class="font-mono text-[11px] text-[#333333]">
-                                {{ u.nurse.type === 'koas' ? 'NIM' : 'STR' }}:
-                                {{ u.nurse.registration_number || '-' }}
+                                {{ row.original.nurse.type === 'koas' ? 'NIM' : 'STR' }}:
+                                {{ row.original.nurse.registration_number || '-' }}
                             </div>
                         </div>
                         <span v-else class="text-[#333333]">-</span>
@@ -732,7 +1092,7 @@ const copyToClipboard = () => {
                     <td class="px-4 py-3.5 text-center">
                         <span
                             :class="
-                                u.is_active
+                                row.original.is_active
                                     ? 'border-[#beedc0] bg-[#beedc0]/40 text-[#000000]'
                                     : 'border-rose-200 bg-rose-100/70 text-rose-900'
                             "
@@ -740,12 +1100,12 @@ const copyToClipboard = () => {
                         >
                             <span
                                 :class="
-                                    u.is_active ? 'bg-[#000000]' : 'bg-rose-600'
+                                    row.original.is_active ? 'bg-[#000000]' : 'bg-rose-600'
                                 "
                                 class="size-1.5 rounded-full"
                             ></span>
                             <span>{{
-                                u.is_active ? 'Aktif' : 'Nonaktif'
+                                row.original.is_active ? 'Aktif' : 'Nonaktif'
                             }}</span>
                         </span>
                     </td>
@@ -758,9 +1118,9 @@ const copyToClipboard = () => {
                             <!-- Reset Password -->
                             <button
                                 type="button"
-                                @click="openResetPasswordModal(u)"
-                                :aria-label="`Reset Password Pengguna ${u.name}`"
-                                :title="`Reset Password ${u.name}`"
+                                @click="openResetPasswordModal(row.original)"
+                                :aria-label="`Reset Password Pengguna ${row.original.name}`"
+                                :title="`Reset Password ${row.original.name}`"
                                 class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-3 py-1.5 text-xs font-medium text-[#000000] transition-colors hover:bg-[#edede2] sm:px-3.5"
                             >
                                 <KeyRound class="size-3.5 text-[#000000]" />
@@ -770,72 +1130,63 @@ const copyToClipboard = () => {
                             <!-- Toggle Status -->
                             <button
                                 type="button"
-                                @click="openToggleStatusModal(u)"
-                                :aria-label="`${u.is_active ? 'Nonaktifkan Akun' : 'Aktifkan Akun'} ${u.name}`"
+                                @click="openToggleStatusModal(row.original)"
+                                :aria-label="`${row.original.is_active ? 'Nonaktifkan Akun' : 'Aktifkan Akun'} ${row.original.name}`"
                                 :title="
-                                    u.is_active
+                                    row.original.is_active
                                         ? 'Nonaktifkan Akun'
                                         : 'Aktifkan Akun'
                                 "
                                 class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border px-3 py-1.5 text-xs font-medium transition-colors sm:px-3.5"
                                 :class="
-                                    u.is_active
+                                    row.original.is_active
                                         ? 'border-rose-200 bg-rose-50 text-rose-900 hover:bg-rose-100'
                                         : 'border-[#beedc0] bg-[#beedc0]/30 text-[#000000] hover:bg-[#beedc0]/50'
                                 "
                             >
-                                <ToggleLeft v-if="u.is_active" class="size-4" />
+                                <ToggleLeft v-if="row.original.is_active" class="size-4" />
                                 <ToggleRight v-else class="size-4" />
                                 <span class="hidden sm:inline">{{
-                                    u.is_active ? 'Nonaktifkan' : 'Aktifkan'
+                                    row.original.is_active ? 'Nonaktifkan' : 'Aktifkan'
                                 }}</span>
+                            </button>
+
+                            <!-- Hapus Akun (Hanya Ditampilkan untuk Akun Nonaktif) -->
+                            <button
+                                v-if="!row.original.is_active"
+                                type="button"
+                                @click="openDeleteModal(row.original)"
+                                :aria-label="`Hapus Akun Pengguna ${row.original.name}`"
+                                :title="`Hapus Akun ${row.original.name}`"
+                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-rose-300 bg-rose-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-rose-700 sm:px-3.5 shadow-xs"
+                            >
+                                <Trash2 class="size-3.5 text-white" />
+                                <span class="hidden sm:inline">Hapus Akun</span>
+                            </button>
+
+                            <!-- Hapus Permanen Data Pasien (Hard Delete) -->
+                            <button
+                                v-if="isPatientUser(row.original)"
+                                type="button"
+                                @click="openForceDeleteModal(row.original)"
+                                :aria-label="`Hapus Data Pasien ${row.original.name} Secara Permanen`"
+                                :title="`Hapus Data Pasien ${row.original.name} Secara Permanen`"
+                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-red-300 bg-red-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-red-800 sm:px-3.5 shadow-xs"
+                            >
+                                <Trash2 class="size-3.5 text-white" />
+                                <span class="hidden sm:inline">Hapus Permanen</span>
                             </button>
                         </div>
                     </td>
                 </tr>
 
                 <!-- Pagination Slot -->
-                <template #pagination v-if="users.total > 0">
-                    <nav
-                        aria-label="Navigasi Halaman Pengguna"
-                        class="flex flex-col items-center justify-between gap-3 text-xs text-[#333333] sm:flex-row"
-                    >
-                        <div>
-                            Menampilkan halaman
-                            <strong class="text-[#000000]">{{
-                                users.current_page
-                            }}</strong>
-                            dari
-                            <strong class="text-[#000000]">{{
-                                users.last_page
-                            }}</strong>
-                            (Total {{ users.total }} pengguna)
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <template
-                                v-for="(link, idx) in users.links"
-                                :key="idx"
-                            >
-                                <Link
-                                    v-if="link.url"
-                                    :href="link.url"
-                                    v-html="link.label"
-                                    :aria-label="`Buka halaman ${link.label}`"
-                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 font-medium transition-colors"
-                                    :class="
-                                        link.active
-                                            ? 'bg-[#000000] text-[#ffffff]'
-                                            : 'bg-[#edede2]/60 text-[#000000] hover:bg-[#edede2]'
-                                    "
-                                />
-                                <span
-                                    v-else
-                                    v-html="link.label"
-                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 text-[#000000]/40"
-                                />
-                            </template>
-                        </div>
-                    </nav>
+                <template #pagination v-if="allUsersData.length > 0">
+                    <Pagination
+                        :table="table"
+                        :pagination="users"
+                        item-name="pengguna"
+                    />
                 </template>
             </ResponsiveTable>
         </div>
@@ -1529,6 +1880,179 @@ const copyToClipboard = () => {
                                 ? 'Ya, Nonaktifkan'
                                 : 'Ya, Aktifkan'
                         }}</span>
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Modal Konfirmasi Hapus Akun Pengguna Nonaktif (Soft-Deletes)
+             ═══════════════════════════════════════════════════════════════ -->
+        <div
+            v-if="deleteTargetUser"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/60 p-4 backdrop-blur-xs"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-user-modal-title"
+        >
+            <motion.div
+                :initial="{ opacity: 0, scale: 0.95 }"
+                :animate="{ opacity: 1, scale: 1 }"
+                class="w-full max-w-md space-y-4 rounded-3xl border border-[#000000]/15 bg-[#fffff3] p-6 shadow-2xl"
+            >
+                <div class="flex items-center gap-3">
+                    <div
+                        class="flex size-10 items-center justify-center rounded-full border border-rose-200 bg-rose-100 text-rose-900"
+                    >
+                        <Trash2 class="size-5 text-rose-600" />
+                    </div>
+                    <div>
+                        <h2
+                            id="delete-user-modal-title"
+                            class="font-['ivypresto-headline'] text-base font-bold text-[#000000] sm:text-lg"
+                        >
+                            Hapus Akun Pengguna
+                        </h2>
+                        <p class="font-['Rubik'] text-xs text-[#333333]">
+                            {{ deleteTargetUser.name }} ({{ deleteTargetUser.email }})
+                        </p>
+                    </div>
+                </div>
+
+                <div
+                    class="space-y-2 rounded-2xl border border-rose-200 bg-rose-50/70 p-4 font-['Rubik'] text-xs text-rose-900"
+                >
+                    <p class="font-medium">
+                        Akun ini akan dihapus dari direktori aktif. Seluruh data rekam medis historis akan tetap dipertahankan.
+                    </p>
+                    <p class="text-[11px] text-rose-700">
+                        Penghapusan menggunakan metode <em>soft-delete</em> sehingga audit log dan relasi data klinis tidak hilang.
+                    </p>
+                </div>
+
+                <div
+                    v-if="deleteErrorMessage"
+                    class="rounded-xl border border-rose-300 bg-rose-100 p-2.5 text-xs font-semibold text-rose-900"
+                >
+                    {{ deleteErrorMessage }}
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button
+                        type="button"
+                        @click="deleteTargetUser = null"
+                        :disabled="isDeletingUser"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2 text-xs font-medium text-[#000000] hover:bg-[#edede2] disabled:opacity-50"
+                    >
+                        Batal
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="confirmDeleteUser"
+                        :disabled="isDeletingUser"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] bg-rose-600 px-5 py-2 text-xs font-medium text-white shadow-none hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <Loader2
+                            v-if="isDeletingUser"
+                            class="size-4 animate-spin text-white"
+                        />
+                        <Trash2 v-else class="size-4 text-white" />
+                        <span>{{ isDeletingUser ? 'Menghapus...' : 'Ya, Hapus Akun' }}</span>
+                    </button>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════════════
+             Modal Konfirmasi Hapus Data Pasien Secara Permanen (Hard Delete)
+             ═══════════════════════════════════════════════════════════════ -->
+        <div
+            v-if="forceDeleteTargetUser"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-[#000000]/70 p-4 backdrop-blur-xs"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="force-delete-patient-title"
+        >
+            <motion.div
+                :initial="{ opacity: 0, scale: 0.95 }"
+                :animate="{ opacity: 1, scale: 1 }"
+                class="w-full max-w-md space-y-4 rounded-3xl border border-red-300 bg-[#fffff3] p-6 shadow-2xl"
+            >
+                <div class="flex items-center gap-3">
+                    <div
+                        class="flex size-11 shrink-0 items-center justify-center rounded-full border border-red-300 bg-red-100 text-red-700"
+                    >
+                        <AlertTriangle class="size-6 text-red-700" />
+                    </div>
+                    <div>
+                        <h2
+                            id="force-delete-patient-title"
+                            class="font-['ivypresto-headline'] text-base font-bold text-red-950 sm:text-lg"
+                        >
+                            Hapus Permanen Data Pasien
+                        </h2>
+                        <p class="font-['Rubik'] text-xs text-[#333333]">
+                            {{ forceDeleteTargetUser.name }} ({{ forceDeleteTargetUser.email }})
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Danger Warning Card -->
+                <div
+                    class="space-y-2 rounded-2xl border border-red-300 bg-red-50 p-4 font-['Rubik'] text-xs text-red-950"
+                >
+                    <p class="font-bold flex items-center gap-1.5 text-red-800">
+                        <AlertCircle class="size-4 shrink-0 text-red-700" />
+                        Tindakan Ini Tidak Dapat Dibatalkan!
+                    </p>
+                    <p class="text-[11px] leading-relaxed text-red-900/90">
+                        Seluruh data pasien ini termasuk <strong>rekam medis, riwayat pemeriksaan, antrean poli, dan tagihan</strong> akan dihapus secara <strong>permanen dari basis data</strong> (Hard Delete).
+                    </p>
+                    <p v-if="forceDeleteTargetUser.patient?.resident_n" class="text-[11px] font-mono text-red-800 font-semibold">
+                        NIK: {{ forceDeleteTargetUser.patient.resident_n }}
+                    </p>
+                </div>
+
+                <!-- Checkbox Confirmation -->
+                <label class="flex items-start gap-2.5 rounded-xl border border-[#000000]/10 bg-[#edede2]/40 p-3 text-xs font-medium text-[#000000] cursor-pointer select-none">
+                    <input
+                        type="checkbox"
+                        v-model="confirmConsent"
+                        class="mt-0.5 size-4 rounded border-gray-300 text-red-700 focus:ring-red-600"
+                    />
+                    <span>Saya memahami bahwa penghapusan ini bersifat permanen dan data yang dihapus tidak dapat dipulihkan.</span>
+                </label>
+
+                <div
+                    v-if="forceDeleteErrorMessage"
+                    class="rounded-xl border border-red-300 bg-red-100 p-2.5 text-xs font-semibold text-red-900"
+                >
+                    {{ forceDeleteErrorMessage }}
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button
+                        type="button"
+                        @click="forceDeleteTargetUser = null"
+                        :disabled="isForceDeleting"
+                        class="min-h-[44px] rounded-[40.5px] border border-[#000000]/15 px-5 py-2 text-xs font-medium text-[#000000] hover:bg-[#edede2] disabled:opacity-50"
+                    >
+                        Batal
+                    </button>
+
+                    <button
+                        type="button"
+                        @click="confirmForceDeleteUser"
+                        :disabled="isForceDeleting || !confirmConsent"
+                        class="flex min-h-[44px] items-center gap-2 rounded-[40.5px] bg-red-700 px-5 py-2 text-xs font-semibold text-white shadow-none hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                        <Loader2
+                            v-if="isForceDeleting"
+                            class="size-4 animate-spin text-white"
+                        />
+                        <Trash2 v-else class="size-4 text-white" />
+                        <span>{{ isForceDeleting ? 'Menghapus Permanen...' : 'Hapus Permanen Sekarang' }}</span>
                     </button>
                 </div>
             </motion.div>

@@ -39,6 +39,13 @@ import {
     watch,
 } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
+import {
+    announceHospitalQueue,
+    buildHospitalAnnouncementText,
+    getAudioContext,
+    playClosingChime,
+    playOpeningChime,
+} from '@/lib/queueAudio';
 
 interface DisplayVideoItem {
     id: number;
@@ -105,7 +112,6 @@ const isSpeaking = ref(false);
 
 let pollingTimer: any = null;
 let clockTimer: any = null;
-let audioCtx: AudioContext | null = null;
 
 // ═══════════════════════════════════════════════════════════════
 // State Video Playlist Player Auto-Looping (YouTube & Local)
@@ -394,98 +400,41 @@ watch(currentVideoIndex, () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// Audio Bell Chime Sintetis & TTS Web Speech (Prioritas Volume Suara)
+// Audio Pemanggilan Antrean (Opening Chime, TTS Lambat, & Closing Chime)
 // ═══════════════════════════════════════════════════════════════
-const getAudioContext = (): AudioContext | null => {
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
-    try {
-        if (!audioCtx) {
-            const AudioContextClass =
-                window.AudioContext || (window as any).webkitAudioContext;
-
-            if (AudioContextClass) {
-                audioCtx = new AudioContextClass();
-            }
-        }
-
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-
-        return audioCtx;
-    } catch {
-        return null;
-    }
-};
-
-const playChime = async () => {
-    const ctx = getAudioContext();
-
-    if (!ctx) {
+const executeQueueAnnouncement = (latestCalled: LatestCalled) => {
+    if (!isAudioEnabled.value) {
         return;
     }
 
-    const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6
-    let startTime = ctx.currentTime;
-
-    notes.forEach((freq) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, startTime);
-
-        gain.gain.setValueAtTime(0, startTime);
-        gain.gain.linearRampToValueAtTime(0.25, startTime + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5);
-
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-
-        osc.start(startTime);
-        osc.stop(startTime + 0.5);
-
-        startTime += 0.22;
+    const announcementText = buildHospitalAnnouncementText({
+        queueNumber: latestCalled.queue_number,
+        patientName: latestCalled.patient_name,
+        poliName: latestCalled.poli_name,
+        roomName: latestCalled.room_name,
+        showPatientName: props.displayConfig?.show_patient_name !== false,
     });
-};
 
-const speakAnnouncement = (text: string) => {
-    if (
-        !isAudioEnabled.value ||
-        typeof window === 'undefined' ||
-        !('speechSynthesis' in window)
-    ) {
-        return;
-    }
-
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'id-ID';
-    utterance.rate = 0.92;
-    utterance.pitch = 1.0;
-    utterance.volume = 1.0; // Suara panggilan diatur maksimal (100%)
-
-    utterance.onstart = () => {
-        isSpeaking.value = true;
-        duckVideoAudio();
-    };
-    utterance.onend = () => {
-        isSpeaking.value = false;
-        setTimeout(() => {
-            if (!isSpeaking.value) {
-                restoreVideoAudio();
-            }
-        }, 800);
-    };
-    utterance.onerror = () => {
-        isSpeaking.value = false;
-        setTimeout(restoreVideoAudio, 500);
-    };
-
-    window.speechSynthesis.speak(utterance);
+    announceHospitalQueue({
+        text: announcementText,
+        rate: 0.80, // Laju agak lambat, tenang, dan artikulatif khas rumah sakit
+        onStart: () => {
+            isSpeaking.value = true;
+            duckVideoAudio();
+        },
+        onEnd: () => {
+            isSpeaking.value = false;
+            setTimeout(() => {
+                if (!isSpeaking.value) {
+                    restoreVideoAudio();
+                }
+            }, 600);
+        },
+        onError: () => {
+            isSpeaking.value = false;
+            setTimeout(restoreVideoAudio, 500);
+        },
+    });
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -508,17 +457,7 @@ const fetchLiveData = async () => {
                 displayData.value.latestCalled?.queue_number
         ) {
             displayData.value = data;
-
-            if (isAudioEnabled.value) {
-                // Kecilkan volume video seketika saat nada panggilan berbunyi
-                duckVideoAudio();
-                playChime();
-                setTimeout(() => {
-                    speakAnnouncement(
-                        `Nomor antrean, ${data.latestCalled?.queue_number}, silakan menuju ke ${data.latestCalled?.poli_name}, ${data.latestCalled?.room_name}.`,
-                    );
-                }, 1000);
-            }
+            executeQueueAnnouncement(data.latestCalled);
         } else {
             displayData.value = data;
         }
@@ -532,7 +471,7 @@ const toggleAudio = () => {
     isAudioEnabled.value = !isAudioEnabled.value;
 
     if (isAudioEnabled.value) {
-        playChime();
+        playOpeningChime();
     }
 };
 

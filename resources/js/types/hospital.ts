@@ -332,3 +332,33 @@ export interface Billing {
     processed_by_nurse?: Nurse | null;
     items?: BillingItem[];
 }
+
+export interface PaginationLink {
+    url: string | null;
+    label: string;
+    active: boolean;
+    page?: number | null;
+}
+
+export interface PaginationMeta {
+    current_page: number;
+    from: number | null;
+    last_page: number;
+    per_page: number;
+    to: number | null;
+    total: number;
+    links?: PaginationLink[];
+    path?: string;
+}
+
+export interface PaginatedResponse<T> {
+    data: T[];
+    links: PaginationLink[];
+    current_page: number;
+    last_page: number;
+    per_page: number;
+    total: number;
+    from: number | null;
+    to: number | null;
+    meta?: PaginationMeta;
+}

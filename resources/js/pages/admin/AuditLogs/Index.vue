@@ -38,6 +38,7 @@ import {
 import { motion } from 'motion-v';
 import { ref } from 'vue';
 import ResponsiveTable from '@/components/admin/ResponsiveTable.vue';
+import Pagination from '@/components/Pagination.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 
 interface AuditLogItem {
@@ -406,46 +407,10 @@ const formatDate = (iso: string) => {
 
                 <!-- Pagination Slot -->
                 <template #pagination v-if="logs.total > 0">
-                    <nav
-                        aria-label="Navigasi Halaman Log Audit"
-                        class="flex flex-col items-center justify-between gap-3 text-xs text-[#333333] sm:flex-row"
-                    >
-                        <div>
-                            Menampilkan halaman
-                            <strong class="text-[#000000]">{{
-                                logs.current_page
-                            }}</strong>
-                            dari
-                            <strong class="text-[#000000]">{{
-                                logs.last_page
-                            }}</strong>
-                            (Total {{ logs.total }} catatan audit)
-                        </div>
-                        <div class="flex items-center gap-1">
-                            <template
-                                v-for="(link, idx) in logs.links"
-                                :key="idx"
-                            >
-                                <Link
-                                    v-if="link.url"
-                                    :href="link.url"
-                                    v-html="link.label"
-                                    :aria-label="`Buka halaman ${link.label}`"
-                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 font-medium transition-colors"
-                                    :class="
-                                        link.active
-                                            ? 'bg-[#000000] text-[#ffffff]'
-                                            : 'bg-[#edede2]/60 text-[#000000] hover:bg-[#edede2]'
-                                    "
-                                />
-                                <span
-                                    v-else
-                                    v-html="link.label"
-                                    class="flex min-h-[36px] min-w-[36px] items-center justify-center rounded-lg px-3 py-1 text-[#000000]/40"
-                                />
-                            </template>
-                        </div>
-                    </nav>
+                    <Pagination
+                        :pagination="logs"
+                        item-name="catatan audit"
+                    />
                 </template>
             </ResponsiveTable>
         </div>

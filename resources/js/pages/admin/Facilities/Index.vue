@@ -35,7 +35,9 @@ import {
 import axios from 'axios';
 import { motion } from 'motion-v';
 import { ref } from 'vue';
+import Pagination from '@/components/Pagination.vue';
 import AdminLayout from '@/layouts/AdminLayout.vue';
+import type { PaginationLink } from '@/types';
 
 interface PoliItem {
     poli_id: number;
@@ -86,6 +88,12 @@ const props = defineProps<{
     schedules?: {
         data: DoctorScheduleItem[];
         total: number;
+        current_page?: number;
+        last_page?: number;
+        per_page?: number;
+        from?: number | null;
+        to?: number | null;
+        links?: PaginationLink[];
     };
     doctors?: DoctorOption[];
 }>();
@@ -635,6 +643,17 @@ const handleDeleteSchedule = async (s: DoctorScheduleItem) => {
                             </tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Pagination Navigasi Jadwal Praktik -->
+                <div
+                    v-if="schedules && (schedules.total ?? 0) > 0"
+                    class="border-t border-[#000000]/10 bg-[#fffff3] px-4 py-3 sm:px-6"
+                >
+                    <Pagination
+                        :pagination="schedules"
+                        item-name="jadwal praktik"
+                    />
                 </div>
             </section>
 

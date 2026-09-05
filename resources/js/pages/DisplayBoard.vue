@@ -16,10 +16,12 @@ import {
 import { motion } from 'motion-v';
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 import AppLogoIcon from '@/components/AppLogoIcon.vue';
-
-// Endpoint layanan Text-to-Speech untuk pengumuman suara antrean
-const GOOGLE_SCRIPT_TTS_URL =
-    'https://script.google.com/macros/s/AKfycbyOSe0ooXdH3GTtUePmbj2leqcRYmuVDLMj7aX8pXd1QldUwCJg2WPv-_ofDoPWyqmk/exec';
+import {
+    announceHospitalQueue,
+    buildHospitalAnnouncementText,
+    getAudioContext,
+    playOpeningChime,
+} from '@/lib/queueAudio';
 
 interface ClinicItem {
     schedule_id: number;
@@ -72,8 +74,6 @@ const isSpeaking = ref(false);
 let pollingTimer: any = null;
 let clockTimer: any = null;
 let repeatTimeoutTimer: any = null;
-let audioCtx: AudioContext | null = null;
-let currentAudio: HTMLAudioElement | null = null;
 
 const formatDoctorName = (name?: string | null): string => {
     if (!name) {
@@ -89,34 +89,6 @@ const formatDoctorName = (name?: string | null): string => {
     return `dr. ${trimmed}`;
 };
 
-// Inisialisasi AudioContext & Unlock Audio Browser
-const getAudioContext = (): AudioContext | null => {
-    if (typeof window === 'undefined') {
-        return null;
-    }
-
-    try {
-        if (!audioCtx) {
-            const AudioContextClass =
-                window.AudioContext || (window as any).webkitAudioContext;
-
-            if (AudioContextClass) {
-                audioCtx = new AudioContextClass();
-            }
-        }
-
-        if (audioCtx && audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
-
-        return audioCtx;
-    } catch (e) {
-        console.warn('Audio Context initialization error:', e);
-
-        return null;
-    }
-};
-
 // Pembaruan Jam Digital
 const updateClock = () => {
     const now = new Date();
@@ -127,50 +99,7 @@ const updateClock = () => {
     });
 };
 
-// 1. Suara Bel "Hospital Chime" (Web Audio API)
-const playHospitalChime = () => {
-    try {
-        const ctx = getAudioContext();
-
-        if (!ctx) {
-            return;
-        }
-
-        const playTone = (
-            freq: number,
-            start: number,
-            duration: number,
-            gainValue = 0.25,
-        ) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
-
-            gain.gain.setValueAtTime(gainValue, ctx.currentTime + start);
-            gain.gain.exponentialRampToValueAtTime(
-                0.0001,
-                ctx.currentTime + start + duration,
-            );
-
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.start(ctx.currentTime + start);
-            osc.stop(ctx.currentTime + start + duration);
-        };
-
-        // Nada Chime 4-Nada Khas Rumah Sakit (C5 -> E5 -> G5 -> C6)
-        playTone(523.25, 0.0, 0.5, 0.25);
-        playTone(659.25, 0.2, 0.5, 0.25);
-        playTone(783.99, 0.4, 0.6, 0.3);
-        playTone(1046.5, 0.65, 0.8, 0.35);
-    } catch (e) {
-        console.warn('Audio chime playback error:', e);
-    }
-};
-
-// 2. Pemanggilan Suara Kalimat Utuh via Google Apps Script (TTS Audio Stream)
+// Pemanggilan Suara Kalimat Utuh dengan Opening Chime, Laju Lambat, & Closing Chime
 const announceQueue = async (item: LatestCalled, repeatCount = 1) => {
     if (!isAudioEnabled.value || typeof window === 'undefined') {
         return;
@@ -181,67 +110,41 @@ const announceQueue = async (item: LatestCalled, repeatCount = 1) => {
         repeatTimeoutTimer = null;
     }
 
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-        currentAudio = null;
-    }
-
     isSpeaking.value = true;
 
-    // Bunyikan bel terlebih dahulu
-    playHospitalChime();
+    const speechText = buildHospitalAnnouncementText({
+        queueNumber: item.queue_number,
+        patientName: item.patient_name,
+        poliName: item.poli_name,
+        roomName: item.room_name,
+        showPatientName: props.displayConfig?.show_patient_name !== false,
+    });
 
-    // Format kalimat dengan jeda alami
-    const cleanQueue = item.queue_number.replace(/-/g, ' ');
-    const patientNamePart = item.patient_name
-        ? `, atas nama ${item.patient_name}`
-        : '';
-    const speechText = `Nomor antrean, ${cleanQueue}${patientNamePart}. Silakan menuju ke ${item.poli_name}, ${item.room_name}.`;
-
-    // Tunggu nada bel selesai berbunyi (1.3 detik)
-    setTimeout(async () => {
-        try {
-            const response = await fetch(
-                `${GOOGLE_SCRIPT_TTS_URL}?text=${encodeURIComponent(speechText)}&lang=id`,
-            );
-            const base64Audio = await response.text();
-
-            if (base64Audio.startsWith('Error')) {
-                throw new Error(base64Audio);
-            }
-
-            currentAudio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
-
-            currentAudio.onended = () => {
-                isSpeaking.value = false;
-                currentAudio = null;
-
-                // Ulangi panggilan 1x lagi jika auto-repeat aktif
-                if (isAutoRepeat.value && repeatCount === 1) {
-                    repeatTimeoutTimer = setTimeout(() => {
-                        if (
-                            displayData.value.latestCalled?.appointment_id ===
-                            item.appointment_id
-                        ) {
-                            announceQueue(item, 2);
-                        }
-                    }, 3000);
-                }
-            };
-
-            currentAudio.onerror = (err) => {
-                console.error('Audio playback error:', err);
-                isSpeaking.value = false;
-                currentAudio = null;
-            };
-
-            await currentAudio.play();
-        } catch (err) {
-            console.error('Gagal memproses panggilan suara:', err);
+    announceHospitalQueue({
+        text: speechText,
+        rate: 0.80, // Laju agak lambat, tenang, dan artikulatif khas rumah sakit
+        onStart: () => {
+            isSpeaking.value = true;
+        },
+        onEnd: () => {
             isSpeaking.value = false;
-        }
-    }, 1300);
+
+            // Ulangi panggilan 1x lagi jika auto-repeat aktif
+            if (isAutoRepeat.value && repeatCount === 1) {
+                repeatTimeoutTimer = setTimeout(() => {
+                    if (
+                        displayData.value.latestCalled?.appointment_id ===
+                        item.appointment_id
+                    ) {
+                        announceQueue(item, 2);
+                    }
+                }, 3000);
+            }
+        },
+        onError: () => {
+            isSpeaking.value = false;
+        },
+    });
 };
 
 // 3. Polling Data Real-Time (Setiap 2.5 Detik)
@@ -297,10 +200,10 @@ const toggleAudio = () => {
             repeatTimeoutTimer = null;
         }
 
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio = null;
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
         }
+        isSpeaking.value = false;
     }
 };
 
@@ -418,13 +321,8 @@ onBeforeUnmount(() => {
         clearTimeout(repeatTimeoutTimer);
     }
 
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-    }
-
-    if (audioCtx) {
-        audioCtx.close().catch(() => {});
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
     }
 
     try {

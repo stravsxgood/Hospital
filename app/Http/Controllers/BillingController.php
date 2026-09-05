@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Billing\CreateXenditInvoiceAction;
 use App\Events\PaymentSettledEvent;
+use App\Http\Requests\StoreBillingRequest;
 use App\Models\Appointment;
 use App\Models\Billing;
 use App\Models\BillingItem;
@@ -27,6 +29,137 @@ class BillingController extends Controller
     public function __construct(
         protected XenditService $xenditService
     ) {}
+
+    /**
+     * Menghitung rincian biaya otomatis (Jasa Dokter, Administrasi, Obat) untuk Appointment.
+     */
+    public function calculateAmount(int $appointmentId): JsonResponse
+    {
+        $appointment = Appointment::with([
+            'patient',
+            'doctorSchedule.doctor',
+            'doctorSchedule.poli',
+            'medicalRecord.prescription.items.medicine',
+            'billing',
+        ])->findOrFail($appointmentId);
+
+        $consultationFee = 150000.00;
+        $adminFee = 25000.00;
+        $medicineTotal = 0.00;
+        $items = [];
+
+        $items[] = [
+            'type' => 'consultation',
+            'name' => 'Konsultasi Dokter ('.($appointment->doctorSchedule?->doctor?->name ?? 'Dokter Spesialis').')',
+            'price' => $consultationFee,
+            'qty' => 1,
+            'subtotal' => $consultationFee,
+        ];
+
+        $items[] = [
+            'type' => 'admin',
+            'name' => 'Administrasi & Sarana Rawat Jalan',
+            'price' => $adminFee,
+            'qty' => 1,
+            'subtotal' => $adminFee,
+        ];
+
+        $prescription = $appointment->medicalRecord?->prescription;
+        if ($prescription && $prescription->items) {
+            foreach ($prescription->items as $item) {
+                $med = $item->medicine;
+                $price = $med ? (float) $med->price : 0.00;
+                $qty = (int) $item->quantity;
+                $subtotal = $price * $qty;
+                $medicineTotal += $subtotal;
+
+                $items[] = [
+                    'type' => 'medicine',
+                    'name' => ($med?->name_medicine ?? 'Obat Farmasi').' ('.$item->dosage.')',
+                    'price' => $price,
+                    'qty' => $qty,
+                    'subtotal' => $subtotal,
+                ];
+            }
+        }
+
+        $totalAmount = $consultationFee + $adminFee + $medicineTotal;
+
+        return response()->json([
+            'status' => true,
+            'appointment_id' => $appointment->appointment_id,
+            'patient_name' => $appointment->patient?->name,
+            'poli_name' => $appointment->doctorSchedule?->poli?->name_poli,
+            'doctor_name' => $appointment->doctorSchedule?->doctor?->name,
+            'consultation_fee' => $consultationFee,
+            'admin_fee' => $adminFee,
+            'medicine_total' => $medicineTotal,
+            'total_amount' => $totalAmount,
+            'items' => $items,
+            'existing_billing' => $appointment->billing,
+        ]);
+    }
+
+    /**
+     * Membuat tagihan Xendit baru (Invoices / QRIS) langsung dari Workspace Staf/Perawat.
+     */
+    public function store(StoreBillingRequest $request, CreateXenditInvoiceAction $action): RedirectResponse|JsonResponse
+    {
+        $appointment = Appointment::with([
+            'patient.user',
+            'doctorSchedule.doctor',
+            'doctorSchedule.poli',
+            'medicalRecord.prescription.items.medicine',
+        ])->findOrFail($request->validated('appointment_id'));
+
+        $amount = (float) ($request->validated('amount') ?? 0);
+
+        // Jika perawat tidak mengisi nominal manual, hitung otomatis secara presisi
+        if ($amount <= 0) {
+            $consultationFee = 150000.00;
+            $adminFee = 25000.00;
+            $medicineTotal = 0.00;
+
+            $prescription = $appointment->medicalRecord?->prescription;
+            if ($prescription && $prescription->items) {
+                foreach ($prescription->items as $item) {
+                    $med = $item->medicine;
+                    $unitPrice = $med ? (float) $med->price : 0.00;
+                    $qty = (int) $item->quantity;
+                    $medicineTotal += ($unitPrice * $qty);
+                }
+            }
+
+            $amount = $consultationFee + $adminFee + $medicineTotal;
+        }
+
+        $description = $request->validated('description');
+        $paymentType = (string) ($request->validated('payment_type') ?? 'invoice');
+        $nurseId = $request->user()?->nurse?->nurse_id;
+
+        $billing = $action->execute(
+            appointment: $appointment,
+            amount: $amount,
+            description: $description,
+            nurseId: $nurseId,
+            paymentType: $paymentType
+        );
+
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Tagihan Xendit berhasil dibuat.',
+                'invoice_url' => $billing->invoice_url,
+                'xendit_payment_url' => $billing->xendit_payment_url,
+                'billing' => $billing,
+            ], 201);
+        }
+
+        return redirect()->back()
+            ->with('success', 'Tagihan #'.$billing->invoice_number.' berhasil diterbitkan.')
+            ->with('invoice_url', $billing->invoice_url)
+            ->with('billing', $billing);
+    }
 
     /**
      * Menampilkan daftar tagihan medis (Billing & Kasir).

@@ -24,8 +24,7 @@ class VerifyXenditWebhook
         // Bandingkan token masuk dengan token resmi dari config secara aman
         if (! $incomingToken || ! hash_equals($validToken, $incomingToken)) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid or missing x-callback-token header.',
+                'message' => 'Unauthorized',
             ], 401);
         }
 

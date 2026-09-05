@@ -27,8 +27,11 @@ class XenditWebhookController extends Controller
                 'incoming_token' => $incomingToken,
             ]);
 
-            return response()->json(['message' => 'Unauthorized token'], 401);
+            return response()->json(['message' => 'Unauthorized'], 401);
         }
+
+        // Catat seluruh data request ke Log::info() untuk proses debugging
+        Log::info('Xendit Webhook Received', $request->all());
 
         $payload = $request->all();
         $status = strtoupper((string) ($payload['status'] ?? ''));
@@ -36,69 +39,73 @@ class XenditWebhookController extends Controller
         $xenditId = (string) ($payload['id'] ?? '');
         $paymentMethod = (string) ($payload['payment_method'] ?? $payload['payment_channel'] ?? 'xendit_invoice');
 
-        Log::info('Xendit Webhook Received', [
-            'status' => $status,
-            'external_id' => $externalId,
-            'xendit_id' => $xenditId,
-        ]);
-
-        if (! in_array($status, ['PAID', 'SETTLED'])) {
-            return response()->json([
-                'status' => true,
-                'message' => 'Notification acknowledged (non-paid status: '.$status.')',
-            ]);
+        // Tangani event pembayaran invoice (cek jika status invoice adalah 'PAID')
+        if ($status !== 'PAID' && $status !== 'SETTLED') {
+            return response()->json(['status' => 'success'], 200);
         }
 
-        // 1. Cek apakah ini pembayaran untuk SIMRS Billing (external_id: BILL-... atau QRIS-...)
-        if (str_starts_with($externalId, 'BILL-') || str_starts_with($externalId, 'QRIS-') || ! empty($xenditId)) {
-            $billing = null;
+        // 1. Cek apakah ini pembayaran untuk SIMRS Billing (external_id: INV-..., BILL-..., QRIS-..., atau xendit_id)
+        $billing = null;
 
-            if (str_starts_with($externalId, 'BILL-') || str_starts_with($externalId, 'QRIS-')) {
+        if (! empty($externalId)) {
+            $billing = Billing::where('external_id', $externalId)
+                ->orWhere('invoice_number', $externalId)
+                ->first();
+
+            if (! $billing && (str_starts_with($externalId, 'BILL-') || str_starts_with($externalId, 'QRIS-') || str_starts_with($externalId, 'INV-'))) {
                 $parts = explode('-', $externalId);
-                $billingId = isset($parts[1]) ? (int) $parts[1] : 0;
-                $billing = Billing::where('billing_id', $billingId)->first();
+                $targetId = isset($parts[1]) ? (int) $parts[1] : 0;
+                if ($targetId > 0) {
+                    $billing = Billing::where('billing_id', $targetId)
+                        ->orWhere('reservation_id', $targetId)
+                        ->orWhere('appointment_id', $targetId)
+                        ->first();
+                }
             }
+        }
 
-            if (! $billing && ! empty($xenditId)) {
-                $billing = Billing::where('xendit_id', $xenditId)->first();
-            }
+        if (! $billing && ! empty($xenditId)) {
+            $billing = Billing::where('xendit_id', $xenditId)
+                ->orWhere('xendit_invoice_id', $xenditId)
+                ->first();
+        }
 
-            if ($billing) {
-                DB::transaction(function () use ($billing, $paymentMethod) {
-                    $billing->update([
-                        'status' => 'paid',
-                        'payment_method' => $paymentMethod,
-                        'paid_at' => now(),
-                    ]);
-
-                    // Update status appointment / antrean
-                    if ($billing->reservation) {
-                        $billing->reservation->update(['status' => 'completed']);
-
-                        $prescription = $billing->reservation->medicalRecord?->prescription;
-                        if ($prescription && in_array($prescription->status, ['menunggu', 'diproses'])) {
-                            $prescription->update(['status' => 'selesai']);
-                        }
-                    }
-                });
-
-                // Siarkan konfirmasi pelunasan instan via Reverb WebSockets
-                event(new PaymentSettledEvent(
-                    billingId: (int) $billing->billing_id,
-                    invoiceNumber: (string) $billing->invoice_number,
-                    status: 'paid',
-                    paymentMethod: (string) $paymentMethod,
-                    paidAmount: (float) $billing->total_amount,
-                    paidAt: now()->toIso8601String()
-                ));
-
-                Log::info("Billing #{$billing->invoice_number} successfully marked as PAID via Xendit webhook.");
-
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Billing successfully marked as PAID',
+        if ($billing) {
+            DB::transaction(function () use ($billing, $paymentMethod) {
+                $billing->update([
+                    'status' => 'paid',
+                    'payment_method' => $paymentMethod,
+                    'paid_at' => now(),
                 ]);
-            }
+
+                // Update status appointment / antrean
+                $appointment = $billing->appointment ?? $billing->reservation;
+                if ($appointment) {
+                    $appointment->update(['status' => 'completed']);
+
+                    $prescription = $appointment->medicalRecord?->prescription;
+                    if ($prescription && in_array($prescription->status, ['menunggu', 'diproses'])) {
+                        $prescription->update(['status' => 'selesai']);
+                    }
+                }
+            });
+
+            // Siarkan konfirmasi pelunasan instan via Reverb WebSockets
+            event(new PaymentSettledEvent(
+                billingId: (int) $billing->billing_id,
+                invoiceNumber: (string) ($billing->invoice_number ?: $billing->external_id),
+                status: 'paid',
+                paymentMethod: (string) $paymentMethod,
+                paidAmount: (float) ($billing->amount ?: $billing->total_amount),
+                paidAt: now()->toIso8601String()
+            ));
+
+            Log::info("Billing #{$billing->invoice_number} successfully marked as PAID via Xendit webhook.");
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Billing successfully marked as PAID',
+            ], 200);
         }
 
         // 2. Fallback untuk Payment legacy (external_id: PAY-...)
@@ -119,17 +126,11 @@ class XenditWebhookController extends Controller
                     }
                 });
 
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Legacy payment successfully updated',
-                ]);
+                return response()->json(['status' => 'success'], 200);
             }
         }
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Webhook received, no matching record found',
-        ]);
+        return response()->json(['status' => 'success'], 200);
     }
 
     /**
@@ -174,14 +175,27 @@ class XenditWebhookController extends Controller
         if (in_array($status, ['COMPLETED', 'PAID', 'SETTLED'])) {
             $billing = null;
 
-            if (str_starts_with($externalId, 'QRIS-') || str_starts_with($externalId, 'BILL-')) {
-                $parts = explode('-', $externalId);
-                $billingId = isset($parts[1]) ? (int) $parts[1] : 0;
-                $billing = Billing::where('billing_id', $billingId)->first();
+            if (! empty($externalId)) {
+                $billing = Billing::where('external_id', $externalId)
+                    ->orWhere('invoice_number', $externalId)
+                    ->first();
+
+                if (! $billing && (str_starts_with($externalId, 'QRIS-') || str_starts_with($externalId, 'BILL-') || str_starts_with($externalId, 'INV-'))) {
+                    $parts = explode('-', $externalId);
+                    $targetId = isset($parts[1]) ? (int) $parts[1] : 0;
+                    if ($targetId > 0) {
+                        $billing = Billing::where('billing_id', $targetId)
+                            ->orWhere('reservation_id', $targetId)
+                            ->orWhere('appointment_id', $targetId)
+                            ->first();
+                    }
+                }
             }
 
             if (! $billing && ! empty($qrId)) {
-                $billing = Billing::where('xendit_id', $qrId)->first();
+                $billing = Billing::where('xendit_id', $qrId)
+                    ->orWhere('xendit_invoice_id', $qrId)
+                    ->first();
             }
 
             if ($billing) {

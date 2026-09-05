@@ -22,7 +22,7 @@ class AdminAuditLogController extends Controller
     {
         $action = $request->query('action');
         $search = $request->query('search');
-        $perPage = (int) ($request->query('per_page', 20));
+        $perPage = (int) ($request->query('per_page', 10));
 
         $driver = DB::connection()->getDriverName();
         $likeOp = $driver === 'pgsql' ? 'ilike' : 'like';

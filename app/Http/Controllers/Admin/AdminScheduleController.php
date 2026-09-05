@@ -49,7 +49,8 @@ class AdminScheduleController extends Controller
                 ELSE 7 END")
             ->orderBy('start_time');
 
-        $schedules = $query->paginate(20)->withQueryString();
+        $perPage = (int) $request->query('per_page', 10);
+        $schedules = $query->paginate($perPage)->withQueryString();
 
         $doctors = Doctor::where('status', 'aktif')->orderBy('name')->get();
         $polis = Poli::where('status', 'Aktif')->orderBy('name_poli')->get();
