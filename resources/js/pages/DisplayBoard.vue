@@ -203,6 +203,7 @@ const toggleAudio = () => {
         if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
             window.speechSynthesis.cancel();
         }
+
         isSpeaking.value = false;
     }
 };
