@@ -356,7 +356,7 @@ const openBillingModal = (apt: AppointmentItem) => {
 
 const handleBillingSuccess = (_billingId: number) => {
     isBillingModalOpen.value = false;
-    router.reload({ preserveScroll: true });
+    router.reload();
 };
 
 // Filtered Queue List
@@ -1635,18 +1635,36 @@ defineOptions({
                                             </span>
 
                                             <!-- Tagihan Xendit / QRIS & Kasir -->
-                                            <template v-if="apt.status !== 'pending' && apt.status !== 'cancelled'">
+                                            <template
+                                                v-if="
+                                                    apt.status !== 'pending' &&
+                                                    apt.status !== 'cancelled'
+                                                "
+                                            >
                                                 <!-- Jika sudah Lunas -->
                                                 <motion.button
-                                                    v-if="apt.billing && (apt.billing.status === 'paid' || apt.billing.status === 'PAID')"
+                                                    v-if="
+                                                        apt.billing &&
+                                                        (apt.billing.status ===
+                                                            'paid' ||
+                                                            apt.billing
+                                                                .status ===
+                                                                'PAID')
+                                                    "
                                                     type="button"
-                                                    :whileHover="{ scale: 1.02 }"
+                                                    :whileHover="{
+                                                        scale: 1.02,
+                                                    }"
                                                     :whileTap="{ scale: 0.98 }"
-                                                    @click="openBillingModal(apt)"
+                                                    @click="
+                                                        openBillingModal(apt)
+                                                    "
                                                     class="inline-flex min-h-[36px] items-center gap-1.5 rounded-[40.5px] border border-emerald-300 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800 hover:bg-emerald-100"
                                                     title="Tagihan sudah lunas - Klik untuk lihat kuitansi"
                                                 >
-                                                    <CheckCircle2 class="size-3.5 text-emerald-600" />
+                                                    <CheckCircle2
+                                                        class="size-3.5 text-emerald-600"
+                                                    />
                                                     <span>Lunas</span>
                                                 </motion.button>
 
@@ -1654,13 +1672,19 @@ defineOptions({
                                                 <motion.button
                                                     v-else-if="apt.billing"
                                                     type="button"
-                                                    :whileHover="{ scale: 1.02 }"
+                                                    :whileHover="{
+                                                        scale: 1.02,
+                                                    }"
                                                     :whileTap="{ scale: 0.98 }"
-                                                    @click="openBillingModal(apt)"
+                                                    @click="
+                                                        openBillingModal(apt)
+                                                    "
                                                     class="inline-flex min-h-[36px] items-center gap-1.5 rounded-[40.5px] border border-amber-300 bg-amber-50 px-3 py-1 text-xs font-bold text-amber-900 hover:bg-amber-100"
                                                     title="Tagihan diterbitkan - Klik untuk QRIS / link pembayaran"
                                                 >
-                                                    <QrCode class="size-3.5 text-amber-700" />
+                                                    <QrCode
+                                                        class="size-3.5 text-amber-700"
+                                                    />
                                                     <span>Menunggu Bayar</span>
                                                 </motion.button>
 
@@ -1668,21 +1692,30 @@ defineOptions({
                                                 <motion.button
                                                     v-else
                                                     type="button"
-                                                    :whileHover="{ scale: 1.02 }"
+                                                    :whileHover="{
+                                                        scale: 1.02,
+                                                    }"
                                                     :whileTap="{ scale: 0.98 }"
-                                                    @click="openBillingModal(apt)"
+                                                    @click="
+                                                        openBillingModal(apt)
+                                                    "
                                                     class="inline-flex min-h-[36px] items-center gap-1.5 rounded-[40.5px] border border-[#000000]/15 bg-[#fffff3] px-3.5 py-1 text-xs font-semibold text-[#000000] hover:bg-[#edede2]"
                                                     title="Buat Tagihan Xendit Invoice / QRIS otomatis"
                                                 >
-                                                    <Receipt class="size-3.5 text-emerald-700" />
+                                                    <Receipt
+                                                        class="size-3.5 text-emerald-700"
+                                                    />
                                                     <span>Tagihan Xendit</span>
                                                 </motion.button>
                                             </template>
 
                                             <span
-                                                v-else-if="apt.status === 'cancelled'"
+                                                v-else-if="
+                                                    apt.status === 'cancelled'
+                                                "
                                                 class="text-xs text-[#333333]"
-                                            >Dibatalkan</span>
+                                                >Dibatalkan</span
+                                            >
                                         </div>
                                     </td>
                                 </tr>

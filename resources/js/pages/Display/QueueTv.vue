@@ -87,7 +87,7 @@ const speakVoiceText = (text: string) => {
 
     announceHospitalQueue({
         text,
-        rate: 0.80, // Laju lambat, artikulatif, dan tenang khas rumah sakit
+        rate: 0.8, // Laju lambat, artikulatif, dan tenang khas rumah sakit
         onStart: () => {
             isSpeaking.value = true;
         },

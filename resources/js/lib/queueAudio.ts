@@ -90,7 +90,9 @@ const playBellTone = (
  * Melodi naik 4-nada: C5 (523.25Hz) -> E5 (659.25Hz) -> G5 (783.99Hz) -> C6 (1046.5Hz).
  * Durasi total nada: ~1.4 detik.
  */
-export const playOpeningChime = (customCtx?: AudioContext | null): Promise<void> => {
+export const playOpeningChime = (
+    customCtx?: AudioContext | null,
+): Promise<void> => {
     return new Promise((resolve) => {
         const ctx = customCtx || getAudioContext();
 
@@ -102,10 +104,10 @@ export const playOpeningChime = (customCtx?: AudioContext | null): Promise<void>
 
         try {
             const start = ctx.currentTime;
-            playBellTone(ctx, 523.25, start + 0.00, 0.55, 0.26); // C5
+            playBellTone(ctx, 523.25, start + 0.0, 0.55, 0.26); // C5
             playBellTone(ctx, 659.25, start + 0.22, 0.55, 0.26); // E5
-            playBellTone(ctx, 783.99, start + 0.44, 0.60, 0.28); // G5
-            playBellTone(ctx, 1046.50, start + 0.68, 0.85, 0.32); // C6
+            playBellTone(ctx, 783.99, start + 0.44, 0.6, 0.28); // G5
+            playBellTone(ctx, 1046.5, start + 0.68, 0.85, 0.32); // C6
 
             setTimeout(() => {
                 resolve();
@@ -122,7 +124,9 @@ export const playOpeningChime = (customCtx?: AudioContext | null): Promise<void>
  * Melodi turun 4-nada penutup resolusi: C6 (1046.5Hz) -> G5 (783.99Hz) -> E5 (659.25Hz) -> C5 (523.25Hz).
  * Durasi total nada: ~1.5 detik.
  */
-export const playClosingChime = (customCtx?: AudioContext | null): Promise<void> => {
+export const playClosingChime = (
+    customCtx?: AudioContext | null,
+): Promise<void> => {
     return new Promise((resolve) => {
         const ctx = customCtx || getAudioContext();
 
@@ -134,10 +138,10 @@ export const playClosingChime = (customCtx?: AudioContext | null): Promise<void>
 
         try {
             const start = ctx.currentTime;
-            playBellTone(ctx, 1046.50, start + 0.00, 0.55, 0.28); // C6
-            playBellTone(ctx, 783.99, start + 0.22, 0.55, 0.26);  // G5
-            playBellTone(ctx, 659.25, start + 0.44, 0.60, 0.26);  // E5
-            playBellTone(ctx, 523.25, start + 0.68, 0.90, 0.30);  // C5
+            playBellTone(ctx, 1046.5, start + 0.0, 0.55, 0.28); // C6
+            playBellTone(ctx, 783.99, start + 0.22, 0.55, 0.26); // G5
+            playBellTone(ctx, 659.25, start + 0.44, 0.6, 0.26); // E5
+            playBellTone(ctx, 523.25, start + 0.68, 0.9, 0.3); // C5
 
             setTimeout(() => {
                 resolve();
@@ -260,7 +264,7 @@ export const announceHospitalQueue = async (options: {
             (v) =>
                 v.lang.toLowerCase().includes('id-id') ||
                 v.lang.toLowerCase().includes('id_id') ||
-                v.lang.toLowerCase().includes('id')
+                v.lang.toLowerCase().includes('id'),
         );
 
         if (idVoice) {

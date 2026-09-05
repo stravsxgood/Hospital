@@ -407,10 +407,7 @@ const formatDate = (iso: string) => {
 
                 <!-- Pagination Slot -->
                 <template #pagination v-if="logs.total > 0">
-                    <Pagination
-                        :pagination="logs"
-                        item-name="catatan audit"
-                    />
+                    <Pagination :pagination="logs" item-name="catatan audit" />
                 </template>
             </ResponsiveTable>
         </div>

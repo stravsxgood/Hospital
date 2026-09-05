@@ -417,7 +417,7 @@ const executeQueueAnnouncement = (latestCalled: LatestCalled) => {
 
     announceHospitalQueue({
         text: announcementText,
-        rate: 0.80, // Laju agak lambat, tenang, dan artikulatif khas rumah sakit
+        rate: 0.8, // Laju agak lambat, tenang, dan artikulatif khas rumah sakit
         onStart: () => {
             isSpeaking.value = true;
             duckVideoAudio();

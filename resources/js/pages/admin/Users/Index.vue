@@ -189,7 +189,11 @@ const columnFilters = computed<ColumnFiltersState>(() => {
     return filters;
 });
 
-const roleFilterFn = (row: any, columnId: string, filterValue: any): boolean => {
+const roleFilterFn = (
+    row: any,
+    columnId: string,
+    filterValue: any,
+): boolean => {
     if (!filterValue || filterValue === 'all') {
         return true;
     }
@@ -202,7 +206,9 @@ const roleFilterFn = (row: any, columnId: string, filterValue: any): boolean => 
 
     const role = u.role?.toLowerCase() || '';
     const hasRole = (r: string) => {
-        return (u.roles || []).some((ro) => ro.name.toLowerCase() === r.toLowerCase());
+        return (u.roles || []).some(
+            (ro) => ro.name.toLowerCase() === r.toLowerCase(),
+        );
     };
 
     if (filterValue === 'doctor') {
@@ -222,17 +228,25 @@ const roleFilterFn = (row: any, columnId: string, filterValue: any): boolean => 
     }
 
     if (filterValue === 'admin' || filterValue === 'super-admin') {
-        return role === 'admin' || role === 'super-admin' || hasRole('super-admin');
+        return (
+            role === 'admin' || role === 'super-admin' || hasRole('super-admin')
+        );
     }
 
     if (filterValue === 'patient') {
-        return role === 'patient' || (!u.doctor && !u.nurse && role !== 'admin');
+        return (
+            role === 'patient' || (!u.doctor && !u.nurse && role !== 'admin')
+        );
     }
 
     return true;
 };
 
-const statusFilterFn = (row: any, columnId: string, filterValue: any): boolean => {
+const statusFilterFn = (
+    row: any,
+    columnId: string,
+    filterValue: any,
+): boolean => {
     if (!filterValue || filterValue === 'all') {
         return true;
     }
@@ -280,7 +294,9 @@ const globalFilterFn = (
     const role = String(u.role || '').toLowerCase();
     const docName = String(u.doctor?.name || '').toLowerCase();
     const sip = String(u.doctor?.sip_number || '').toLowerCase();
-    const spec = String(u.doctor?.specialization?.name_specialization || '').toLowerCase();
+    const spec = String(
+        u.doctor?.specialization?.name_specialization || '',
+    ).toLowerCase();
     const nurseName = String(u.nurse?.name || '').toLowerCase();
     const regNum = String(u.nurse?.registration_number || '').toLowerCase();
     const institute = String(u.nurse?.institute || '').toLowerCase();
@@ -656,7 +672,10 @@ const isPatientUser = (user: UserItem): boolean => {
     return (
         user.role === 'patient' ||
         Boolean(user.patient) ||
-        (!user.doctor && !user.nurse && user.role !== 'admin' && user.role !== 'super-admin')
+        (!user.doctor &&
+            !user.nurse &&
+            user.role !== 'admin' &&
+            user.role !== 'super-admin')
     );
 };
 
@@ -1015,7 +1034,9 @@ const copyToClipboard = () => {
                 >
                     <!-- Nama & Email -->
                     <td class="px-4 py-3.5 sm:px-6">
-                        <div class="font-bold text-[#000000]">{{ row.original.name }}</div>
+                        <div class="font-bold text-[#000000]">
+                            {{ row.original.name }}
+                        </div>
                         <div
                             class="max-w-[180px] truncate text-xs text-[#333333] sm:max-w-none"
                         >
@@ -1026,7 +1047,10 @@ const copyToClipboard = () => {
                     <!-- Role Badge -->
                     <td class="px-4 py-3.5">
                         <span
-                            v-if="row.original.doctor || row.original.role === 'doctor'"
+                            v-if="
+                                row.original.doctor ||
+                                row.original.role === 'doctor'
+                            "
                             class="inline-flex items-center gap-1.5 rounded-full border border-[#beedc0] bg-[#beedc0]/40 px-3 py-0.5 text-xs font-bold text-[#000000]"
                         >
                             <Stethoscope class="size-3 text-[#000000]" />
@@ -1048,7 +1072,8 @@ const copyToClipboard = () => {
                         </span>
                         <span
                             v-else-if="
-                                row.original.role === 'admin' || row.original.role === 'super-admin'
+                                row.original.role === 'admin' ||
+                                row.original.role === 'super-admin'
                             "
                             class="inline-flex items-center gap-1.5 rounded-full bg-[#000000] px-3 py-0.5 text-xs font-bold text-[#ffffff]"
                         >
@@ -1070,7 +1095,7 @@ const copyToClipboard = () => {
                                 {{
                                     row.original.doctor.specialization
                                         ?.name_specialization || 'Spesialis'
-                                 }}
+                                }}
                             </div>
                             <div class="font-mono text-[11px] text-[#333333]">
                                 SIP: {{ row.original.doctor.sip_number }}
@@ -1081,8 +1106,15 @@ const copyToClipboard = () => {
                                 {{ row.original.nurse.institute || 'RS Utama' }}
                             </div>
                             <div class="font-mono text-[11px] text-[#333333]">
-                                {{ row.original.nurse.type === 'koas' ? 'NIM' : 'STR' }}:
-                                {{ row.original.nurse.registration_number || '-' }}
+                                {{
+                                    row.original.nurse.type === 'koas'
+                                        ? 'NIM'
+                                        : 'STR'
+                                }}:
+                                {{
+                                    row.original.nurse.registration_number ||
+                                    '-'
+                                }}
                             </div>
                         </div>
                         <span v-else class="text-[#333333]">-</span>
@@ -1100,7 +1132,9 @@ const copyToClipboard = () => {
                         >
                             <span
                                 :class="
-                                    row.original.is_active ? 'bg-[#000000]' : 'bg-rose-600'
+                                    row.original.is_active
+                                        ? 'bg-[#000000]'
+                                        : 'bg-rose-600'
                                 "
                                 class="size-1.5 rounded-full"
                             ></span>
@@ -1144,10 +1178,15 @@ const copyToClipboard = () => {
                                         : 'border-[#beedc0] bg-[#beedc0]/30 text-[#000000] hover:bg-[#beedc0]/50'
                                 "
                             >
-                                <ToggleLeft v-if="row.original.is_active" class="size-4" />
+                                <ToggleLeft
+                                    v-if="row.original.is_active"
+                                    class="size-4"
+                                />
                                 <ToggleRight v-else class="size-4" />
                                 <span class="hidden sm:inline">{{
-                                    row.original.is_active ? 'Nonaktifkan' : 'Aktifkan'
+                                    row.original.is_active
+                                        ? 'Nonaktifkan'
+                                        : 'Aktifkan'
                                 }}</span>
                             </button>
 
@@ -1158,7 +1197,7 @@ const copyToClipboard = () => {
                                 @click="openDeleteModal(row.original)"
                                 :aria-label="`Hapus Akun Pengguna ${row.original.name}`"
                                 :title="`Hapus Akun ${row.original.name}`"
-                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-rose-300 bg-rose-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-rose-700 sm:px-3.5 shadow-xs"
+                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-rose-300 bg-rose-600 px-3 py-1.5 text-xs font-medium text-white shadow-xs transition-colors hover:bg-rose-700 sm:px-3.5"
                             >
                                 <Trash2 class="size-3.5 text-white" />
                                 <span class="hidden sm:inline">Hapus Akun</span>
@@ -1171,10 +1210,12 @@ const copyToClipboard = () => {
                                 @click="openForceDeleteModal(row.original)"
                                 :aria-label="`Hapus Data Pasien ${row.original.name} Secara Permanen`"
                                 :title="`Hapus Data Pasien ${row.original.name} Secara Permanen`"
-                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-red-300 bg-red-700 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-red-800 sm:px-3.5 shadow-xs"
+                                class="inline-flex min-h-[38px] cursor-pointer items-center gap-1 rounded-[40.5px] border border-red-300 bg-red-700 px-3 py-1.5 text-xs font-semibold text-white shadow-xs transition-colors hover:bg-red-800 sm:px-3.5"
                             >
                                 <Trash2 class="size-3.5 text-white" />
-                                <span class="hidden sm:inline">Hapus Permanen</span>
+                                <span class="hidden sm:inline"
+                                    >Hapus Permanen</span
+                                >
                             </button>
                         </div>
                     </td>
@@ -1914,7 +1955,9 @@ const copyToClipboard = () => {
                             Hapus Akun Pengguna
                         </h2>
                         <p class="font-['Rubik'] text-xs text-[#333333]">
-                            {{ deleteTargetUser.name }} ({{ deleteTargetUser.email }})
+                            {{ deleteTargetUser.name }} ({{
+                                deleteTargetUser.email
+                            }})
                         </p>
                     </div>
                 </div>
@@ -1923,10 +1966,13 @@ const copyToClipboard = () => {
                     class="space-y-2 rounded-2xl border border-rose-200 bg-rose-50/70 p-4 font-['Rubik'] text-xs text-rose-900"
                 >
                     <p class="font-medium">
-                        Akun ini akan dihapus dari direktori aktif. Seluruh data rekam medis historis akan tetap dipertahankan.
+                        Akun ini akan dihapus dari direktori aktif. Seluruh data
+                        rekam medis historis akan tetap dipertahankan.
                     </p>
                     <p class="text-[11px] text-rose-700">
-                        Penghapusan menggunakan metode <em>soft-delete</em> sehingga audit log dan relasi data klinis tidak hilang.
+                        Penghapusan menggunakan metode
+                        <em>soft-delete</em> sehingga audit log dan relasi data
+                        klinis tidak hilang.
                     </p>
                 </div>
 
@@ -1958,7 +2004,9 @@ const copyToClipboard = () => {
                             class="size-4 animate-spin text-white"
                         />
                         <Trash2 v-else class="size-4 text-white" />
-                        <span>{{ isDeletingUser ? 'Menghapus...' : 'Ya, Hapus Akun' }}</span>
+                        <span>{{
+                            isDeletingUser ? 'Menghapus...' : 'Ya, Hapus Akun'
+                        }}</span>
                     </button>
                 </div>
             </motion.div>
@@ -1993,7 +2041,9 @@ const copyToClipboard = () => {
                             Hapus Permanen Data Pasien
                         </h2>
                         <p class="font-['Rubik'] text-xs text-[#333333]">
-                            {{ forceDeleteTargetUser.name }} ({{ forceDeleteTargetUser.email }})
+                            {{ forceDeleteTargetUser.name }} ({{
+                                forceDeleteTargetUser.email
+                            }})
                         </p>
                     </div>
                 </div>
@@ -2002,26 +2052,40 @@ const copyToClipboard = () => {
                 <div
                     class="space-y-2 rounded-2xl border border-red-300 bg-red-50 p-4 font-['Rubik'] text-xs text-red-950"
                 >
-                    <p class="font-bold flex items-center gap-1.5 text-red-800">
+                    <p class="flex items-center gap-1.5 font-bold text-red-800">
                         <AlertCircle class="size-4 shrink-0 text-red-700" />
                         Tindakan Ini Tidak Dapat Dibatalkan!
                     </p>
                     <p class="text-[11px] leading-relaxed text-red-900/90">
-                        Seluruh data pasien ini termasuk <strong>rekam medis, riwayat pemeriksaan, antrean poli, dan tagihan</strong> akan dihapus secara <strong>permanen dari basis data</strong> (Hard Delete).
+                        Seluruh data pasien ini termasuk
+                        <strong
+                            >rekam medis, riwayat pemeriksaan, antrean poli, dan
+                            tagihan</strong
+                        >
+                        akan dihapus secara
+                        <strong>permanen dari basis data</strong> (Hard Delete).
                     </p>
-                    <p v-if="forceDeleteTargetUser.patient?.resident_n" class="text-[11px] font-mono text-red-800 font-semibold">
+                    <p
+                        v-if="forceDeleteTargetUser.patient?.resident_n"
+                        class="font-mono text-[11px] font-semibold text-red-800"
+                    >
                         NIK: {{ forceDeleteTargetUser.patient.resident_n }}
                     </p>
                 </div>
 
                 <!-- Checkbox Confirmation -->
-                <label class="flex items-start gap-2.5 rounded-xl border border-[#000000]/10 bg-[#edede2]/40 p-3 text-xs font-medium text-[#000000] cursor-pointer select-none">
+                <label
+                    class="flex cursor-pointer items-start gap-2.5 rounded-xl border border-[#000000]/10 bg-[#edede2]/40 p-3 text-xs font-medium text-[#000000] select-none"
+                >
                     <input
                         type="checkbox"
                         v-model="confirmConsent"
                         class="mt-0.5 size-4 rounded border-gray-300 text-red-700 focus:ring-red-600"
                     />
-                    <span>Saya memahami bahwa penghapusan ini bersifat permanen dan data yang dihapus tidak dapat dipulihkan.</span>
+                    <span
+                        >Saya memahami bahwa penghapusan ini bersifat permanen
+                        dan data yang dihapus tidak dapat dipulihkan.</span
+                    >
                 </label>
 
                 <div
@@ -2052,7 +2116,11 @@ const copyToClipboard = () => {
                             class="size-4 animate-spin text-white"
                         />
                         <Trash2 v-else class="size-4 text-white" />
-                        <span>{{ isForceDeleting ? 'Menghapus Permanen...' : 'Hapus Permanen Sekarang' }}</span>
+                        <span>{{
+                            isForceDeleting
+                                ? 'Menghapus Permanen...'
+                                : 'Hapus Permanen Sekarang'
+                        }}</span>
                     </button>
                 </div>
             </motion.div>

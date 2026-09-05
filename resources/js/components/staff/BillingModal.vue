@@ -55,7 +55,17 @@ export interface BillingData {
     external_id?: string;
     total_amount?: number;
     amount?: number;
-    status: 'unpaid' | 'pending' | 'paid' | 'expired' | 'cancelled' | 'PENDING' | 'PAID' | 'EXPIRED' | 'FAILED' | string;
+    status:
+        | 'unpaid'
+        | 'pending'
+        | 'paid'
+        | 'expired'
+        | 'cancelled'
+        | 'PENDING'
+        | 'PAID'
+        | 'EXPIRED'
+        | 'FAILED'
+        | string;
     payment_method?: string | null;
     invoice_url?: string | null;
     xendit_payment_url?: string | null;
@@ -163,7 +173,11 @@ const formatRupiah = (val: number | string | null | undefined): string => {
    Computed States
    ═══════════════════════════════════════════════════════════════ */
 const effectiveAmount = computed<number>(() => {
-    if (isCustomAmountActive.value && customAmount.value && customAmount.value > 0) {
+    if (
+        isCustomAmountActive.value &&
+        customAmount.value &&
+        customAmount.value > 0
+    ) {
         return customAmount.value;
     }
 
@@ -227,11 +241,14 @@ const fetchCalculation = async (appointmentId: number) => {
     errorMessage.value = null;
 
     try {
-        const response = await axios.get(`/staff/billing/calculate/${appointmentId}`);
+        const response = await axios.get(
+            `/staff/billing/calculate/${appointmentId}`,
+        );
 
         if (response.data && response.data.status) {
             costBreakdown.value = response.data.items || [];
-            autoCalculatedTotal.value = Number(response.data.total_amount) || 175000;
+            autoCalculatedTotal.value =
+                Number(response.data.total_amount) || 175000;
 
             if (response.data.existing_billing) {
                 activeBilling.value = response.data.existing_billing;
@@ -296,19 +313,24 @@ watch(
 
             if (activeBilling.value.payment_details) {
                 try {
-                    const parsed = JSON.parse(activeBilling.value.payment_details);
+                    const parsed = JSON.parse(
+                        activeBilling.value.payment_details,
+                    );
                     rawQr = parsed.qr_string ?? null;
                 } catch (e) {}
             }
 
             if (rawQr) {
                 await renderQrCode(rawQr);
-            } else if (activeBilling.value.payment_method === 'xendit_qris' && activeBilling.value.xendit_payment_url) {
+            } else if (
+                activeBilling.value.payment_method === 'xendit_qris' &&
+                activeBilling.value.xendit_payment_url
+            ) {
                 await renderQrCode(activeBilling.value.xendit_payment_url);
             }
         }
     },
-    { immediate: true }
+    { immediate: true },
 );
 
 /* ═══════════════════════════════════════════════════════════════
@@ -340,14 +362,19 @@ const handleCreateBilling = async () => {
 
             if (activeBilling.value?.payment_details) {
                 try {
-                    const parsed = JSON.parse(activeBilling.value.payment_details);
+                    const parsed = JSON.parse(
+                        activeBilling.value.payment_details,
+                    );
                     rawQr = parsed.qr_string ?? null;
                 } catch (e) {}
             }
 
             if (rawQr) {
                 await renderQrCode(rawQr);
-            } else if (activeBilling.value?.payment_method === 'xendit_qris' && activeBilling.value?.xendit_payment_url) {
+            } else if (
+                activeBilling.value?.payment_method === 'xendit_qris' &&
+                activeBilling.value?.xendit_payment_url
+            ) {
                 await renderQrCode(activeBilling.value.xendit_payment_url);
             }
 
@@ -368,7 +395,8 @@ const handleCreateBilling = async () => {
    Action: Check Payment Status Instantly
    ═══════════════════════════════════════════════════════════════ */
 const checkStatus = async () => {
-    const billingId = activeBilling.value?.billing_id || activeBilling.value?.id;
+    const billingId =
+        activeBilling.value?.billing_id || activeBilling.value?.id;
 
     if (!billingId) {
         return;
@@ -380,10 +408,15 @@ const checkStatus = async () => {
         const response = await axios.get(`/staff/billing/${billingId}/status`);
 
         if (response.data && response.data.status) {
-            if (response.data.is_paid || response.data.billing_status === 'paid' || response.data.billing_status === 'PAID') {
+            if (
+                response.data.is_paid ||
+                response.data.billing_status === 'paid' ||
+                response.data.billing_status === 'PAID'
+            ) {
                 if (activeBilling.value) {
                     activeBilling.value.status = 'PAID';
-                    activeBilling.value.paid_at = response.data.paid_at ?? new Date().toISOString();
+                    activeBilling.value.paid_at =
+                        response.data.paid_at ?? new Date().toISOString();
                 }
 
                 stopPolling();
@@ -461,13 +494,19 @@ const copyPaymentLink = async () => {
             class="relative z-10 flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-[#000000]/10 bg-[#fffff3] text-[#000000] shadow-2xl"
         >
             <!-- Header Modal -->
-            <div class="flex items-center justify-between border-b border-[#000000]/10 bg-[#edede2]/60 px-6 py-4">
+            <div
+                class="flex items-center justify-between border-b border-[#000000]/10 bg-[#edede2]/60 px-6 py-4"
+            >
                 <div class="flex items-center gap-3">
-                    <div class="flex size-10 items-center justify-center rounded-full bg-[#000000] text-[#ffffff]">
+                    <div
+                        class="flex size-10 items-center justify-center rounded-full bg-[#000000] text-[#ffffff]"
+                    >
                         <Receipt class="size-5 text-[#beedc0]" />
                     </div>
                     <div>
-                        <h3 class="text-base font-bold text-[#000000] sm:text-lg">
+                        <h3
+                            class="text-base font-bold text-[#000000] sm:text-lg"
+                        >
                             Tagihan Pasien & Xendit Gateway
                         </h3>
                         <p class="text-xs text-[#333333]">
@@ -486,41 +525,67 @@ const copyPaymentLink = async () => {
             </div>
 
             <!-- Body Scrollable -->
-            <div class="flex-1 overflow-y-auto px-6 py-5 space-y-6">
+            <div class="flex-1 space-y-6 overflow-y-auto px-6 py-5">
                 <!-- Info Pasien & Kunjungan -->
-                <div class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4">
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#000000]/5 pb-3">
+                <div
+                    class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4"
+                >
+                    <div
+                        class="flex flex-wrap items-center justify-between gap-2 border-b border-[#000000]/5 pb-3"
+                    >
                         <div>
-                            <span class="text-xs text-[#333333]">Nama Pasien</span>
+                            <span class="text-xs text-[#333333]"
+                                >Nama Pasien</span
+                            >
                             <div class="text-base font-bold text-[#000000]">
-                                {{ appointment?.patient?.name ?? 'Nama Pasien' }}
+                                {{
+                                    appointment?.patient?.name ?? 'Nama Pasien'
+                                }}
                             </div>
                         </div>
                         <div class="text-right">
-                            <span class="text-xs text-[#333333]">No. Antrean</span>
+                            <span class="text-xs text-[#333333]"
+                                >No. Antrean</span
+                            >
                             <div>
-                                <span class="inline-flex rounded-full bg-[#000000] px-3 py-0.5 font-mono text-xs font-bold text-[#ffffff]">
+                                <span
+                                    class="inline-flex rounded-full bg-[#000000] px-3 py-0.5 font-mono text-xs font-bold text-[#ffffff]"
+                                >
                                     {{ appointment?.queue_number ?? '-' }}
                                 </span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="mt-3 grid grid-cols-2 gap-2 text-xs text-[#333333] sm:grid-cols-3">
+                    <div
+                        class="mt-3 grid grid-cols-2 gap-2 text-xs text-[#333333] sm:grid-cols-3"
+                    >
                         <div>
-                            <span class="block text-[11px] opacity-70">Poliklinik</span>
+                            <span class="block text-[11px] opacity-70"
+                                >Poliklinik</span
+                            >
                             <span class="font-semibold text-[#000000]">
-                                {{ appointment?.doctor_schedule?.poli?.name_poli ?? 'Poli Umum' }}
+                                {{
+                                    appointment?.doctor_schedule?.poli
+                                        ?.name_poli ?? 'Poli Umum'
+                                }}
                             </span>
                         </div>
                         <div>
-                            <span class="block text-[11px] opacity-70">Dokter Pemeriksa</span>
+                            <span class="block text-[11px] opacity-70"
+                                >Dokter Pemeriksa</span
+                            >
                             <span class="font-semibold text-[#000000]">
-                                {{ appointment?.doctor_schedule?.doctor?.name ?? 'Dokter' }}
+                                {{
+                                    appointment?.doctor_schedule?.doctor
+                                        ?.name ?? 'Dokter'
+                                }}
                             </span>
                         </div>
                         <div>
-                            <span class="block text-[11px] opacity-70">NIK / Identitas</span>
+                            <span class="block text-[11px] opacity-70"
+                                >NIK / Identitas</span
+                            >
                             <span class="font-mono text-[#000000]">
                                 {{ appointment?.patient?.resident_n ?? '-' }}
                             </span>
@@ -533,7 +598,7 @@ const copyPaymentLink = async () => {
                     v-if="errorMessage"
                     class="flex items-start gap-2.5 rounded-xl border border-red-300 bg-red-50 p-3.5 text-xs text-red-800"
                 >
-                    <AlertCircle class="size-4 shrink-0 text-red-600 mt-0.5" />
+                    <AlertCircle class="mt-0.5 size-4 shrink-0 text-red-600" />
                     <div class="flex-1">{{ errorMessage }}</div>
                 </div>
 
@@ -544,7 +609,9 @@ const copyPaymentLink = async () => {
                     v-if="isPaid"
                     class="rounded-xl border border-emerald-300 bg-emerald-50/70 p-6 text-center"
                 >
-                    <div class="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm">
+                    <div
+                        class="mx-auto flex size-14 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm"
+                    >
                         <CheckCircle2 class="size-8" />
                     </div>
 
@@ -552,20 +619,38 @@ const copyPaymentLink = async () => {
                         Pembayaran Lunas
                     </h4>
                     <p class="text-xs text-emerald-700">
-                        Tagihan medis telah berhasil diselesaikan dan dicatat pada sistem SIMRS.
+                        Tagihan medis telah berhasil diselesaikan dan dicatat
+                        pada sistem SIMRS.
                     </p>
 
-                    <div class="mt-4 inline-flex flex-col items-center rounded-lg border border-emerald-200 bg-[#ffffff] px-6 py-3 shadow-none">
-                        <span class="text-xs text-neutral-500">Nominal Lunas</span>
-                        <span class="font-mono text-xl font-bold text-emerald-700">
-                            {{ formatRupiah(activeBilling?.amount || activeBilling?.total_amount) }}
+                    <div
+                        class="mt-4 inline-flex flex-col items-center rounded-lg border border-emerald-200 bg-[#ffffff] px-6 py-3 shadow-none"
+                    >
+                        <span class="text-xs text-neutral-500"
+                            >Nominal Lunas</span
+                        >
+                        <span
+                            class="font-mono text-xl font-bold text-emerald-700"
+                        >
+                            {{
+                                formatRupiah(
+                                    activeBilling?.amount ||
+                                        activeBilling?.total_amount,
+                                )
+                            }}
                         </span>
                         <span class="mt-1 text-[11px] text-neutral-400">
-                            Invoice: {{ activeBilling?.invoice_number || activeBilling?.external_id }}
+                            Invoice:
+                            {{
+                                activeBilling?.invoice_number ||
+                                activeBilling?.external_id
+                            }}
                         </span>
                     </div>
 
-                    <div class="mt-4 flex flex-wrap items-center justify-center gap-3">
+                    <div
+                        class="mt-4 flex flex-wrap items-center justify-center gap-3"
+                    >
                         <a
                             :href="`/staff/billing/${activeBilling?.billing_id || activeBilling?.id}`"
                             class="inline-flex min-h-[44px] items-center gap-1.5 rounded-full border border-neutral-300 bg-[#ffffff] px-5 py-2 text-xs font-semibold text-neutral-800 hover:bg-neutral-50"
@@ -595,45 +680,79 @@ const copyPaymentLink = async () => {
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <span class="relative flex size-3">
-                                <span class="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75" />
-                                <span class="relative inline-flex size-3 rounded-full bg-amber-500" />
+                                <span
+                                    class="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75"
+                                />
+                                <span
+                                    class="relative inline-flex size-3 rounded-full bg-amber-500"
+                                />
                             </span>
                             <span class="text-sm font-bold text-amber-900">
                                 Menunggu Pembayaran
                             </span>
                         </div>
 
-                        <span class="font-mono text-xs font-bold text-amber-800">
-                            {{ activeBilling?.invoice_number || activeBilling?.external_id }}
+                        <span
+                            class="font-mono text-xs font-bold text-amber-800"
+                        >
+                            {{
+                                activeBilling?.invoice_number ||
+                                activeBilling?.external_id
+                            }}
                         </span>
                     </div>
 
                     <!-- Total Nominal -->
-                    <div class="flex items-center justify-between rounded-lg border border-amber-200 bg-[#ffffff] p-4">
-                        <span class="text-xs text-neutral-600">Total yang Harus Dibayar:</span>
-                        <span class="font-mono text-xl font-bold text-[#000000]">
-                            {{ formatRupiah(activeBilling?.amount || activeBilling?.total_amount) }}
+                    <div
+                        class="flex items-center justify-between rounded-lg border border-amber-200 bg-[#ffffff] p-4"
+                    >
+                        <span class="text-xs text-neutral-600"
+                            >Total yang Harus Dibayar:</span
+                        >
+                        <span
+                            class="font-mono text-xl font-bold text-[#000000]"
+                        >
+                            {{
+                                formatRupiah(
+                                    activeBilling?.amount ||
+                                        activeBilling?.total_amount,
+                                )
+                            }}
                         </span>
                     </div>
 
                     <!-- QRIS Dynamic Box -->
-                    <div class="flex flex-col items-center rounded-xl border border-neutral-200 bg-[#ffffff] p-5 shadow-none">
-                        <div class="flex items-center gap-1.5 text-xs font-bold text-neutral-800">
+                    <div
+                        class="flex flex-col items-center rounded-xl border border-neutral-200 bg-[#ffffff] p-5 shadow-none"
+                    >
+                        <div
+                            class="flex items-center gap-1.5 text-xs font-bold text-neutral-800"
+                        >
                             <QrCode class="size-4 text-emerald-700" />
                             <span>Scan QRIS untuk Pembayaran Langsung</span>
                         </div>
-                        <p class="mt-0.5 text-[11px] text-neutral-500 text-center">
-                            Mendukung m-Banking BCA, Mandiri, BRI, BNI, GoPay, OVO, ShopeePay, Dana
+                        <p
+                            class="mt-0.5 text-center text-[11px] text-neutral-500"
+                        >
+                            Mendukung m-Banking BCA, Mandiri, BRI, BNI, GoPay,
+                            OVO, ShopeePay, Dana
                         </p>
 
                         <!-- Canvas QR -->
-                        <div class="mt-3 flex size-56 items-center justify-center rounded-xl border border-neutral-200 bg-[#ffffff] p-2">
+                        <div
+                            class="mt-3 flex size-56 items-center justify-center rounded-xl border border-neutral-200 bg-[#ffffff] p-2"
+                        >
                             <canvas ref="qrCanvasRef" class="size-full" />
                         </div>
 
-                        <div class="mt-2 text-[11px] text-neutral-400 flex items-center gap-1">
+                        <div
+                            class="mt-2 flex items-center gap-1 text-[11px] text-neutral-400"
+                        >
                             <Clock class="size-3" />
-                            <span>Status auto-update saat pembayaran terverifikasi</span>
+                            <span
+                                >Status auto-update saat pembayaran
+                                terverifikasi</span
+                            >
                         </div>
                     </div>
 
@@ -657,9 +776,14 @@ const copyPaymentLink = async () => {
                             @click="copyPaymentLink"
                             class="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full border border-neutral-300 bg-[#ffffff] px-4 py-2 text-xs font-semibold text-neutral-800 hover:bg-neutral-50"
                         >
-                            <Check v-if="copiedLink" class="size-4 text-emerald-600" />
+                            <Check
+                                v-if="copiedLink"
+                                class="size-4 text-emerald-600"
+                            />
                             <Copy v-else class="size-4" />
-                            <span>{{ copiedLink ? 'Tersalin!' : 'Salin Tautan' }}</span>
+                            <span>{{
+                                copiedLink ? 'Tersalin!' : 'Salin Tautan'
+                            }}</span>
                         </button>
 
                         <!-- Cek Status -->
@@ -669,9 +793,14 @@ const copyPaymentLink = async () => {
                             :disabled="isCheckingStatus"
                             class="inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-full border border-amber-300 bg-amber-100/70 px-4 py-2 text-xs font-semibold text-amber-950 hover:bg-amber-200/80 disabled:opacity-50"
                         >
-                            <Loader2 v-if="isCheckingStatus" class="size-4 animate-spin" />
+                            <Loader2
+                                v-if="isCheckingStatus"
+                                class="size-4 animate-spin"
+                            />
                             <RefreshCw v-else class="size-4" />
-                            <span>{{ isCheckingStatus ? 'Mengecek...' : 'Cek Status' }}</span>
+                            <span>{{
+                                isCheckingStatus ? 'Mengecek...' : 'Cek Status'
+                            }}</span>
                         </button>
                     </div>
                 </div>
@@ -681,14 +810,26 @@ const copyPaymentLink = async () => {
                      ═══════════════════════════════════════════════════════════ -->
                 <div v-else class="space-y-4">
                     <!-- Rincian Biaya Otomatis -->
-                    <div class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4">
-                        <div class="flex items-center justify-between border-b border-neutral-100 pb-2.5">
-                            <div class="flex items-center gap-1.5 text-xs font-bold text-neutral-900">
+                    <div
+                        class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4"
+                    >
+                        <div
+                            class="flex items-center justify-between border-b border-neutral-100 pb-2.5"
+                        >
+                            <div
+                                class="flex items-center gap-1.5 text-xs font-bold text-neutral-900"
+                            >
                                 <Sparkles class="size-4 text-emerald-600" />
-                                <span>Rincian Biaya Otomatis (SIMRS Pre-calculate)</span>
+                                <span
+                                    >Rincian Biaya Otomatis (SIMRS
+                                    Pre-calculate)</span
+                                >
                             </div>
 
-                            <span v-if="isCalculating" class="flex items-center gap-1 text-[11px] text-neutral-400">
+                            <span
+                                v-if="isCalculating"
+                                class="flex items-center gap-1 text-[11px] text-neutral-400"
+                            >
                                 <Loader2 class="size-3 animate-spin" />
                                 Menghitung...
                             </span>
@@ -702,60 +843,98 @@ const copyPaymentLink = async () => {
                                 class="flex items-center justify-between py-2"
                             >
                                 <div class="flex items-center gap-2">
-                                    <Stethoscope v-if="item.type === 'consultation'" class="size-3.5 text-neutral-400" />
-                                    <Pill v-else-if="item.type === 'medicine'" class="size-3.5 text-emerald-600" />
-                                    <FileText v-else class="size-3.5 text-neutral-400" />
-                                    <span class="text-neutral-800">{{ item.name }}</span>
-                                    <span v-if="item.qty > 1" class="text-[11px] text-neutral-400">
+                                    <Stethoscope
+                                        v-if="item.type === 'consultation'"
+                                        class="size-3.5 text-neutral-400"
+                                    />
+                                    <Pill
+                                        v-else-if="item.type === 'medicine'"
+                                        class="size-3.5 text-emerald-600"
+                                    />
+                                    <FileText
+                                        v-else
+                                        class="size-3.5 text-neutral-400"
+                                    />
+                                    <span class="text-neutral-800">{{
+                                        item.name
+                                    }}</span>
+                                    <span
+                                        v-if="item.qty > 1"
+                                        class="text-[11px] text-neutral-400"
+                                    >
                                         ({{ item.qty }}x)
                                     </span>
                                 </div>
-                                <span class="font-mono font-medium text-neutral-900">
+                                <span
+                                    class="font-mono font-medium text-neutral-900"
+                                >
                                     {{ formatRupiah(item.subtotal) }}
                                 </span>
                             </div>
                         </div>
 
                         <!-- Total Otomatis -->
-                        <div class="mt-3 flex items-center justify-between border-t border-neutral-200 pt-3">
-                            <span class="text-xs font-bold text-neutral-900">Total Perhitungan Otomatis:</span>
-                            <span class="font-mono text-base font-bold text-emerald-700">
+                        <div
+                            class="mt-3 flex items-center justify-between border-t border-neutral-200 pt-3"
+                        >
+                            <span class="text-xs font-bold text-neutral-900"
+                                >Total Perhitungan Otomatis:</span
+                            >
+                            <span
+                                class="font-mono text-base font-bold text-emerald-700"
+                            >
                                 {{ formatRupiah(autoCalculatedTotal) }}
                             </span>
                         </div>
                     </div>
 
                     <!-- Pilihan Opsi Nominal Manual (Jika Perlu Disesuaikan) -->
-                    <div class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4">
+                    <div
+                        class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4"
+                    >
                         <div class="flex items-center justify-between">
                             <label class="text-xs font-bold text-neutral-800">
                                 Nominal Tagihan
                             </label>
                             <button
                                 type="button"
-                                @click="isCustomAmountActive = !isCustomAmountActive"
+                                @click="
+                                    isCustomAmountActive = !isCustomAmountActive
+                                "
                                 class="text-xs text-emerald-700 hover:underline"
                             >
-                                {{ isCustomAmountActive ? 'Gunakan Hitungan Otomatis' : 'Ubah Nominal Manual' }}
+                                {{
+                                    isCustomAmountActive
+                                        ? 'Gunakan Hitungan Otomatis'
+                                        : 'Ubah Nominal Manual'
+                                }}
                             </button>
                         </div>
 
-                        <div v-if="isCustomAmountActive" class="mt-2.5 space-y-2">
+                        <div
+                            v-if="isCustomAmountActive"
+                            class="mt-2.5 space-y-2"
+                        >
                             <div class="relative">
-                                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 font-mono text-sm text-neutral-400">Rp</span>
+                                <span
+                                    class="absolute top-1/2 left-3.5 -translate-y-1/2 font-mono text-sm text-neutral-400"
+                                    >Rp</span
+                                >
                                 <input
                                     v-model.number="customAmount"
                                     type="number"
                                     min="1000"
                                     placeholder="Masukkan nominal tagihan kustom..."
-                                    class="h-11 w-full rounded-xl border border-neutral-300 pl-10 pr-4 text-sm font-bold text-neutral-900 focus:border-neutral-900 focus:outline-none"
+                                    class="h-11 w-full rounded-xl border border-neutral-300 pr-4 pl-10 text-sm font-bold text-neutral-900 focus:border-neutral-900 focus:outline-none"
                                 />
                             </div>
 
                             <!-- Preset Cepat -->
                             <div class="flex flex-wrap gap-2 text-xs">
                                 <button
-                                    v-for="preset in [100000, 150000, 250000, 500000]"
+                                    v-for="preset in [
+                                        100000, 150000, 250000, 500000,
+                                    ]"
                                     :key="preset"
                                     type="button"
                                     @click="customAmount = preset"
@@ -767,12 +946,18 @@ const copyPaymentLink = async () => {
                         </div>
 
                         <div v-else class="mt-1 text-xs text-neutral-500">
-                            Nominal yang akan diterbitkan: <strong class="font-mono text-emerald-700 font-bold">{{ formatRupiah(effectiveAmount) }}</strong>
+                            Nominal yang akan diterbitkan:
+                            <strong
+                                class="font-mono font-bold text-emerald-700"
+                                >{{ formatRupiah(effectiveAmount) }}</strong
+                            >
                         </div>
                     </div>
 
                     <!-- Pilihan Metode Pembayaran Utama -->
-                    <div class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4">
+                    <div
+                        class="rounded-xl border border-[#000000]/10 bg-[#ffffff] p-4"
+                    >
                         <label class="text-xs font-bold text-neutral-800">
                             Metode Pembayaran Pilihan Pasien
                         </label>
@@ -781,30 +966,54 @@ const copyPaymentLink = async () => {
                             <button
                                 type="button"
                                 @click="paymentType = 'qris'"
-                                :class="paymentType === 'qris' ? 'border-[#000000] bg-[#edede2]/60 ring-1 ring-[#000000]' : 'border-neutral-200 bg-white hover:border-neutral-300'"
+                                :class="
+                                    paymentType === 'qris'
+                                        ? 'border-[#000000] bg-[#edede2]/60 ring-1 ring-[#000000]'
+                                        : 'border-neutral-200 bg-white hover:border-neutral-300'
+                                "
                                 class="flex min-h-[44px] items-center gap-2.5 rounded-xl border p-3 text-left transition-colors"
                             >
-                                <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800">
+                                <div
+                                    class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-100 text-emerald-800"
+                                >
                                     <QrCode class="size-4" />
                                 </div>
                                 <div>
-                                    <div class="text-xs font-bold text-neutral-900">QRIS Instan</div>
-                                    <div class="text-[10px] text-neutral-500">Scan langsung di layar</div>
+                                    <div
+                                        class="text-xs font-bold text-neutral-900"
+                                    >
+                                        QRIS Instan
+                                    </div>
+                                    <div class="text-[10px] text-neutral-500">
+                                        Scan langsung di layar
+                                    </div>
                                 </div>
                             </button>
 
                             <button
                                 type="button"
                                 @click="paymentType = 'invoice'"
-                                :class="paymentType === 'invoice' ? 'border-[#000000] bg-[#edede2]/60 ring-1 ring-[#000000]' : 'border-neutral-200 bg-white hover:border-neutral-300'"
+                                :class="
+                                    paymentType === 'invoice'
+                                        ? 'border-[#000000] bg-[#edede2]/60 ring-1 ring-[#000000]'
+                                        : 'border-neutral-200 bg-white hover:border-neutral-300'
+                                "
                                 class="flex min-h-[44px] items-center gap-2.5 rounded-xl border p-3 text-left transition-colors"
                             >
-                                <div class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-800">
+                                <div
+                                    class="flex size-8 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-800"
+                                >
                                     <CreditCard class="size-4" />
                                 </div>
                                 <div>
-                                    <div class="text-xs font-bold text-neutral-900">Xendit Invoice</div>
-                                    <div class="text-[10px] text-neutral-500">Kirim tautan bayar ke pasien</div>
+                                    <div
+                                        class="text-xs font-bold text-neutral-900"
+                                    >
+                                        Xendit Invoice
+                                    </div>
+                                    <div class="text-[10px] text-neutral-500">
+                                        Kirim tautan bayar ke pasien
+                                    </div>
                                 </div>
                             </button>
                         </div>
@@ -813,7 +1022,9 @@ const copyPaymentLink = async () => {
             </div>
 
             <!-- Footer Action Buttons -->
-            <div class="flex items-center justify-end gap-3 border-t border-[#000000]/10 bg-[#edede2]/50 px-6 py-4">
+            <div
+                class="flex items-center justify-end gap-3 border-t border-[#000000]/10 bg-[#edede2]/50 px-6 py-4"
+            >
                 <button
                     type="button"
                     @click="emit('close')"
@@ -832,10 +1043,22 @@ const copyPaymentLink = async () => {
                     :disabled="isSubmitting || effectiveAmount <= 0"
                     class="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#000000] px-6 py-2 text-xs font-bold text-[#ffffff] shadow-sm hover:bg-[#1a1a1a] disabled:opacity-50"
                 >
-                    <Loader2 v-if="isSubmitting" class="size-4 animate-spin text-[#beedc0]" />
-                    <QrCode v-else-if="paymentType === 'qris'" class="size-4 text-[#beedc0]" />
+                    <Loader2
+                        v-if="isSubmitting"
+                        class="size-4 animate-spin text-[#beedc0]"
+                    />
+                    <QrCode
+                        v-else-if="paymentType === 'qris'"
+                        class="size-4 text-[#beedc0]"
+                    />
                     <CreditCard v-else class="size-4 text-[#beedc0]" />
-                    <span>{{ isSubmitting ? 'Menerbitkan Tagihan...' : (paymentType === 'qris' ? 'Buat QRIS Langsung' : 'Terbitkan Xendit Invoice') }}</span>
+                    <span>{{
+                        isSubmitting
+                            ? 'Menerbitkan Tagihan...'
+                            : paymentType === 'qris'
+                              ? 'Buat QRIS Langsung'
+                              : 'Terbitkan Xendit Invoice'
+                    }}</span>
                 </motion.button>
             </div>
         </motion.div>

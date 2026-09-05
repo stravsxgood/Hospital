@@ -17,17 +17,28 @@ import type { PaginatedResponse, PaginationLink } from '@/types';
 
 interface PaginationProps {
     table?: any;
-    links?: PaginationLink[] | Array<{ url: string | null; label: string; active: boolean }>;
-    pagination?: PaginatedResponse<any> | {
-        data?: any[];
-        links?: PaginationLink[] | Array<{ url: string | null; label: string; active: boolean }>;
-        current_page?: number;
-        last_page?: number;
-        total?: number;
-        from?: number | null;
-        to?: number | null;
-        per_page?: number;
-    } | null;
+    links?:
+        | PaginationLink[]
+        | Array<{ url: string | null; label: string; active: boolean }>;
+    pagination?:
+        | PaginatedResponse<any>
+        | {
+              data?: any[];
+              links?:
+                  | PaginationLink[]
+                  | Array<{
+                        url: string | null;
+                        label: string;
+                        active: boolean;
+                    }>;
+              current_page?: number;
+              last_page?: number;
+              total?: number;
+              from?: number | null;
+              to?: number | null;
+              per_page?: number;
+          }
+        | null;
     itemName?: string;
 }
 
@@ -274,9 +285,7 @@ const isNextLink = (label: string): boolean => {
 };
 
 const cleanLabel = (label: string): string => {
-    return label
-        .replace(/&laquo;|&raquo;|«|»/g, '')
-        .trim();
+    return label.replace(/&laquo;|&raquo;|«|»/g, '').trim();
 };
 </script>
 
@@ -288,21 +297,33 @@ const cleanLabel = (label: string): string => {
     >
         <!-- Info Ringkasan Data Halaman -->
         <div class="text-[#333333]/80">
-            <template v-if="totalItems > 0 && fromItem !== null && toItem !== null">
+            <template
+                v-if="totalItems > 0 && fromItem !== null && toItem !== null"
+            >
                 Menampilkan
-                <strong class="font-semibold text-[#000000]">{{ fromItem }}</strong>
+                <strong class="font-semibold text-[#000000]">{{
+                    fromItem
+                }}</strong>
                 -
-                <strong class="font-semibold text-[#000000]">{{ toItem }}</strong>
+                <strong class="font-semibold text-[#000000]">{{
+                    toItem
+                }}</strong>
                 dari
-                <strong class="font-semibold text-[#000000]">{{ totalItems }}</strong>
+                <strong class="font-semibold text-[#000000]">{{
+                    totalItems
+                }}</strong>
                 {{ itemName }}
                 (Halaman {{ currentPage }} dari {{ lastPage }})
             </template>
             <template v-else>
                 Halaman
-                <strong class="font-semibold text-[#000000]">{{ currentPage }}</strong>
+                <strong class="font-semibold text-[#000000]">{{
+                    currentPage
+                }}</strong>
                 dari
-                <strong class="font-semibold text-[#000000]">{{ lastPage }}</strong>
+                <strong class="font-semibold text-[#000000]">{{
+                    lastPage
+                }}</strong>
             </template>
         </div>
 

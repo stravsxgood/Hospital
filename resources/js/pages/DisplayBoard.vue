@@ -122,7 +122,7 @@ const announceQueue = async (item: LatestCalled, repeatCount = 1) => {
 
     announceHospitalQueue({
         text: speechText,
-        rate: 0.80, // Laju agak lambat, tenang, dan artikulatif khas rumah sakit
+        rate: 0.8, // Laju agak lambat, tenang, dan artikulatif khas rumah sakit
         onStart: () => {
             isSpeaking.value = true;
         },

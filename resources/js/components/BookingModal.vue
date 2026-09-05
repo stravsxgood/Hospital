@@ -236,17 +236,21 @@ const submitBooking = () => {
             // Ambil payload tiket dari flash response
             const ticket = flash?.success?.ticket ?? flash?.ticket;
 
-            emit('success', ticket || {
-                appointment_id: 0,
-                queue_number: 'ANT-001',
-                doctor_name: props.schedule?.doctor?.name ?? 'Dokter Spesialis',
-                poli_name:
-                    props.schedule?.poli?.name_poli ??
-                    props.schedule?.poli?.name ??
-                    'Poliklinik',
-                appointment_date: form.appointment_date,
-                patient_name: user.value?.name ?? 'Pasien',
-            });
+            emit(
+                'success',
+                ticket || {
+                    appointment_id: 0,
+                    queue_number: 'ANT-001',
+                    doctor_name:
+                        props.schedule?.doctor?.name ?? 'Dokter Spesialis',
+                    poli_name:
+                        props.schedule?.poli?.name_poli ??
+                        props.schedule?.poli?.name ??
+                        'Poliklinik',
+                    appointment_date: form.appointment_date,
+                    patient_name: user.value?.name ?? 'Pasien',
+                },
+            );
 
             closeModal();
         },
@@ -295,8 +299,8 @@ const getSpecializationLabel = (schedule: DoctorSchedule | null): string => {
                 <DialogDescription
                     class="text-xs leading-relaxed text-[#333333]/80"
                 >
-                    Pilih tanggal praktik yang sesuai dengan jadwal dokter dan isi
-                    keluhan untuk memproses nomor antrean poliklinik.
+                    Pilih tanggal praktik yang sesuai dengan jadwal dokter dan
+                    isi keluhan untuk memproses nomor antrean poliklinik.
                 </DialogDescription>
             </DialogHeader>
 
@@ -349,11 +353,17 @@ const getSpecializationLabel = (schedule: DoctorSchedule | null): string => {
                 >
                     <div class="flex items-center gap-1.5 font-medium">
                         <Calendar class="size-3.5 text-[#000000]" />
-                        <span>Praktik Setiap Hari {{ schedule.day || schedule.day_of_week }}</span>
+                        <span
+                            >Praktik Setiap Hari
+                            {{ schedule.day || schedule.day_of_week }}</span
+                        >
                     </div>
                     <div class="flex items-center gap-1.5">
                         <Clock class="size-3.5 text-[#000000]" />
-                        <span>{{ schedule.start_time }} - {{ schedule.end_time }} WIB</span>
+                        <span
+                            >{{ schedule.start_time }} -
+                            {{ schedule.end_time }} WIB</span
+                        >
                     </div>
                 </div>
             </div>
@@ -376,7 +386,10 @@ const getSpecializationLabel = (schedule: DoctorSchedule | null): string => {
                 </div>
 
                 <!-- Pilihan Cepat Tanggal Praktik Mendatang -->
-                <div v-if="upcomingPracticeDates.length > 0" class="space-y-1.5">
+                <div
+                    v-if="upcomingPracticeDates.length > 0"
+                    class="space-y-1.5"
+                >
                     <label class="text-xs font-semibold text-[#000000]">
                         Pilih Jadwal Praktik Terdekat
                     </label>
@@ -436,12 +449,20 @@ const getSpecializationLabel = (schedule: DoctorSchedule | null): string => {
 
                     <!-- Peringatan Ketidaksesuaian Hari Kunjungan -->
                     <div
-                        v-if="!selectedDateDayMatch.valid && form.appointment_date"
+                        v-if="
+                            !selectedDateDayMatch.valid && form.appointment_date
+                        "
                         class="mt-1 flex items-start gap-1.5 rounded-[6px] bg-amber-50 p-2 text-xs text-amber-800"
                     >
                         <Info class="mt-0.5 size-3.5 shrink-0 text-amber-600" />
                         <span>
-                            Tanggal ini jatuh pada hari <strong>{{ selectedDateDayMatch.selectedDayName }}</strong>, sedangkan dokter berpraktik pada hari <strong>{{ schedule?.day }}</strong>.
+                            Tanggal ini jatuh pada hari
+                            <strong>{{
+                                selectedDateDayMatch.selectedDayName
+                            }}</strong
+                            >, sedangkan dokter berpraktik pada hari
+                            <strong>{{ schedule?.day }}</strong
+                            >.
                         </span>
                     </div>
 
@@ -503,7 +524,9 @@ const getSpecializationLabel = (schedule: DoctorSchedule | null): string => {
                     </motion.button>
                     <motion.button
                         type="submit"
-                        :disabled="form.processing || !selectedDateDayMatch.valid"
+                        :disabled="
+                            form.processing || !selectedDateDayMatch.valid
+                        "
                         :whileHover="{ scale: 1.02 }"
                         :whileTap="{ scale: 0.98 }"
                         class="inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-[40.5px] bg-[#000000] px-6 py-2.5 text-sm font-medium text-[#ffffff] transition-colors hover:bg-[#333333] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
