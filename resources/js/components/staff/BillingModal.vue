@@ -293,6 +293,7 @@ watch(
 
             // Coba ekstrak qr_string dari payment_details
             let rawQr: string | null = null;
+
             if (activeBilling.value.payment_details) {
                 try {
                     const parsed = JSON.parse(activeBilling.value.payment_details);
@@ -326,7 +327,7 @@ const handleCreateBilling = async () => {
             appointment_id: props.appointment.appointment_id,
             amount: effectiveAmount.value,
             payment_type: paymentType.value,
-            description: `Tagihan Layanan Rawat Jalan Poli ${props.appointment.doctorSchedule?.poli?.name_poli ?? 'Poliklinik'} (${props.appointment.patient?.name ?? 'Pasien'})`,
+            description: `Tagihan Layanan Rawat Jalan Poli ${props.appointment.doctor_schedule?.poli?.name_poli ?? 'Poliklinik'} (${props.appointment.patient?.name ?? 'Pasien'})`,
         };
 
         const response = await axios.post('/staff/billing', payload);
@@ -336,6 +337,7 @@ const handleCreateBilling = async () => {
 
             // Jika QRIS, render canvas QR
             let rawQr: string | null = null;
+
             if (activeBilling.value?.payment_details) {
                 try {
                     const parsed = JSON.parse(activeBilling.value.payment_details);
@@ -383,6 +385,7 @@ const checkStatus = async () => {
                     activeBilling.value.status = 'PAID';
                     activeBilling.value.paid_at = response.data.paid_at ?? new Date().toISOString();
                 }
+
                 stopPolling();
                 emit('success', billingId);
             }
@@ -507,13 +510,13 @@ const copyPaymentLink = async () => {
                         <div>
                             <span class="block text-[11px] opacity-70">Poliklinik</span>
                             <span class="font-semibold text-[#000000]">
-                                {{ appointment?.doctorSchedule?.poli?.name_poli ?? 'Poli Umum' }}
+                                {{ appointment?.doctor_schedule?.poli?.name_poli ?? 'Poli Umum' }}
                             </span>
                         </div>
                         <div>
                             <span class="block text-[11px] opacity-70">Dokter Pemeriksa</span>
                             <span class="font-semibold text-[#000000]">
-                                {{ appointment?.doctorSchedule?.doctor?.name ?? 'Dokter' }}
+                                {{ appointment?.doctor_schedule?.doctor?.name ?? 'Dokter' }}
                             </span>
                         </div>
                         <div>
