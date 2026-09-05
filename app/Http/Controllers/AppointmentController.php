@@ -161,7 +161,7 @@ class AppointmentController extends Controller
             'appointment_id' => $appointment->appointment_id,
             'queue_number' => $appointment->queue_number,
             'doctor_name' => $schedule->doctor?->name,
-            'poli_name' => $schedule->poli?->name_poli ?? $schedule->poli?->name,
+            'poli_name' => $schedule->poli?->name_poli,
             'appointment_date' => Carbon::parse($appointment->appointment_date)->format('d-m-Y'),
             'patient_name' => $patient->name,
             'resident_n' => $patient->resident_n,

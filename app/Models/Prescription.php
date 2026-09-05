@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +24,9 @@ use Illuminate\Support\Carbon;
  * @property string|null $notes
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read MedicalRecord|null $medicalRecord
+ * @property-read Collection<int, PrescriptionItem> $items
+ * @property-read Collection<int, PrescriptionItem> $prescriptionItems
  */
 class Prescription extends Model
 {
@@ -47,6 +51,8 @@ class Prescription extends Model
 
     /**
      * Relasi ke Rekam Medis (EMR)
+     *
+     * @return BelongsTo<MedicalRecord, $this>
      */
     public function medicalRecord(): BelongsTo
     {
@@ -55,6 +61,8 @@ class Prescription extends Model
 
     /**
      * Relasi ke rincian item obat resep
+     *
+     * @return HasMany<PrescriptionItem, $this>
      */
     public function items(): HasMany
     {

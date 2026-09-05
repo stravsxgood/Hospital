@@ -50,7 +50,7 @@ class BillingController extends Controller
 
         $items[] = [
             'type' => 'consultation',
-            'name' => 'Konsultasi Dokter ('.($appointment->doctorSchedule?->doctor?->name ?? 'Dokter Spesialis').')',
+            'name' => 'Konsultasi Dokter ('.($appointment->doctorSchedule?->doctor->name ?? 'Dokter Spesialis').')',
             'price' => $consultationFee,
             'qty' => 1,
             'subtotal' => $consultationFee,
@@ -65,7 +65,7 @@ class BillingController extends Controller
         ];
 
         $prescription = $appointment->medicalRecord?->prescription;
-        if ($prescription && $prescription->items) {
+        if ($prescription) {
             foreach ($prescription->items as $item) {
                 $med = $item->medicine;
                 $price = $med ? (float) $med->price : 0.00;
@@ -105,12 +105,13 @@ class BillingController extends Controller
      */
     public function store(StoreBillingRequest $request, CreateXenditInvoiceAction $action): RedirectResponse|JsonResponse
     {
+        /** @var Appointment $appointment */
         $appointment = Appointment::with([
             'patient.user',
             'doctorSchedule.doctor',
             'doctorSchedule.poli',
             'medicalRecord.prescription.items.medicine',
-        ])->findOrFail($request->validated('appointment_id'));
+        ])->findOrFail((int) $request->validated('appointment_id'));
 
         $amount = (float) ($request->validated('amount') ?? 0);
 
@@ -121,7 +122,7 @@ class BillingController extends Controller
             $medicineTotal = 0.00;
 
             $prescription = $appointment->medicalRecord?->prescription;
-            if ($prescription && $prescription->items) {
+            if ($prescription) {
                 foreach ($prescription->items as $item) {
                     $med = $item->medicine;
                     $unitPrice = $med ? (float) $med->price : 0.00;
@@ -295,7 +296,7 @@ class BillingController extends Controller
 
             $itemsPayload[] = [
                 'item_type' => 'consultation_fee',
-                'item_name' => 'Jasa Konsultasi Dokter ('.($appointment->doctorSchedule?->doctor?->name ?? 'Dokter Spesialis').')',
+                'item_name' => 'Jasa Konsultasi Dokter ('.($appointment->doctorSchedule?->doctor->name ?? 'Dokter Spesialis').')',
                 'quantity' => 1,
                 'unit_price' => $consultationFee,
                 'subtotal' => $consultationFee,
@@ -313,7 +314,7 @@ class BillingController extends Controller
 
             // Hitung biaya resep obat elektronik jika dokter memberikan resep
             $prescription = $appointment->medicalRecord?->prescription;
-            if ($prescription && $prescription->items) {
+            if ($prescription) {
                 foreach ($prescription->items as $item) {
                     $med = $item->medicine;
                     $unitPrice = $med ? (float) $med->price : 0.00;

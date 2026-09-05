@@ -45,9 +45,9 @@ class CreateXenditInvoiceAction
         $roundedAmount = (int) round($amount);
 
         $patient = $appointment->patient;
-        $patientEmail = $patient?->user?->email ?? 'pasien@hospital.com';
+        $patientEmail = $patient?->user->email ?? 'pasien@hospital.com';
         $patientName = $patient?->name ?? 'Pasien SIMRS';
-        $poliName = $appointment->doctorSchedule?->poli?->name_poli ?? 'Poliklinik Rawat Jalan';
+        $poliName = $appointment->doctorSchedule?->poli->name_poli ?? 'Poliklinik Rawat Jalan';
         $invoiceDescription = $description ?: "Tagihan Layanan Rawat Jalan - {$poliName} ({$patientName})";
 
         // 1. Eksekusi Request ke Xendit Invoices API
@@ -134,6 +134,8 @@ class CreateXenditInvoiceAction
     /**
      * Memanggil endpoint POST https://api.xendit.co/v2/invoices
      * dengan Basic Auth dan fallback mock pada testing environment.
+     *
+     * @return array<string, mixed>
      */
     protected function createXenditInvoicePayload(
         string $externalId,

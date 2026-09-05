@@ -25,6 +25,11 @@ use Illuminate\Support\Carbon;
  * @property string|null $physical_check
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Patient|null $patient
+ * @property-read Doctor|null $doctor
+ * @property-read Appointment|null $reservation
+ * @property-read Appointment|null $appointment
+ * @property-read Prescription|null $prescription
  */
 class MedicalRecord extends Model
 {
@@ -52,6 +57,8 @@ class MedicalRecord extends Model
 
     /**
      * Relasi ke data Pasien
+     *
+     * @return BelongsTo<Patient, $this>
      */
     public function patient(): BelongsTo
     {
@@ -60,6 +67,8 @@ class MedicalRecord extends Model
 
     /**
      * Relasi ke Dokter yang memeriksa
+     *
+     * @return BelongsTo<Doctor, $this>
      */
     public function doctor(): BelongsTo
     {
@@ -68,6 +77,8 @@ class MedicalRecord extends Model
 
     /**
      * Relasi ke data Reservasi / Appointment antrean
+     *
+     * @return BelongsTo<Appointment, $this>
      */
     public function reservation(): BelongsTo
     {
@@ -76,6 +87,8 @@ class MedicalRecord extends Model
 
     /**
      * Alias relasi ke Appointment
+     *
+     * @return BelongsTo<Appointment, $this>
      */
     public function appointment(): BelongsTo
     {
@@ -84,6 +97,8 @@ class MedicalRecord extends Model
 
     /**
      * Relasi ke Resep Obat Elektronik (E-Prescription)
+     *
+     * @return HasOne<Prescription, $this>
      */
     public function prescription(): HasOne
     {

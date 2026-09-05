@@ -4,13 +4,33 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * @property int $appointment_id
+ * @property int $patient_id
+ * @property int $doctor_schedule_id
+ * @property Carbon $appointment_date
+ * @property string $queue_number
+ * @property string|null $complaint
+ * @property string $status
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read User|null $user
+ * @property-read Patient|null $patient
+ * @property-read DoctorSchedule|null $doctorSchedule
+ * @property-read MedicalRecord|null $medicalRecord
+ * @property-read Collection<int, MedicalRecord> $medicalRecords
+ * @property-read Billing|null $billing
+ * @property-read Collection<int, Billing> $billings
+ */
 class Appointment extends Model
 {
     use HasFactory;
@@ -45,31 +65,49 @@ class Appointment extends Model
         ];
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return BelongsTo<Patient, $this>
+     */
     public function patient(): BelongsTo
     {
         return $this->belongsTo(Patient::class, 'patient_id', 'patient_id');
     }
 
+    /**
+     * @return BelongsTo<DoctorSchedule, $this>
+     */
     public function doctorSchedule(): BelongsTo
     {
         return $this->belongsTo(DoctorSchedule::class, 'doctor_schedule_id', 'doctor_schedule_id');
     }
 
+    /**
+     * @return HasOne<MedicalRecord, $this>
+     */
     public function medicalRecord(): HasOne
     {
         return $this->hasOne(MedicalRecord::class, 'reservation_id', 'appointment_id');
     }
 
+    /**
+     * @return HasMany<MedicalRecord, $this>
+     */
     public function medicalRecords(): HasMany
     {
         return $this->hasMany(MedicalRecord::class, 'reservation_id', 'appointment_id');
     }
 
+    /**
+     * @return HasOne<Billing, $this>
+     */
     public function billing(): HasOne
     {
         return $this->hasOne(Billing::class, 'reservation_id', 'appointment_id');

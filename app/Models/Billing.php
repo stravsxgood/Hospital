@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,6 +26,11 @@ use Illuminate\Support\Carbon;
  * @property string|null $xendit_id
  * @property string|null $xendit_payment_url
  * @property Carbon|null $paid_at
+ * @property-read Patient|null $patient
+ * @property-read Appointment|null $reservation
+ * @property-read Appointment|null $appointment
+ * @property-read Nurse|null $processedByNurse
+ * @property-read Collection<int, BillingItem> $items
  */
 class Billing extends Model
 {
@@ -74,6 +80,8 @@ class Billing extends Model
 
     /**
      * Relasi ke Pasien penerima tagihan.
+     *
+     * @return BelongsTo<Patient, $this>
      */
     public function patient(): BelongsTo
     {
@@ -82,6 +90,8 @@ class Billing extends Model
 
     /**
      * Relasi ke Reservasi / Janji Temu rawat jalan.
+     *
+     * @return BelongsTo<Appointment, $this>
      */
     public function reservation(): BelongsTo
     {
@@ -90,6 +100,8 @@ class Billing extends Model
 
     /**
      * Alias relasi ke Appointment untuk fleksibilitas kode.
+     *
+     * @return BelongsTo<Appointment, $this>
      */
     public function appointment(): BelongsTo
     {
@@ -98,6 +110,8 @@ class Billing extends Model
 
     /**
      * Relasi ke Petugas Perawat / Kasir Tetap yang memproses pembayaran.
+     *
+     * @return BelongsTo<Nurse, $this>
      */
     public function processedByNurse(): BelongsTo
     {
@@ -106,6 +120,8 @@ class Billing extends Model
 
     /**
      * Relasi ke item rincian tagihan (biaya dokter, obat, tindakan).
+     *
+     * @return HasMany<BillingItem, $this>
      */
     public function items(): HasMany
     {

@@ -167,7 +167,7 @@ class DoctorConsultationController extends Controller
             // E. Siarkan event notifikasi resep instan ke antrean farmasi via Reverb
             if ($prescription) {
                 $patient = Patient::find($medicalRecord->patient_id);
-                $poliName = $appointment?->doctorSchedule?->poli?->name ?? 'Poliklinik';
+                $poliName = $appointment?->doctorSchedule?->poli?->name_poli ?? 'Poliklinik';
                 event(new PrescriptionCreatedEvent(
                     prescriptionId: (int) $prescription->prescription_id,
                     prescriptionNumber: (string) $prescription->prescription_number,

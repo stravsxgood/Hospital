@@ -21,6 +21,8 @@ use Illuminate\Support\Carbon;
  * @property string|null $notes
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Prescription|null $prescription
+ * @property-read Medicine|null $medicine
  */
 class PrescriptionItem extends Model
 {
@@ -47,6 +49,8 @@ class PrescriptionItem extends Model
 
     /**
      * Relasi ke Resep Obat Utama
+     *
+     * @return BelongsTo<Prescription, $this>
      */
     public function prescription(): BelongsTo
     {
@@ -55,6 +59,8 @@ class PrescriptionItem extends Model
 
     /**
      * Relasi ke Master Data Obat
+     *
+     * @return BelongsTo<Medicine, $this>
      */
     public function medicine(): BelongsTo
     {
