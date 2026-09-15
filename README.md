@@ -18,7 +18,7 @@ SIMRS ini dibangun untuk mendemonstrasikan implementasi arsitektur monolit moder
 
 ## 🏛 System Architecture & Tech Stack
 
-* **Backend Core**: Laravel 11 (PHP 8.2+)
+* **Backend Core**: Laravel 13 (PHP 8.2+)
 * **Database**: PostgreSQL 16 (Relational integrity, JSONB support, strict ACID)
 * **Frontend Layer**: Vue 3 (Composition API, TypeScript) via Inertia.js
 * **Real-time Engine**: Laravel Reverb (WebSocket server for live queue broadcasting)
@@ -84,8 +84,8 @@ Repositori ini menerapkan kontrol kualitas kode ketat sebelum perubahan di-*merg
 
 1. **Clone repository**
    ```bash
-   git clone [https://github.com/stravsxgood/SIMRS.git](https://github.com/stravsxgood/SIMRS.git)
-   cd SIMRS
+   git clone [https://github.com/stravsxgood/Hospital.git](https://github.com/stravsxgood/Hospital.git)
+   cd Hospital
    ```
 
 2. **Setup Dependencies**
@@ -133,10 +133,3 @@ Aplikasi sudah dilengkapi seeder data realistis untuk pengujian setiap role:
 | **Kasir** | `kasir@simrs.test` | `password` | Invoice & Payment Gateway |
 
 ---
-
-## 👤 Author
-
-* **Qusay Adya Galaghazy**
-* GitHub: [@stravsxgood](https://github.com/stravsxgood)
-* LinkedIn: [linkedin.com/in/qusay-adya](https://linkedin.com/in/qusay-adya)
-* Email: qusayadya0@gmail.com
