@@ -3,8 +3,8 @@
 > Enterprise-grade Hospital Information System built with Laravel, Inertia.js (Vue 3), and PostgreSQL. Designed for high-reliability medical workflows, real-time outpatient queue orchestration, and strict financial transaction reconciliation.
 
 [![PHPStan](https://img.shields.io/badge/PHPStan-Level%207-brightgreen.svg)](#code-quality--standards)
-[![Laravel](https://img.shields.io/badge/Laravel-11.x-red.svg)](https://laravel.com)
-[![Vue](https://img.shields.io/badge/Vue.js-3.x-green.svg)](https://vuejs.org)
+[![Laravel](https://img.shields.io/badge/Laravel-13-red.svg)](https://laravel.com)
+[![Vue](https://img.shields.io/badge/Vue.js-green.svg)](https://vuejs.org)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue.svg)](https://www.postgresql.org)
 [![Inertia.js](https://img.shields.io/badge/Inertia.js-Adapter-purple.svg)](https://inertiajs.com)
 
